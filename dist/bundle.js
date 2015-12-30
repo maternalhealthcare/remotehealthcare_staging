@@ -72650,33 +72650,164 @@ var MotherDemographics = (function (_ControlBase) {
                 value: 'Select Village',
                 text: locale('SelVill')
             }, {
-                value: 'Village1',
-                text: 'Village1'
+                value: 'Ammapalayam',
+                text: 'Ammapalayam'
             }, {
-                value: 'Village2',
-                text: 'Village2'
+                value: 'Kurumbalur',
+                text: 'Kurumbalur'
+            }, {
+                value: 'Kalpadi',
+                text: 'Kalpadi'
+            }, {
+                value: 'Ladapuram',
+                text: 'Ladapuram'
+            }, {
+                value: 'Velur',
+                text: 'Velur'
+            }, {
+                value: 'Elambalur',
+                text: 'Elambalur'
+            }, {
+                value: 'Esanai',
+                text: 'Esanai'
+            }, {
+                value: 'Anukkur',
+                text: 'Anukkur'
+            }, {
+                value: 'V.Kalathur',
+                text: 'V.Kalathur'
+            }, {
+                value: 'Arumbavur',
+                text: 'Arumbavur'
+            }, {
+                value: 'Pasumbalur',
+                text: 'Pasumbalur'
+            }, {
+                value: 'Poolambadi',
+                text: 'Poolambadi'
+            }, {
+                value: 'Neikuppai',
+                text: 'Neikuppai'
+            }, {
+                value: 'Karai',
+                text: 'Karai'
+            }, {
+                value: 'Padalur',
+                text: 'Padalur'
+            }, {
+                value: 'Chettikulam',
+                text: 'Chettikulam'
+            }, {
+                value: 'Melamathur',
+                text: 'Melamathur'
+            }, {
+                value: 'Adhanur',
+                text: 'Adhanur'
+            }, {
+                value: 'Thungapuram',
+                text: 'Thungapuram'
+            }, {
+                value: 'Kunnam',
+                text: 'Kunnam'
+            }, {
+                value: 'Athiyur',
+                text: 'Athiyur'
+            }, {
+                value: 'L.K.Kadu',
+                text: 'L.K.Kadu'
+            }, {
+                value: 'V.K.Puram',
+                text: 'V.K.Puram'
+            }];
+
+            var pincode = [{
+                value: 'Select Pincode',
+                text: locale('SelPincode')
+            }, {
+                value: '621101',
+                text: '621101'
+            }, {
+                value: '621107',
+                text: '621107'
+            }, {
+                value: '621113',
+                text: '621113'
+            }, {
+                value: '621121',
+                text: '621121'
+            }, {
+                value: '621104',
+                text: '621104'
+            }, {
+                value: '621212',
+                text: '621212'
+            }, {
+                value: '621219',
+                text: '621219'
+            }, {
+                value: '621219',
+                text: '621219'
+            }, {
+                value: '621117',
+                text: '621117'
+            }, {
+                value: '621103',
+                text: '621103'
+            }, {
+                value: '621117',
+                text: '621117'
+            }, {
+                value: '621110',
+                text: '621110'
+            }, {
+                value: '621116',
+                text: '621116'
+            }, {
+                value: '621109',
+                text: '621109'
+            }, {
+                value: '621109',
+                text: '621109'
+            }, {
+                value: '621104',
+                text: '621104'
+            }, {
+                value: '621708',
+                text: '621708'
+            }, {
+                value: '621708',
+                text: '621708'
+            }, {
+                value: '621115',
+                text: '621115'
+            }, {
+                value: '621708',
+                text: '621708'
+            }, {
+                value: '621108',
+                text: '621108'
+            }, {
+                value: '621108',
+                text: '621108'
+            }, {
+                value: '621115',
+                text: '621115'
             }];
 
             var cities = [{
                 value: 'Select City',
                 text: locale('SelCity')
             }, {
-                value: 'City1',
-                text: 'City1'
-            }, {
-                value: 'City2',
-                text: 'City2'
+                value: 'Perambalur',
+                text: 'Perambalur'
             }];
 
             var states = [{
                 value: 'Select State',
                 text: locale('SelState')
             }, {
-                value: 'State1',
-                text: 'State2'
-            }, {
-                value: 'State2',
-                text: 'State2'
+                value: 'Tamil Nadu',
+                text: 'Tamil Nadu'
             }];
 
             return _react2.default.createElement(
@@ -72710,7 +72841,8 @@ var MotherDemographics = (function (_ControlBase) {
                                 options: cities, valueLink: this.linkState(this.state.context, 'city') }),
                             _react2.default.createElement(_DropDown2.default, { label: locale('State'), className: 'editable', placeholder: locale('SelState'), labelClassName: labelClass,
                                 options: states, valueLink: this.linkState(this.state.context, 'state') }),
-                            _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('Pincode'), className: 'editable', placeholder: locale('EnterPIN'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context, 'pincode') })
+                            _react2.default.createElement(_DropDown2.default, { label: locale('Pincode'), className: 'editable', placeholder: locale('SelPincode'), labelClassName: labelClass,
+                                options: pincode, valueLink: this.linkState(this.state.context, 'pincode') })
                         )
                     ),
                     _react2.default.createElement(
@@ -75731,8 +75863,8 @@ var GeneralExamination = (function (_ControlBase) {
 				_createClass(GeneralExamination, [{
 								key: 'childRender',
 								value: function childRender() {
-												var labelClass = 'col-xs-3 alignLeft';
-												var wrapperClass = 'col-xs-2';
+												var labelClass = 'col-xs-4 alignLeft';
+												var wrapperClass = 'col-xs-6';
 												return _react2.default.createElement(
 																'div',
 																{ className: 'wrapper custom_row' },
@@ -75973,7 +76105,7 @@ var LabOrders = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { xs: 6 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Recommendationforanomalyscan'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'Recommend_Anomaly_Scan') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Recommendationforanomalyscan'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'recommendAnomalyScan') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -76487,6 +76619,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
             var albendazole = _react2.default.createElement('span', null);
             var albendazole_Date = _react2.default.createElement('span', null);
             var folicAcid_Tablets_dispensed = _react2.default.createElement('span', null);
+            var folicAcidSupplimentIFADate = _react2.default.createElement('span', null);
 
             if (this.state.context.MedicalPrescriptions.Inj_TT_IM) {
                 isInj_TT_IM_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date of Injection ', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'injTT0_5mlIMDate') });
@@ -76496,6 +76629,9 @@ var MedicalPrescriptions = (function (_ControlBase) {
             }
             if (this.state.context.MedicalPrescriptions.Albendazole) {
                 albendazole_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole_Date') });
+            }
+            if (this.state.context.MedicalPrescriptions.folicAcidSuppliment_IFA) {
+                folicAcidSupplimentIFADate = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSupplimentIFADate') });
             }
 
             if (this.state.context.visitType == 'ANC2') {
@@ -76542,7 +76678,20 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     )
                 );
             } else if (this.state.context.visitType == 'ANC1') {
-                folicAcid_Tablets_dispensed = _react2.default.createElement(_ToggleButton2.default, { label: locale('Folic_Acid_Tablets_Dispensed'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'FolicAcid_Tablets_Dispensed') });
+                folicAcid_Tablets_dispensed = _react2.default.createElement(
+                    _reactBootstrap.Row,
+                    null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 4 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Folic_Acid_Tablets_Dispensed'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSuppliment_IFA') })
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 8 },
+                        folicAcidSupplimentIFADate
+                    )
+                );
             } else if (this.state.context.visitType == 'ANC3') {
                 isInj_TT_IM = _react2.default.createElement(
                     _reactBootstrap.Row,
@@ -76581,7 +76730,6 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     'form',
                     { className: 'form-horizontal' },
                     isInj_TT_IM,
-                    folicAcid_Tablets_dispensed,
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
@@ -76629,7 +76777,8 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         )
                     ),
                     iFA_Tablets_Dispensed,
-                    albendazole
+                    albendazole,
+                    folicAcid_Tablets_dispensed
                 )
             );
         }
@@ -77766,7 +77915,10 @@ var StyleHeader = {
     fontSize: '1.25vw'
 };
 var borderStyle = {};
-var borderStyle1 = { 'overflow-x': 'hidden' };
+var borderStyle1 = {
+    'overflow-x': 'hidden',
+    'marginTop': '-1%'
+};
 var appName = { textAlign: 'center' };
 
 var menudivStyle = {
@@ -77968,9 +78120,9 @@ var VisitInfo = (function (_ControlBase) {
                                     locale('cancel')
                                 )
                             )
-                        ),
-                        _react2.default.createElement(_Alert2.default, { options: this.state.visitData.risks, valueLink: this.linkState(this.state.visitData, 'isRiskOpen') })
+                        )
                     ),
+                    _react2.default.createElement(_Alert2.default, { className: 'visitAlert', options: this.state.visitData.risks, valueLink: this.linkState(this.state.visitData, 'isRiskOpen') }),
                     _react2.default.createElement(
                         'div',
                         { style: borderStyle1 },
@@ -79260,6 +79412,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var paginateButton = { display: 'inline-block !important', padding: '5px' };
+
 var PaginationDynamicLi = (function (_React$Component) {
     _inherits(PaginationDynamicLi, _React$Component);
 
@@ -79280,7 +79434,7 @@ var PaginationDynamicLi = (function (_React$Component) {
             var offsetIndex = this.props.offsetIndex;
             return _react2.default.createElement(
                 'li',
-                { className: offsetIndex == pageNo ? 'active' : 'null' },
+                { style: paginateButton, className: offsetIndex == pageNo ? 'active' : 'null' },
                 _react2.default.createElement(
                     'a',
                     { style: pointer, onClick: this.props.onClick.bind(this, pageNo) },
@@ -79324,7 +79478,7 @@ var Pagination = (function (_React$Component2) {
             if (offsetIndex === 1) {
                 pageNoList.push(_react2.default.createElement(
                     'li',
-                    { className: 'disabled' },
+                    { style: paginateButton, className: 'disabled' },
                     _react2.default.createElement(
                         'a',
                         { 'aria-label': 'Previous' },
@@ -79338,7 +79492,7 @@ var Pagination = (function (_React$Component2) {
             } else {
                 pageNoList.push(_react2.default.createElement(
                     'li',
-                    null,
+                    { style: paginateButton },
                     _react2.default.createElement(
                         'a',
                         { style: pointer, onClick: this.props.onClick.bind(this, 'previous'), 'aria-label': 'Previous' },
@@ -79369,7 +79523,7 @@ var Pagination = (function (_React$Component2) {
                 if (maxPage !== totalPages) {
                     pageNoList.push(_react2.default.createElement(
                         'li',
-                        null,
+                        { style: paginateButton },
                         _react2.default.createElement(
                             'a',
                             { onClick: this.props.onClick.bind(this, 'next') },
@@ -79385,7 +79539,7 @@ var Pagination = (function (_React$Component2) {
             if (offsetIndex === totalPages) {
                 pageNoList.push(_react2.default.createElement(
                     'li',
-                    { className: 'disabled' },
+                    { style: paginateButton, className: 'disabled' },
                     _react2.default.createElement(
                         'a',
                         { 'aria-label': 'Next' },
@@ -79399,7 +79553,7 @@ var Pagination = (function (_React$Component2) {
             } else {
                 pageNoList.push(_react2.default.createElement(
                     'li',
-                    null,
+                    { style: paginateButton },
                     _react2.default.createElement(
                         'a',
                         { style: pointer, onClick: this.props.onClick.bind(this, 'next'), 'aria-label': 'Next' },
@@ -79420,7 +79574,7 @@ var Pagination = (function (_React$Component2) {
                 { className: 'row', style: clearMargin },
                 _react2.default.createElement(
                     'ul',
-                    { className: 'pagination pagination-lg pull-right' },
+                    { className: 'pagination pagination-md pull-right' },
                     pageNoList
                 )
             );
@@ -79530,7 +79684,7 @@ var PregnancyStatus = (function (_React$Component) {
         value: function getWeekNumber(date) {
             var dArray = date.split('/');
 
-            var formatedDate1 = new Date(dArray[1] + '/' + dArray[0] + '/' + dArray[2]); // Converting MM/DD/YYYY Formate
+            var formatedDate1 = new Date(dArray[1] + '/' + dArray[0] + '/' + dArray[2]); // Converting MM/DD/YYYY Format
             var formatedDate2 = new Date(); // fetching current date
             var ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
 
@@ -79795,17 +79949,17 @@ var GridBody = (function (_React$Component) {
             if (totalRowCount % rowsPerPage > 0) {
                 totalPages = totalPages + 1;
             }
-            var SlicedList = [];
+            var slicedList = [];
             for (i = 1; i <= totalPages; i++) {
                 if (offsetIndex == i) {
                     var endNo = offsetIndex * rowsPerPage;
                     var startNo = endNo - rowsPerPage;
-                    SlicedList = PatientDetailsArray.slice(startNo, endNo);
+                    slicedList = PatientDetailsArray.slice(startNo, endNo);
                 }
             }
-            for (i = 0; i < SlicedList.length; i++) {
-                SlicedList[i].alt = alt;
-                rows.push(_react2.default.createElement(WorkListRow, _extends({ rowContent: SlicedList[i], key: SlicedList[i].patientId }, this.props)));
+            for (i = 0; i < slicedList.length; i++) {
+                slicedList[i].alt = alt;
+                rows.push(_react2.default.createElement(WorkListRow, _extends({ rowContent: slicedList[i], key: slicedList[i].patientId }, this.props)));
                 alt = !alt;
             }
             var bodyStyle = {
@@ -80016,8 +80170,6 @@ var Tabs = (function (_React$Component) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).call(this, props));
 
         _this.state = { tabActive: _this.props.tabActive };
-        // AppAction.executeAction(ActionType.GET_WEEKLY_WORKLIST, null);
-        // AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
         AppAction.executeAction(ActionType.GET_TOTAL_WORKLIST, null);
 
         return _this;
@@ -80719,8 +80871,8 @@ module.exports = {
     ExpectedDateOfDelivery: 'EDD by Date',
     EDDByUSG: 'EDD by USG',
     MandatoryField: 'Mandatory field',
-    First_Day_Of_Last_Mentsrual_Period: '(1st day of last Mentsrual Period)',
-    If_already_done: '(If already done)',
+    First_Day_Of_Last_Mentsrual_Period: '( 1st day of last Mentsrual Period)',
+    If_already_done: '( If already done)',
     DateofQuickening: 'Date Of Quickening',
 
     /*History of Current Illness*/
@@ -80740,7 +80892,7 @@ module.exports = {
     SevereHeadacheAndBlurringOfVision: 'Severe headache and blurring of vision',
     BurningSensationDuringMicturition: 'Passing smaller amounts of urine and burning sensation during micturition',
     VaginalBleeding: 'Vaginal bleeding',
-    LeakingOfWateryFluidPerVaginum: 'Leaking of watery fluid per vaginum (P/V)',
+    LeakingOfWateryFluidPerVaginum: 'Leaking of watery fluid per vaginum ( P/V)',
     Decreased: 'Decreased',
     Absent: 'Absent',
     FoetalMoments: 'Foetal Moments',
@@ -80761,7 +80913,7 @@ module.exports = {
     FundalHeight: 'Fundal Height in weeks',
     FoetalLie: 'Foetal Lie',
     FoetalPresentation: 'Foetal presentation',
-    FHS: 'FHS (Foetal heart Rate)',
+    FHS: 'FHS ( Foetal heart Rate)',
     SingleVsMultiplePregnancy: 'Single Vs Multiple Pregnancy',
     FoetalMovements: 'Foetal Movements',
 
@@ -80788,7 +80940,7 @@ module.exports = {
     /*Family History*/
     FamilyHistory: 'Family History',
     FamilyHistoryTitle: 'This section records Family History information',
-    HighBP: 'High blood pressure (hypertension)',
+    HighBP: 'High blood pressure ( hypertension)',
     Diabetes: 'Diabetes',
     Tuberculosis: 'Tuberculosis',
     TwinsInImmediateFamily: 'Twins in immediate Family',
@@ -80806,7 +80958,7 @@ module.exports = {
     Oedema: 'Oedema',
     BP: 'Blood Pressure',
     TemperatureInFarenheit: 'Temperature in farenheit',
-    TooWeakToGetOutOfBed: 'Temperature > or = 38 degrees, display additional checkbox(too weak to get out of bed)',
+    TooWeakToGetOutOfBed: 'Temperature > or = 38 degrees, display additional checkbox( too weak to get out of bed)',
     HabbitsAndSocialHistory: 'Habbits/Social History',
     HabbitsAndSocialHistoryTitle: 'This section records Habbits and Social History information',
     Tobacco: 'Tobacco',
@@ -80834,7 +80986,7 @@ module.exports = {
     RecurrentEarlyAbortion: 'Recurrent early abortion',
     PostAbortionComplications: 'Post-abortion complications',
     HypertensionPreEclmpsiaOrEclampsia: 'Hypertension,Pre-eclampsia or eclampsia',
-    AntePartumHaemorrhage: 'Ante-Partum Haemorrhage (APH)',
+    AntePartumHaemorrhage: 'Ante-Partum Haemorrhage ( APH)',
     BreechOrTransversePresentation: 'Breech or transverse presentation',
     obstructedLabourIncludingDystocia: 'Obstructed labour,including dystocia',
     PerinealInjuriesTears: 'Perineal injuries/tears',
@@ -80900,7 +81052,7 @@ module.exports = {
     BloodGroup_including_RhFactor: 'Blood group, including Rh factor',
     VDRL_RPR: 'VDRL/RPR',
     HIV_testing: 'HIV testing',
-    Rapid_Malaria_Test: 'Rapid malaria test (if unavailable at SC)',
+    Rapid_Malaria_Test: 'Rapid malaria test ( if unavailable at SC)',
     BloodSugar: 'Blood Sugar',
     HbsAg: 'HbsAg',
     CBC_with_ESR: 'CBC with ESR',
@@ -80913,9 +81065,9 @@ module.exports = {
     Select_UPT: 'Select UPT',
     USG: 'USG',
     Recommendationforanomalyscan: 'Recommendation for anomaly scan',
-    GCT: 'GCT (75gms of Glucose)',
-    HbRepeat: 'Hb(Repeat)',
-    BloodSugarRepeat: 'Blood Sugar(Repeat)',
+    GCT: 'GCT ( 75gms of Glucose)',
+    HbRepeat: 'Hb( Repeat)',
+    BloodSugarRepeat: 'Blood Sugar( Repeat)',
 
     /*Registration - Mothers Demographic Information*/
     MothersDemographicInformation: 'Mother\'s Demographic Information',
@@ -80928,6 +81080,7 @@ module.exports = {
     EnterAddLine3: 'Enter Address 3',
     Village: 'Village',
     SelVill: 'Select Village',
+    SelPincode: 'Select Pincode',
     City: 'City',
     SelCity: 'Select City',
     State: 'State',
@@ -80949,7 +81102,7 @@ module.exports = {
     MedicalPrescriptions: 'Medical prescriptions',
     MedicalPrescriptionsTitle: 'This section records Medical prescriptions information',
     Inj_TT_IM: 'Inj. TT 0.5ml IM',
-    FolicAcidSuppliment_IFA: 'Folic Acid Suppliment (IFA)',
+    FolicAcidSuppliment_IFA: 'Folic Acid Suppliment ( IFA)',
     Counselling: 'Counselling - Diet, Importance of ANC, domestic violence, sex during Pregnancy',
     Issue_MaternalChildProtectionCard: 'Issue Maternal & Child Protection Card',
     JSYCard: 'JSY Card',
@@ -80959,7 +81112,7 @@ module.exports = {
     Date_of_Injection: 'Date of Injection',
     Folic_Acid_Tablets_Dispensed: 'Folic Acid Tablets dispensed',
     IFA_Tablets_Dispensed: 'IFA Tablets dispensed',
-    Albendazole_Dispensed: 'Albendazole (400mg) dispensed',
+    Albendazole_Dispensed: 'Albendazole ( 400mg) dispensed',
 
     /* Primary Information*/
     PrimaryInformation: 'Primary Information',
@@ -81011,7 +81164,7 @@ module.exports = {
     Information_on_Referral_provided_to_institution_referred: 'Information on Referral provided to institution referred:',
     CurrentMedication: 'Current Medication:',
     PatientConsentObtained: 'Patient Consent Obtained:',
-    Print_Export_to_PDF: 'Print (Export to PDF)',
+    Print_Export_to_PDF: 'Print ( Export to PDF)',
     Cancel: 'Cancel',
     PleaseEenter: 'Please enter',
     PleaseEnterTheReason: 'Please enter the reason',
@@ -81673,7 +81826,7 @@ var Control = (function (_ControlBase) {
                         v: _react2.default.createElement(
                             _reactBootstrap.Alert,
                             _extends({ bsStyle: 'danger', bsClass: 'alert' }, _this2.props, { onDismiss: _this2.handleAlertDismiss.bind(_this2) }),
-                            _react2.default.createElement('i', { 'class': 'glyphicon glyphicon-exclamation-sign' }),
+                            _react2.default.createElement('i', { className: 'glyphicon glyphicon-exclamation-sign' }),
                             _react2.default.createElement(
                                 'div',
                                 { className: 'alertTitle' },
@@ -81681,7 +81834,7 @@ var Control = (function (_ControlBase) {
                             ),
                             _react2.default.createElement(
                                 'ul',
-                                null,
+                                { className: 'list-unstyled' },
                                 messages
                             )
                         )
@@ -83889,7 +84042,6 @@ var VisitStore = (function (_BaseStore) {
                     };
                     ServiceManager.doPost(postData).then(function (response) {
 
-                        toast.show(response, NOTIFICATION_TYPE.SUCCESS);
                         var outcome = _BaseTranslator2.default.executeRules(visitData);
                         var responseObj = {
                             response: response,
@@ -84239,7 +84391,7 @@ var WorkListStore = (function (_BaseStore) {
             return key;
         }
 
-        // function for checking wheather the date is in this week or not
+        // function for checking whether the date is in this week or not
 
     }, {
         key: 'checkInCurrentWeek',
@@ -84249,8 +84401,7 @@ var WorkListStore = (function (_BaseStore) {
             var thisYear = today.getFullYear();
             var iteratorYear = new Date(formattedDate).getFullYear();
             var day = this.getFirstSundayOfYear(thisYear);
-            var tempWeek = this.getWeek(formattedDate, day); // /iterating data
-            // week
+            var tempWeek = this.getWeek(formattedDate, day);
             var todayFormatted = this.formatter(today);
             var tempTodayFormatted = this.convertDateFormatForView(todayFormatted);
             var thisWeek = this.getWeek(tempTodayFormatted, day);
@@ -84305,7 +84456,7 @@ var WorkListStore = (function (_BaseStore) {
             }
             return weekDate;
         }
-        // transilater function
+        // translator function
 
     }, {
         key: 'translate',
@@ -85200,7 +85351,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 },
                 MedicalPrescriptions: {
                     Inj_TT_IM: visitData ? bool(visitData.injTT0_5mlIM) : false,
-                    FolicAcidSuppliment_IFA: visitData ? bool(visitData.folicAcidSupplimentIFA) : false,
+                    folicAcidSuppliment_IFA: visitData ? bool(visitData.folicAcidSupplimentIFA) : false,
                     folicAcidSupplimentIFADate: visitData ? visitData.folicAcidSupplimentIFADate : '',
                     Counselling: visitData ? bool(visitData.counsellingDiet) : false,
                     Issue_MaternalChildProtectionCard: visitData ? bool(visitData.issueMaternal_ChildProtectionCard) : false,
@@ -85365,7 +85516,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 urineProteins: visitData.LabResults.UrineProteins,
                 rapidMalariaTest: visitData.LabResults.RapidMalariaTest,
                 injTT0_5mlIM: str(visitData.MedicalPrescriptions.Inj_TT_IM, ''),
-                folicAcidSupplimentIFA: str(visitData.MedicalPrescriptions.FolicAcidSuppliment_IFA, ''),
+                folicAcidSupplimentIFA: str(visitData.MedicalPrescriptions.folicAcidSuppliment_IFA, ''),
                 counsellingDiet: str(visitData.MedicalPrescriptions.Counselling, ''),
                 issueMaternal_ChildProtectionCard: str(visitData.MedicalPrescriptions.Issue_MaternalChildProtectionCard, ''),
                 jSYCard: str(visitData.MedicalPrescriptions.JSYCard, ''),
@@ -85375,7 +85526,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 comments: visitData.Comments.GeneralComments,
                 quickeningDate: visitData.CurrentPregnancy.quickeningDate,
                 foetalMomentsCountPer12Hrs: 12,
-                //foetalMoments: visitData.CurrentIllnessHistory.foetalMoments,
+                //   foetalMoments: visitData.CurrentIllnessHistory.foetalMoments,
                 folicAcidSupplimentIFADate: '12/12/1990',
                 counsellingDietDate: '12/12/1990',
                 impOfANCDate: '12/12/1990',

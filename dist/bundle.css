@@ -522,7 +522,7 @@ ul.dropdown-menu.dropdown-menu-right {
     width: 102% !important;
     left: -6px; }
   .menubar + div {
-    width: 78%; }
+    width: 78.58%; }
   .menubar ul {
     display: block; }
   .menubar .burger {
@@ -906,6 +906,9 @@ input[type=checkbox] {
   left: 4px;
   cursor: pointer; }
 
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none; }
+
 .form-control::-webkit-input-placeholder {
   font-size: 15px;
   color: #373737; }
@@ -1146,7 +1149,9 @@ input[type=checkbox] {
   background-color: #FFD9DA;
   border-color: #FFB9BA;
   border-width: 4px;
-  margin-top: 10px; }
+  margin-top: 10px;
+  margin-left: 1%;
+  margin-right: 1%; }
 
 .alert {
   margin-bottom: 0px; }
@@ -1154,7 +1159,10 @@ input[type=checkbox] {
 .alertTitle {
   font-weight: bold;
   font-family: Arial Black;
-  font-size: 20px; }
+  font-size: 20px;
+  padding-left: 28px;
+  position: relative;
+  bottom: 28px; }
 
 /*Loading data*/
 .glyphicon-refresh-animate {
@@ -1342,59 +1350,146 @@ input[type=checkbox]:checked + label:after {
 .bold {
   font-weight: 900; }
 
+.alert .glyphicon-exclamation-sign:before {
+  font-size: 21px; }
 
-body {
+.alert ul.list-unstyled li {
+  padding-left: 27px;
+  line-height: 18px; }
+
+.alert ul.list-unstyled li:before {
+  content: "* \00a0 ";
+  color: #EE4240;
+  font-size: 22px;
+  top: 7px;
+  position: relative;
+  font-weight: bold; }
+
+.alert ul.list-unstyled li {
+  position: relative;
+  top: -7px; }
+
+.alert ul.list-unstyled {
+  height: auto;
+  top: -12px;
+  position: relative; }
+
+.freeLabel label {
+  font-weight: normal; }
+
+.visitAlert {
+  width: 79%;
+  float: right;
+  margin-left: 0 !important;
+  margin-right: 0 !important; }
+
+/** The Magic **/
+.btn-breadcrumb .btn {
+  width: 23.5%;
+  padding: 6px 12px 6px 24px; }
+  .btn-breadcrumb .btn:after {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 31px solid transparent;
+    border-bottom: 31px solid transparent;
+    position: absolute;
+    top: 50%;
+    margin-top: -31px;
+    left: 100%;
+    z-index: 3; }
+  .btn-breadcrumb .btn:before {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 35px solid transparent;
+    border-bottom: 35px solid transparent;
+    border-left: 35px solid #efefef;
+    position: absolute;
+    top: 50%;
+    margin-top: -35px;
+    margin-left: 1px;
+    left: 100%;
+    z-index: 3; }
+  .btn-breadcrumb .btn:first-child {
+    padding: 6px 6px 6px 10px;
+    width: 3%; }
+  .btn-breadcrumb .btn:last-child {
+    padding: 6px 18px 6px 24px; }
+  .btn-breadcrumb .btn.btn-default:not(:last-child):after {
+    border-left: 35px solid #fff; }
+  .btn-breadcrumb .btn.btn-default:not(:last-child):before {
+    border-left: 35px solid #ccc; }
+  .btn-breadcrumb .btn.btn-default:hover:not(:last-child):after {
+    border-left: 35px solid #ebebeb; }
+  .btn-breadcrumb .btn.btn-default:hover:not(:last-child):before {
+    border-left: 35px solid #f5f5f5; }
+
+.btn-breadcrumb .btn:nth-child(1) {
+  background-color: #FFFFFF; }
+  .btn-breadcrumb .btn:nth-child(1):after {
+    border-left: 35px solid #FFFFFF; }
+
+.btn-breadcrumb .btn:nth-child(2) {
+  background-color: #d8dbd7; }
+  .btn-breadcrumb .btn:nth-child(2):after {
+    border-left: 35px solid #d8dbd7; }
+
+.btn-breadcrumb .btn:nth-child(3) {
+  background-color: #ebebeb; }
+  .btn-breadcrumb .btn:nth-child(3):after {
+    border-left: 35px solid #ebebeb; }
+
+.btn-breadcrumb .btn:nth-child(4) {
+  background-color: #f8f8f8; }
+  .btn-breadcrumb .btn:nth-child(4):after {
+    border-left: 40px solid #f8f8f8; }
+
+.btn-breadcrumb .btn:nth-child(5) {
+  background-color: white; }
+  .btn-breadcrumb .btn:nth-child(5):after {
+    border-left: 30px solid white;
+    margin-top: -31px;
+    border-top: 31px solid transparent;
+    border-bottom: 30px solid transparent; }
+
+.breadcrumbSelect {
+  background-color: #76d31a !important; }
+  .breadcrumbSelect:after {
+    border-left: 35px solid #76D31A !important; }
+
+.trimesterwrapper {
+  width: 100%; }
+
+/*custom breadcrump starts here*/
+a.btn.trimisterBtn.btn-breadcrumb {
+  padding-top: 21px; }
+
+a.btn.trimisterBtn.breadcrumbSelect {
+  padding-top: 21px;
+  /*background: url("./patient/selectedCheck.png") no-repeat 92px 21px;*/ }
+
+.trimisterBtn .glyphicon-ok-sign:before {
+  padding: 15px; }
+
+.trimesterwrapper.btn-group.btn-breadcrumb a span {
+  padding: 10px;
   font-family: GEInspira;
-  background: #FFFFFF; }
+  font-weight: bold;
+  color: #000; }
 
-.Dboard {
-  background: #FFFFFF;
-  top: 6px; }
+.active_tab_tick {
+  background-image: url("./patient/selectedCheck.png");
+  background-repeat: none;
+  background-position: 3px 0px; }
 
-.Dboard .date {
-  font-size: 25px; }
+.default_tab_tick {
+  background-image: url("./patient/defaultCheck.png");
+  background-repeat: none;
+  background-position: 3px 0px; }
 
-.Dboard .monthName {
-  float: left;
-  position: absolute;
-  top: 1px; }
-
-.Dboard .yearName {
-  float: left;
-  top: 15px;
-  position: absolute;
-  font-size: 10px;
-  padding-top: 4px; }
-
-.boxes > div {
-  height: 105px;
-  padding-top: 15px;
-  border-right: solid 1px #E0E0E0; }
-
-.boxes.row {
-  border-top: solid 1px #E0E0E0;
-  border-bottom: solid 1px #E0E0E0; }
-
-.right {
-  border-left: solid 1px #E0E0E0; }
-
-@media (min-width: 480px) {
-  .boxes > div {
-    height: auto; } }
-
-.print_export {
-  padding-top: 7px; }
-
-.border {
-  border: solid 1px #E0E0E0;
-  height: auto; }
-
-.row.one-border {
-  border-top: solid 1px #CFCFCF; }
-
-.col-lg-5.right-border {
-  border-right: solid 1px #CFCFCF;
-  height: 343px; }
 
 .chart {
   height: 190px; }
@@ -1526,7 +1621,7 @@ ul.dropdown-menu.dropdown-menu-right {
     width: 102% !important;
     left: -6px; }
   .menubar + div {
-    width: 78%; }
+    width: 78.58%; }
   .menubar ul {
     display: block; }
   .menubar .burger {
@@ -1947,14 +2042,14 @@ button.toast-close-button {
   padding: 0.5%;
   font-weight: bold;
   font-family: GEInspira;
-  height: 49px; }
+  height: auto; }
 
 .wholeVisitIndicatorLabel {
   padding: 4px 0px 6px 6px; }
   .wholeVisitIndicatorLabel:not(:last-child):after {
     content: '|';
     color: white;
-    margin-left: 10px; }
+    margin-left: 30px; }
 
 .visitIndicator {
   margin-top: 5px; }
@@ -1967,7 +2062,7 @@ button.toast-close-button {
   .visitDetailLabel:not(:last-child):after {
     content: '|';
     color: white;
-    margin-left: 10px;
+    margin-left: 30px;
     font-family: GEInspira; }
 
 .visitDetailLabel font {
@@ -1979,7 +2074,7 @@ button.toast-close-button {
   font-family: GEInspira; }
 
 .paddTopForVisit {
-  top: 21%; }
+  top: 0%; }
 
 .btnGroup button {
   height: 19px;
