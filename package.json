@@ -58,7 +58,6 @@
     "gulp-connect": "^2.2.0",
     "gulp-eslint": "^1.1.0",
     "gulp-open": "^1.0.0",
-    "gulp-sass": "^2.1.1",
     "jest-cli": "^0.8.0",
     "react-addons-css-transition-group": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
@@ -68,7 +67,6 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "body-parser": "~1.13.2",
     "bootstrap": "^3.3.5",
     "express": "^4.13.3",
     "flux": "^2.1.1",
@@ -78,13 +76,15 @@
     "object-assign": "^4.0.1",
     "rc-datepicker": "^3.0.0",
     "react": "^0.14.3",
+    "react-addons-update": "^0.14.5",
     "react-bootstrap": "^0.28.1",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-bootstrap-switch": "^3.4.0",
     "react-deep-link-state": "0.0.2",
     "react-dom": "^0.14.3",
     "react-router": "^1.0.0",
-    "request": "^2.67.0"
+    "request": "^2.67.0",
+    "body-parser": "~1.13.2"
   },
   "engines": {
     "node": "5.1.0"
