@@ -12,14 +12,10 @@ var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '../../../dist/'));
-
-//var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
-//request = request.defaults({proxy: proxyUrl});
-
+app.use(express.static(__dirname + '/dist/'));
 
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '../../../dist/index.html'));
+    res.sendFile(path.join(__dirname + '/dist/index.html'));
 }
 );
 
