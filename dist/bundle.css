@@ -41,11 +41,19 @@
   padding-right: 60px;
 }
 
-.react-datepicker-input .input-button {
+.react-datepicker-input .button-wrapper {
   position: absolute;
-  margin: 0;
   right: 0;
   top: 0;
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.react-datepicker-input .input-button {
+  margin: 0;
   height: 100%;
   width: 50px;
   display: flex;
@@ -60,6 +68,10 @@
 
 .react-datepicker-input .input-button:hover {
   background-color: #E8E8E8;
+}
+
+.react-datepicker-input .clear-button i {
+  cursor: pointer;
 }
 
 .react-datepicker-input i {
@@ -1456,7 +1468,7 @@ input[type=checkbox]:checked + label:after {
   background: #1AA5DE;
   margin-left: 46%;
   color: #FFF;
-  margin-top: -1%;
+  margin-top: 1%;
   width: 100px;
   border-radius: 25px;
   padding: 1px 5px 5px 5px; }
@@ -1621,6 +1633,58 @@ a.btn.trimisterBtn.breadcrumbSelect {
   background-repeat: none;
   background-position: 3px 0px; }
 
+body {
+  font-family: GEInspira;
+  background: #FFFFFF; }
+
+.Dboard {
+  background: #FFFFFF;
+  top: 6px; }
+
+.Dboard .date {
+  font-size: 25px; }
+
+.Dboard .monthName {
+  float: left;
+  position: absolute;
+  top: 1px; }
+
+.Dboard .yearName {
+  float: left;
+  top: 15px;
+  position: absolute;
+  font-size: 10px;
+  padding-top: 4px; }
+
+.boxes > div {
+  height: 105px;
+  padding-top: 15px;
+  border-right: solid 1px #E0E0E0; }
+
+.boxes.row {
+  border-top: solid 1px #E0E0E0;
+  border-bottom: solid 1px #E0E0E0; }
+
+.right {
+  border-left: solid 1px #E0E0E0; }
+
+@media (min-width: 480px) {
+  .boxes > div {
+    height: auto; } }
+
+.print_export {
+  padding-top: 7px; }
+
+.border {
+  border: solid 1px #E0E0E0;
+  height: auto; }
+
+.row.one-border {
+  border-top: solid 1px #CFCFCF; }
+
+.col-lg-5.right-border {
+  border-right: solid 1px #CFCFCF;
+  height: 343px; }
 
 .chart {
   height: 190px; }
@@ -1996,9 +2060,6 @@ ul.dropdown-menu.dropdown-menu-right {
   color: #000;
   font-size: 15px;
   font-family: GEInspira;
-  font-weight: bold; }
-
-.toast-title {
   font-weight: bold; }
 
 .toast-title {
