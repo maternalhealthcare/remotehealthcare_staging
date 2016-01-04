@@ -85086,11 +85086,12 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
+                        url: '/api/worklists',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
+
                         workListJSON[_AppConstants.WORKLIST_JSON] = response;
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, AppConstants.TOTAL_WORKLIST);
                         totalList = updatedWorklistJson[_AppConstants.WORKLIST_JSON];
@@ -85102,12 +85103,13 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
+                        url: '/api/worklists',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
                         workListJSON[_AppConstants.WORKLIST_JSON] = WorkListStore.translate(response, RequestType.GET, _AppConstants.DAY_TYPE);
+                        totalList = workListJSON[_AppConstants.WORKLIST_JSON];
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, _AppConstants.DAY_TYPE);
                         WorkListStore.emitChange(ActionType.GET_TODAYS_WORKLIST, updatedWorklistJson);
                     });
@@ -85117,12 +85119,13 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
+                        url: '/api/worklists',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
                         workListJSON[_AppConstants.WORKLIST_JSON] = WorkListStore.translate(response, RequestType.GET, _AppConstants.WEEK_TYPE);
+                        totalList = workListJSON[_AppConstants.WORKLIST_JSON];
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, _AppConstants.WEEK_TYPE);
                         WorkListStore.emitChange(ActionType.GET_WEEKLY_WORKLIST, updatedWorklistJson);
                     });
@@ -85163,8 +85166,8 @@ var WorkListStore = (function (_BaseStore) {
                 sortedWorkList = searchData;
             } else {
                 searchData.filter(function (row) {
-                    var jsonString = JSON.stringify(row);
-                    if (jsonString.indexOf(searchBy) > -1) {
+                    var jsonString = JSON.stringify(row).toLowerCase();
+                    if (jsonString.indexOf(searchBy.toLowerCase()) > -1) {
                         sortedWorkList.push(row);
                         return true;
                     } else {
