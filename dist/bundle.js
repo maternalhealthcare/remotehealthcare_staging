@@ -512,7 +512,7 @@
     };
 
     async.auto = function (tasks, concurrency, callback) {
-        if (typeof arguments[1] === 'function') {
+        if (!callback) {
             // concurrency is optional, shift the args.
             callback = concurrency;
             concurrency = null;
@@ -529,8 +529,6 @@
 
         var results = {};
         var runningTasks = 0;
-
-        var hasError = false;
 
         var listeners = [];
         function addListener(fn) {
@@ -554,7 +552,6 @@
         });
 
         _arrayEach(keys, function (k) {
-            if (hasError) return;
             var task = _isArray(tasks[k]) ? tasks[k]: [tasks[k]];
             var taskCallback = _restParam(function(err, args) {
                 runningTasks--;
@@ -567,8 +564,6 @@
                         safeResults[rkey] = val;
                     });
                     safeResults[k] = args;
-                    hasError = true;
-
                     callback(err, safeResults);
                 }
                 else {
@@ -788,7 +783,7 @@
                 } else if (test.apply(this, args)) {
                     iterator(next);
                 } else {
-                    callback.apply(null, [null].concat(args));
+                    callback(null);
                 }
             });
             iterator(next);
@@ -936,23 +931,24 @@
                 _insert(q, data, true, callback);
             },
             process: function () {
-                while(!q.paused && workers < q.concurrency && q.tasks.length){
+                if (!q.paused && workers < q.concurrency && q.tasks.length) {
+                    while(workers < q.concurrency && q.tasks.length){
+                        var tasks = q.payload ?
+                            q.tasks.splice(0, q.payload) :
+                            q.tasks.splice(0, q.tasks.length);
 
-                    var tasks = q.payload ?
-                        q.tasks.splice(0, q.payload) :
-                        q.tasks.splice(0, q.tasks.length);
+                        var data = _map(tasks, function (task) {
+                            return task.data;
+                        });
 
-                    var data = _map(tasks, function (task) {
-                        return task.data;
-                    });
-
-                    if (q.tasks.length === 0) {
-                        q.empty();
+                        if (q.tasks.length === 0) {
+                            q.empty();
+                        }
+                        workers += 1;
+                        workersList.push(tasks[0]);
+                        var cb = only_once(_next(q, tasks));
+                        worker(data, cb);
                     }
-                    workers += 1;
-                    workersList.push(tasks[0]);
-                    var cb = only_once(_next(q, tasks));
-                    worker(data, cb);
                 }
             },
             length: function () {
@@ -21158,12 +21154,12 @@ module.exports = range;
 
 },{"../internal/isIterateeCall":236}],261:[function(require,module,exports){
 //! moment.js
-//! version : 2.11.0
+//! version : 2.10.6
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
 
-;(function (global, factory) {
+(function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
     global.moment = factory()
@@ -21280,45 +21276,39 @@ module.exports = range;
         return m;
     }
 
-    function isUndefined(input) {
-        return input === void 0;
-    }
-
-    // Plugins that add properties should also add the key here (null value),
-    // so we can properly clone ourselves.
     var momentProperties = utils_hooks__hooks.momentProperties = [];
 
     function copyConfig(to, from) {
         var i, prop, val;
 
-        if (!isUndefined(from._isAMomentObject)) {
+        if (typeof from._isAMomentObject !== 'undefined') {
             to._isAMomentObject = from._isAMomentObject;
         }
-        if (!isUndefined(from._i)) {
+        if (typeof from._i !== 'undefined') {
             to._i = from._i;
         }
-        if (!isUndefined(from._f)) {
+        if (typeof from._f !== 'undefined') {
             to._f = from._f;
         }
-        if (!isUndefined(from._l)) {
+        if (typeof from._l !== 'undefined') {
             to._l = from._l;
         }
-        if (!isUndefined(from._strict)) {
+        if (typeof from._strict !== 'undefined') {
             to._strict = from._strict;
         }
-        if (!isUndefined(from._tzm)) {
+        if (typeof from._tzm !== 'undefined') {
             to._tzm = from._tzm;
         }
-        if (!isUndefined(from._isUTC)) {
+        if (typeof from._isUTC !== 'undefined') {
             to._isUTC = from._isUTC;
         }
-        if (!isUndefined(from._offset)) {
+        if (typeof from._offset !== 'undefined') {
             to._offset = from._offset;
         }
-        if (!isUndefined(from._pf)) {
+        if (typeof from._pf !== 'undefined') {
             to._pf = getParsingFlags(from);
         }
-        if (!isUndefined(from._locale)) {
+        if (typeof from._locale !== 'undefined') {
             to._locale = from._locale;
         }
 
@@ -21326,7 +21316,7 @@ module.exports = range;
             for (i in momentProperties) {
                 prop = momentProperties[i];
                 val = from[prop];
-                if (!isUndefined(val)) {
+                if (typeof val !== 'undefined') {
                     to[prop] = val;
                 }
             }
@@ -21373,7 +21363,6 @@ module.exports = range;
         return value;
     }
 
-    // compare two arrays, return the number of differences
     function compareArrays(array1, array2, dontConvert) {
         var len = Math.min(array1.length, array2.length),
             lengthDiff = Math.abs(array1.length - array2.length),
@@ -21391,7 +21380,6 @@ module.exports = range;
     function Locale() {
     }
 
-    // internal storage for locale config files
     var locales = {};
     var globalLocale;
 
@@ -21429,7 +21417,7 @@ module.exports = range;
     function loadLocale(name) {
         var oldLocale = null;
         // TODO: Find a better way to register and load all the locales in Node
-        if (!locales[name] && !isUndefined(module) &&
+        if (!locales[name] && typeof module !== 'undefined' &&
                 module && module.exports) {
             try {
                 oldLocale = globalLocale._abbr;
@@ -21448,7 +21436,7 @@ module.exports = range;
     function locale_locales__getSetGlobalLocale (key, values) {
         var data;
         if (key) {
-            if (isUndefined(values)) {
+            if (typeof values === 'undefined') {
                 data = locale_locales__getLocale(key);
             }
             else {
@@ -21533,10 +21521,6 @@ module.exports = range;
         return normalizedInput;
     }
 
-    function isFunction(input) {
-        return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
-    }
-
     function makeGetSet (unit, keepTime) {
         return function (value) {
             if (value != null) {
@@ -21550,14 +21534,11 @@ module.exports = range;
     }
 
     function get_set__get (mom, unit) {
-        return mom.isValid() ?
-            mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+        return mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]();
     }
 
     function get_set__set (mom, unit, value) {
-        if (mom.isValid()) {
-            mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
-        }
+        return mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
     }
 
     // MOMENTS
@@ -21570,7 +21551,7 @@ module.exports = range;
             }
         } else {
             units = normalizeUnits(units);
-            if (isFunction(this[units])) {
+            if (typeof this[units] === 'function') {
                 return this[units](value);
             }
         }
@@ -21585,7 +21566,7 @@ module.exports = range;
             Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
     var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
 
@@ -21681,8 +21662,6 @@ module.exports = range;
     var match4         = /\d{4}/;         //    0000 - 9999
     var match6         = /[+-]?\d{6}/;    // -999999 - 999999
     var match1to2      = /\d\d?/;         //       0 - 99
-    var match3to4      = /\d\d\d\d?/;     //     999 - 9999
-    var match5to6      = /\d\d\d\d\d\d?/; //   99999 - 999999
     var match1to3      = /\d{1,3}/;       //       0 - 999
     var match1to4      = /\d{1,4}/;       //       0 - 9999
     var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
@@ -21691,16 +21670,20 @@ module.exports = range;
     var matchSigned    = /[+-]?\d+/;      //    -inf - inf
 
     var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
-    var matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi; // +00 -00 +00:00 -00:00 +0000 -0000 or Z
 
     var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
 
     // any word (or two) characters or numbers including two/three word month in arabic.
-    // includes scottish gaelic two word and hyphenated months
-    var matchWord = /[0-9]*(a[mn]\s?)?['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF\-]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
-
+    var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
 
     var regexes = {};
+
+    function isFunction (sth) {
+        // https://github.com/moment/moment/issues/2325
+        return typeof sth === 'function' &&
+            Object.prototype.toString.call(sth) === '[object Function]';
+    }
+
 
     function addRegexToken (token, regex, strictRegex) {
         regexes[token] = isFunction(regex) ? regex : function (isStrict) {
@@ -21760,8 +21743,6 @@ module.exports = range;
     var MINUTE = 4;
     var SECOND = 5;
     var MILLISECOND = 6;
-    var WEEK = 7;
-    var WEEKDAY = 8;
 
     function daysInMonth(year, month) {
         return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
@@ -21808,17 +21789,14 @@ module.exports = range;
 
     // LOCALES
 
-    var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s+)+MMMM?/;
     var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
-    function localeMonths (m, format) {
-        return isArray(this._months) ? this._months[m.month()] :
-            this._months[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+    function localeMonths (m) {
+        return this._months[m.month()];
     }
 
-    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sept_Oct_Nov_Dec'.split('_');
-    function localeMonthsShort (m, format) {
-        return isArray(this._monthsShort) ? this._monthsShort[m.month()] :
-            this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+    function localeMonthsShort (m) {
+        return this._monthsShort[m.month()];
     }
 
     function localeMonthsParse (monthName, format, strict) {
@@ -21856,11 +21834,6 @@ module.exports = range;
 
     function setMonth (mom, value) {
         var dayOfMonth;
-
-        if (!mom.isValid()) {
-            // No op
-            return mom;
-        }
 
         // TODO: Move this out of here!
         if (typeof value === 'string') {
@@ -21907,12 +21880,6 @@ module.exports = range;
             if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
                 overflow = DATE;
             }
-            if (getParsingFlags(m)._overflowWeeks && overflow === -1) {
-                overflow = WEEK;
-            }
-            if (getParsingFlags(m)._overflowWeekday && overflow === -1) {
-                overflow = WEEKDAY;
-            }
 
             getParsingFlags(m).overflow = overflow;
         }
@@ -21921,7 +21888,7 @@ module.exports = range;
     }
 
     function warn(msg) {
-        if (utils_hooks__hooks.suppressDeprecationWarnings === false && !isUndefined(console) && console.warn) {
+        if (utils_hooks__hooks.suppressDeprecationWarnings === false && typeof console !== 'undefined' && console.warn) {
             console.warn('Deprecation warning: ' + msg);
         }
     }
@@ -21931,7 +21898,7 @@ module.exports = range;
 
         return extend(function () {
             if (firstTime) {
-                warn(msg + '\nArguments: ' + Array.prototype.slice.call(arguments).join(', ') + '\n' + (new Error()).stack);
+                warn(msg + '\n' + (new Error()).stack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -21949,39 +21916,22 @@ module.exports = range;
 
     utils_hooks__hooks.suppressDeprecationWarnings = false;
 
-    // iso 8601 regex
-    // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-    var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
-    var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
-
-    var tzRegex = /Z|[+-]\d\d(?::?\d\d)?/;
+    var from_string__isoRegex = /^\s*(?:[+-]\d{6}|\d{4})-(?:(\d\d-\d\d)|(W\d\d$)|(W\d\d-\d)|(\d\d\d))((T| )(\d\d(:\d\d(:\d\d(\.\d+)?)?)?)?([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
 
     var isoDates = [
-        ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
-        ['YYYY-MM-DD', /\d{4}-\d\d-\d\d/],
-        ['GGGG-[W]WW-E', /\d{4}-W\d\d-\d/],
-        ['GGGG-[W]WW', /\d{4}-W\d\d/, false],
-        ['YYYY-DDD', /\d{4}-\d{3}/],
-        ['YYYY-MM', /\d{4}-\d\d/, false],
-        ['YYYYYYMMDD', /[+-]\d{10}/],
-        ['YYYYMMDD', /\d{8}/],
-        // YYYYMM is NOT allowed by the standard
-        ['GGGG[W]WWE', /\d{4}W\d{3}/],
-        ['GGGG[W]WW', /\d{4}W\d{2}/, false],
-        ['YYYYDDD', /\d{7}/]
+        ['YYYYYY-MM-DD', /[+-]\d{6}-\d{2}-\d{2}/],
+        ['YYYY-MM-DD', /\d{4}-\d{2}-\d{2}/],
+        ['GGGG-[W]WW-E', /\d{4}-W\d{2}-\d/],
+        ['GGGG-[W]WW', /\d{4}-W\d{2}/],
+        ['YYYY-DDD', /\d{4}-\d{3}/]
     ];
 
     // iso time formats and regexes
     var isoTimes = [
-        ['HH:mm:ss.SSSS', /\d\d:\d\d:\d\d\.\d+/],
-        ['HH:mm:ss,SSSS', /\d\d:\d\d:\d\d,\d+/],
-        ['HH:mm:ss', /\d\d:\d\d:\d\d/],
-        ['HH:mm', /\d\d:\d\d/],
-        ['HHmmss.SSSS', /\d\d\d\d\d\d\.\d+/],
-        ['HHmmss,SSSS', /\d\d\d\d\d\d,\d+/],
-        ['HHmmss', /\d\d\d\d\d\d/],
-        ['HHmm', /\d\d\d\d/],
-        ['HH', /\d\d/]
+        ['HH:mm:ss.SSSS', /(T| )\d\d:\d\d:\d\d\.\d+/],
+        ['HH:mm:ss', /(T| )\d\d:\d\d:\d\d/],
+        ['HH:mm', /(T| )\d\d:\d\d/],
+        ['HH', /(T| )\d\d/]
     ];
 
     var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
@@ -21990,49 +21940,26 @@ module.exports = range;
     function configFromISO(config) {
         var i, l,
             string = config._i,
-            match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string),
-            allowTime, dateFormat, timeFormat, tzFormat;
+            match = from_string__isoRegex.exec(string);
 
         if (match) {
             getParsingFlags(config).iso = true;
-
             for (i = 0, l = isoDates.length; i < l; i++) {
-                if (isoDates[i][1].exec(match[1])) {
-                    dateFormat = isoDates[i][0];
-                    allowTime = isoDates[i][2] !== false;
+                if (isoDates[i][1].exec(string)) {
+                    config._f = isoDates[i][0];
                     break;
                 }
             }
-            if (dateFormat == null) {
-                config._isValid = false;
-                return;
-            }
-            if (match[3]) {
-                for (i = 0, l = isoTimes.length; i < l; i++) {
-                    if (isoTimes[i][1].exec(match[3])) {
-                        // match[2] should be 'T' or space
-                        timeFormat = (match[2] || ' ') + isoTimes[i][0];
-                        break;
-                    }
-                }
-                if (timeFormat == null) {
-                    config._isValid = false;
-                    return;
+            for (i = 0, l = isoTimes.length; i < l; i++) {
+                if (isoTimes[i][1].exec(string)) {
+                    // match[6] should be 'T' or space
+                    config._f += (match[6] || ' ') + isoTimes[i][0];
+                    break;
                 }
             }
-            if (!allowTime && timeFormat != null) {
-                config._isValid = false;
-                return;
+            if (string.match(matchOffset)) {
+                config._f += 'Z';
             }
-            if (match[4]) {
-                if (tzRegex.exec(match[4])) {
-                    tzFormat = 'Z';
-                } else {
-                    config._isValid = false;
-                    return;
-                }
-            }
-            config._f = dateFormat + (timeFormat || '') + (tzFormat || '');
             configFromStringAndFormat(config);
         } else {
             config._isValid = false;
@@ -22070,8 +21997,8 @@ module.exports = range;
         //http://stackoverflow.com/questions/181348/instantiating-a-javascript-object-by-calling-prototype-constructor-apply
         var date = new Date(y, m, d, h, M, s, ms);
 
-        //the date constructor remaps years 0-99 to 1900-1999
-        if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
+        //the date constructor doesn't accept years < 1970
+        if (y < 1970) {
             date.setFullYear(y);
         }
         return date;
@@ -22079,15 +22006,11 @@ module.exports = range;
 
     function createUTCDate (y) {
         var date = new Date(Date.UTC.apply(null, arguments));
-
-        //the Date.UTC function remaps years 0-99 to 1900-1999
-        if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
+        if (y < 1970) {
             date.setUTCFullYear(y);
         }
         return date;
     }
-
-    // FORMATTING
 
     addFormatToken(0, ['YY', 2], 0, function () {
         return this.year() % 100;
@@ -22141,66 +22064,124 @@ module.exports = range;
         return isLeapYear(this.year());
     }
 
-    // start-of-first-week - start-of-year
-    function firstWeekOffset(year, dow, doy) {
-        var // first-week day -- which january is always in the first week (4 for iso, 1 for other)
-            fwd = 7 + dow - doy,
-            // first-week day local weekday -- which local weekday is fwd
-            fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
+    addFormatToken('w', ['ww', 2], 'wo', 'week');
+    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
 
-        return -fwdlw + fwd - 1;
+    // ALIASES
+
+    addUnitAlias('week', 'w');
+    addUnitAlias('isoWeek', 'W');
+
+    // PARSING
+
+    addRegexToken('w',  match1to2);
+    addRegexToken('ww', match1to2, match2);
+    addRegexToken('W',  match1to2);
+    addRegexToken('WW', match1to2, match2);
+
+    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
+        week[token.substr(0, 1)] = toInt(input);
+    });
+
+    // HELPERS
+
+    // firstDayOfWeek       0 = sun, 6 = sat
+    //                      the day of the week that starts the week
+    //                      (usually sunday or monday)
+    // firstDayOfWeekOfYear 0 = sun, 6 = sat
+    //                      the first week is the week that contains the first
+    //                      of this day of the week
+    //                      (eg. ISO weeks use thursday (4))
+    function weekOfYear(mom, firstDayOfWeek, firstDayOfWeekOfYear) {
+        var end = firstDayOfWeekOfYear - firstDayOfWeek,
+            daysToDayOfWeek = firstDayOfWeekOfYear - mom.day(),
+            adjustedMoment;
+
+
+        if (daysToDayOfWeek > end) {
+            daysToDayOfWeek -= 7;
+        }
+
+        if (daysToDayOfWeek < end - 7) {
+            daysToDayOfWeek += 7;
+        }
+
+        adjustedMoment = local__createLocal(mom).add(daysToDayOfWeek, 'd');
+        return {
+            week: Math.ceil(adjustedMoment.dayOfYear() / 7),
+            year: adjustedMoment.year()
+        };
     }
+
+    // LOCALES
+
+    function localeWeek (mom) {
+        return weekOfYear(mom, this._week.dow, this._week.doy).week;
+    }
+
+    var defaultLocaleWeek = {
+        dow : 0, // Sunday is the first day of the week.
+        doy : 6  // The week that contains Jan 1st is the first week of the year.
+    };
+
+    function localeFirstDayOfWeek () {
+        return this._week.dow;
+    }
+
+    function localeFirstDayOfYear () {
+        return this._week.doy;
+    }
+
+    // MOMENTS
+
+    function getSetWeek (input) {
+        var week = this.localeData().week(this);
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    function getSetISOWeek (input) {
+        var week = weekOfYear(this, 1, 4).week;
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+
+    // ALIASES
+
+    addUnitAlias('dayOfYear', 'DDD');
+
+    // PARSING
+
+    addRegexToken('DDD',  match1to3);
+    addRegexToken('DDDD', match3);
+    addParseToken(['DDD', 'DDDD'], function (input, array, config) {
+        config._dayOfYear = toInt(input);
+    });
+
+    // HELPERS
 
     //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
-    function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
-        var localWeekday = (7 + weekday - dow) % 7,
-            weekOffset = firstWeekOffset(year, dow, doy),
-            dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset,
-            resYear, resDayOfYear;
-
-        if (dayOfYear <= 0) {
-            resYear = year - 1;
-            resDayOfYear = daysInYear(resYear) + dayOfYear;
-        } else if (dayOfYear > daysInYear(year)) {
-            resYear = year + 1;
-            resDayOfYear = dayOfYear - daysInYear(year);
-        } else {
-            resYear = year;
-            resDayOfYear = dayOfYear;
+    function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
+        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
+        if (d < firstDayOfWeek) {
+            d += 7;
         }
 
+        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
+
+        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
+
         return {
-            year: resYear,
-            dayOfYear: resDayOfYear
+            year: dayOfYear > 0 ? year : year - 1,
+            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
         };
     }
 
-    function weekOfYear(mom, dow, doy) {
-        var weekOffset = firstWeekOffset(mom.year(), dow, doy),
-            week = Math.floor((mom.dayOfYear() - weekOffset - 1) / 7) + 1,
-            resWeek, resYear;
+    // MOMENTS
 
-        if (week < 1) {
-            resYear = mom.year() - 1;
-            resWeek = week + weeksInYear(resYear, dow, doy);
-        } else if (week > weeksInYear(mom.year(), dow, doy)) {
-            resWeek = week - weeksInYear(mom.year(), dow, doy);
-            resYear = mom.year() + 1;
-        } else {
-            resYear = mom.year();
-            resWeek = week;
-        }
-
-        return {
-            week: resWeek,
-            year: resYear
-        };
-    }
-
-    function weeksInYear(year, dow, doy) {
-        var weekOffset = firstWeekOffset(year, dow, doy),
-            weekOffsetNext = firstWeekOffset(year + 1, dow, doy);
-        return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
+    function getSetDayOfYear (input) {
+        var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+        return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
     }
 
     // Pick the first defined of two or three arguments.
@@ -22215,12 +22196,11 @@ module.exports = range;
     }
 
     function currentDateArray(config) {
-        // hooks is actually the exported moment object
-        var nowValue = new Date(utils_hooks__hooks.now());
+        var now = new Date();
         if (config._useUTC) {
-            return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
+            return [now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()];
         }
-        return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
+        return [now.getFullYear(), now.getMonth(), now.getDate()];
     }
 
     // convert an array to a date.
@@ -22290,7 +22270,7 @@ module.exports = range;
     }
 
     function dayOfYearFromWeekInfo(config) {
-        var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow;
+        var w, weekYear, week, weekday, dow, doy, temp;
 
         w = config._w;
         if (w.GG != null || w.W != null || w.E != null) {
@@ -22304,9 +22284,6 @@ module.exports = range;
             weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(local__createLocal(), 1, 4).year);
             week = defaults(w.W, 1);
             weekday = defaults(w.E, 1);
-            if (weekday < 1 || weekday > 7) {
-                weekdayOverflow = true;
-            }
         } else {
             dow = config._locale._week.dow;
             doy = config._locale._week.doy;
@@ -22317,32 +22294,23 @@ module.exports = range;
             if (w.d != null) {
                 // weekday -- low day numbers are considered next week
                 weekday = w.d;
-                if (weekday < 0 || weekday > 6) {
-                    weekdayOverflow = true;
+                if (weekday < dow) {
+                    ++week;
                 }
             } else if (w.e != null) {
                 // local weekday -- counting starts from begining of week
                 weekday = w.e + dow;
-                if (w.e < 0 || w.e > 6) {
-                    weekdayOverflow = true;
-                }
             } else {
                 // default to begining of week
                 weekday = dow;
             }
         }
-        if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
-            getParsingFlags(config)._overflowWeeks = true;
-        } else if (weekdayOverflow != null) {
-            getParsingFlags(config)._overflowWeekday = true;
-        } else {
-            temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
-            config._a[YEAR] = temp.year;
-            config._dayOfYear = temp.dayOfYear;
-        }
+        temp = dayOfYearFromWeeks(weekYear, week, weekday, doy, dow);
+
+        config._a[YEAR] = temp.year;
+        config._dayOfYear = temp.dayOfYear;
     }
 
-    // constant that refers to the ISO standard
     utils_hooks__hooks.ISO_8601 = function () {};
 
     // date from string and format string
@@ -22435,7 +22403,6 @@ module.exports = range;
         }
     }
 
-    // date from string and array of format strings
     function configFromStringAndArray(config) {
         var tempConfig,
             bestMoment,
@@ -22486,9 +22453,7 @@ module.exports = range;
         }
 
         var i = normalizeObjectUnits(config._i);
-        config._a = map([i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond], function (obj) {
-            return obj && parseInt(obj, 10);
-        });
+        config._a = [i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond];
 
         configFromArray(config);
     }
@@ -22530,17 +22495,13 @@ module.exports = range;
             configFromInput(config);
         }
 
-        if (!valid__isValid(config)) {
-            config._d = null;
-        }
-
         return config;
     }
 
     function configFromInput(config) {
         var input = config._i;
         if (input === undefined) {
-            config._d = new Date(utils_hooks__hooks.now());
+            config._d = new Date();
         } else if (isDate(input)) {
             config._d = new Date(+input);
         } else if (typeof input === 'string') {
@@ -22587,11 +22548,7 @@ module.exports = range;
          'moment().min is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548',
          function () {
              var other = local__createLocal.apply(null, arguments);
-             if (this.isValid() && other.isValid()) {
-                 return other < this ? this : other;
-             } else {
-                 return valid__createInvalid();
-             }
+             return other < this ? this : other;
          }
      );
 
@@ -22599,11 +22556,7 @@ module.exports = range;
         'moment().max is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548',
         function () {
             var other = local__createLocal.apply(null, arguments);
-            if (this.isValid() && other.isValid()) {
-                return other > this ? this : other;
-            } else {
-                return valid__createInvalid();
-            }
+            return other > this ? this : other;
         }
     );
 
@@ -22641,10 +22594,6 @@ module.exports = range;
 
         return pickBy('isAfter', args);
     }
-
-    var now = Date.now || function () {
-        return +(new Date());
-    };
 
     function Duration (duration) {
         var normalizedInput = normalizeObjectUnits(duration),
@@ -22685,8 +22634,6 @@ module.exports = range;
         return obj instanceof Duration;
     }
 
-    // FORMATTING
-
     function offset (token, separator) {
         addFormatToken(token, 0, 0, function () {
             var offset = this.utcOffset();
@@ -22704,11 +22651,11 @@ module.exports = range;
 
     // PARSING
 
-    addRegexToken('Z',  matchShortOffset);
-    addRegexToken('ZZ', matchShortOffset);
+    addRegexToken('Z',  matchOffset);
+    addRegexToken('ZZ', matchOffset);
     addParseToken(['Z', 'ZZ'], function (input, array, config) {
         config._useUTC = true;
-        config._tzm = offsetFromString(matchShortOffset, input);
+        config._tzm = offsetFromString(input);
     });
 
     // HELPERS
@@ -22718,8 +22665,8 @@ module.exports = range;
     // '-1530'  > ['-15', '30']
     var chunkOffset = /([\+\-]|\d\d)/gi;
 
-    function offsetFromString(matcher, string) {
-        var matches = ((string || '').match(matcher) || []);
+    function offsetFromString(string) {
+        var matches = ((string || '').match(matchOffset) || []);
         var chunk   = matches[matches.length - 1] || [];
         var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
         var minutes = +(parts[1] * 60) + toInt(parts[2]);
@@ -22769,13 +22716,11 @@ module.exports = range;
     function getSetOffset (input, keepLocalTime) {
         var offset = this._offset || 0,
             localAdjust;
-        if (!this.isValid()) {
-            return input != null ? this : NaN;
-        }
         if (input != null) {
             if (typeof input === 'string') {
-                input = offsetFromString(matchShortOffset, input);
-            } else if (Math.abs(input) < 16) {
+                input = offsetFromString(input);
+            }
+            if (Math.abs(input) < 16) {
                 input = input * 60;
             }
             if (!this._isUTC && keepLocalTime) {
@@ -22835,15 +22780,12 @@ module.exports = range;
         if (this._tzm) {
             this.utcOffset(this._tzm);
         } else if (typeof this._i === 'string') {
-            this.utcOffset(offsetFromString(matchOffset, this._i));
+            this.utcOffset(offsetFromString(this._i));
         }
         return this;
     }
 
     function hasAlignedHourOffset (input) {
-        if (!this.isValid()) {
-            return false;
-        }
         input = input ? local__createLocal(input).utcOffset() : 0;
 
         return (this.utcOffset() - input) % 60 === 0;
@@ -22857,7 +22799,7 @@ module.exports = range;
     }
 
     function isDaylightSavingTimeShifted () {
-        if (!isUndefined(this._isDSTShifted)) {
+        if (typeof this._isDSTShifted !== 'undefined') {
             return this._isDSTShifted;
         }
 
@@ -22878,23 +22820,22 @@ module.exports = range;
     }
 
     function isLocal () {
-        return this.isValid() ? !this._isUTC : false;
+        return !this._isUTC;
     }
 
     function isUtcOffset () {
-        return this.isValid() ? this._isUTC : false;
+        return this._isUTC;
     }
 
     function isUtc () {
-        return this.isValid() ? this._isUTC && this._offset === 0 : false;
+        return this._isUTC && this._offset === 0;
     }
 
-    // ASP.NET json date format regex
-    var aspNetRegex = /(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?)?/;
+    var aspNetRegex = /(\-)?(?:(\d*)\.)?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?)?/;
 
     // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
     // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
-    var isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
+    var create__isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
 
     function create__createDuration (input, key) {
         var duration = input,
@@ -22927,7 +22868,7 @@ module.exports = range;
                 s  : toInt(match[SECOND])      * sign,
                 ms : toInt(match[MILLISECOND]) * sign
             };
-        } else if (!!(match = isoRegex.exec(input))) {
+        } else if (!!(match = create__isoRegex.exec(input))) {
             sign = (match[1] === '-') ? -1 : 1;
             duration = {
                 y : parseIso(match[2], sign),
@@ -22984,10 +22925,6 @@ module.exports = range;
 
     function momentsDifference(base, other) {
         var res;
-        if (!(base.isValid() && other.isValid())) {
-            return {milliseconds: 0, months: 0};
-        }
-
         other = cloneWithOffset(other, base);
         if (base.isBefore(other)) {
             res = positiveMomentsDifference(base, other);
@@ -23000,7 +22937,6 @@ module.exports = range;
         return res;
     }
 
-    // TODO: remove 'name' arg after deprecation is removed
     function createAdder(direction, name) {
         return function (val, period) {
             var dur, tmp;
@@ -23021,12 +22957,6 @@ module.exports = range;
         var milliseconds = duration._milliseconds,
             days = duration._days,
             months = duration._months;
-
-        if (!mom.isValid()) {
-            // No op
-            return;
-        }
-
         updateOffset = updateOffset == null ? true : updateOffset;
 
         if (milliseconds) {
@@ -23058,10 +22988,7 @@ module.exports = range;
                 diff < 1 ? 'sameDay' :
                 diff < 2 ? 'nextDay' :
                 diff < 7 ? 'nextWeek' : 'sameElse';
-
-        var output = formats && (isFunction(formats[format]) ? formats[format]() : formats[format]);
-
-        return this.format(output || this.localeData().calendar(format, this, local__createLocal(now)));
+        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
     }
 
     function clone () {
@@ -23069,28 +22996,26 @@ module.exports = range;
     }
 
     function isAfter (input, units) {
-        var localInput = isMoment(input) ? input : local__createLocal(input);
-        if (!(this.isValid() && localInput.isValid())) {
-            return false;
-        }
-        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        var inputMs;
+        units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
         if (units === 'millisecond') {
-            return +this > +localInput;
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this > +input;
         } else {
-            return +localInput < +this.clone().startOf(units);
+            inputMs = isMoment(input) ? +input : +local__createLocal(input);
+            return inputMs < +this.clone().startOf(units);
         }
     }
 
     function isBefore (input, units) {
-        var localInput = isMoment(input) ? input : local__createLocal(input);
-        if (!(this.isValid() && localInput.isValid())) {
-            return false;
-        }
-        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        var inputMs;
+        units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
         if (units === 'millisecond') {
-            return +this < +localInput;
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this < +input;
         } else {
-            return +this.clone().endOf(units) < +localInput;
+            inputMs = isMoment(input) ? +input : +local__createLocal(input);
+            return +this.clone().endOf(units) < inputMs;
         }
     }
 
@@ -23099,44 +23024,21 @@ module.exports = range;
     }
 
     function isSame (input, units) {
-        var localInput = isMoment(input) ? input : local__createLocal(input),
-            inputMs;
-        if (!(this.isValid() && localInput.isValid())) {
-            return false;
-        }
+        var inputMs;
         units = normalizeUnits(units || 'millisecond');
         if (units === 'millisecond') {
-            return +this === +localInput;
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this === +input;
         } else {
-            inputMs = +localInput;
+            inputMs = +local__createLocal(input);
             return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
         }
     }
 
-    function isSameOrAfter (input, units) {
-        return this.isSame(input, units) || this.isAfter(input,units);
-    }
-
-    function isSameOrBefore (input, units) {
-        return this.isSame(input, units) || this.isBefore(input,units);
-    }
-
     function diff (input, units, asFloat) {
-        var that,
-            zoneDelta,
+        var that = cloneWithOffset(input, this),
+            zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4,
             delta, output;
-
-        if (!this.isValid()) {
-            return NaN;
-        }
-
-        that = cloneWithOffset(input, this);
-
-        if (!that.isValid()) {
-            return NaN;
-        }
-
-        zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4;
 
         units = normalizeUnits(units);
 
@@ -23188,7 +23090,7 @@ module.exports = range;
     function moment_format__toISOString () {
         var m = this.clone().utc();
         if (0 < m.year() && m.year() <= 9999) {
-            if (isFunction(Date.prototype.toISOString)) {
+            if ('function' === typeof Date.prototype.toISOString) {
                 // native implementation is ~50x faster, use it when we can
                 return this.toDate().toISOString();
             } else {
@@ -23205,13 +23107,10 @@ module.exports = range;
     }
 
     function from (time, withoutSuffix) {
-        if (this.isValid() &&
-                ((isMoment(time) && time.isValid()) ||
-                 local__createLocal(time).isValid())) {
-            return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
-        } else {
+        if (!this.isValid()) {
             return this.localeData().invalidDate();
         }
+        return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
     }
 
     function fromNow (withoutSuffix) {
@@ -23219,22 +23118,16 @@ module.exports = range;
     }
 
     function to (time, withoutSuffix) {
-        if (this.isValid() &&
-                ((isMoment(time) && time.isValid()) ||
-                 local__createLocal(time).isValid())) {
-            return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
-        } else {
+        if (!this.isValid()) {
             return this.localeData().invalidDate();
         }
+        return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
     }
 
     function toNow (withoutSuffix) {
         return this.to(local__createLocal(), withoutSuffix);
     }
 
-    // If passed a locale key, it will set the locale for this
-    // instance.  Otherwise, it will return the locale configuration
-    // variables for this instance.
     function locale (key) {
         var newLocaleData;
 
@@ -23345,11 +23238,6 @@ module.exports = range;
         };
     }
 
-    function toJSON () {
-        // JSON.stringify(new Date(NaN)) === 'null'
-        return this.isValid() ? this.toISOString() : 'null';
-    }
-
     function moment_valid__isValid () {
         return valid__isValid(this);
     }
@@ -23361,18 +23249,6 @@ module.exports = range;
     function invalidAt () {
         return getParsingFlags(this).overflow;
     }
-
-    function creationData() {
-        return {
-            input: this._i,
-            format: this._f,
-            locale: this._locale,
-            isUTC: this._isUTC,
-            strict: this._strict
-        };
-    }
-
-    // FORMATTING
 
     addFormatToken(0, ['gg', 2], 0, function () {
         return this.weekYear() % 100;
@@ -23415,20 +23291,22 @@ module.exports = range;
         week[token] = utils_hooks__hooks.parseTwoDigitYear(input);
     });
 
+    // HELPERS
+
+    function weeksInYear(year, dow, doy) {
+        return weekOfYear(local__createLocal([year, 11, 31 + dow - doy]), dow, doy).week;
+    }
+
     // MOMENTS
 
     function getSetWeekYear (input) {
-        return getSetWeekYearHelper.call(this,
-                input,
-                this.week(),
-                this.weekday(),
-                this.localeData()._week.dow,
-                this.localeData()._week.doy);
+        var year = weekOfYear(this, this.localeData()._week.dow, this.localeData()._week.doy).year;
+        return input == null ? year : this.add((input - year), 'y');
     }
 
     function getSetISOWeekYear (input) {
-        return getSetWeekYearHelper.call(this,
-                input, this.isoWeek(), this.isoWeekday(), 1, 4);
+        var year = weekOfYear(this, 1, 4).year;
+        return input == null ? year : this.add((input - year), 'y');
     }
 
     function getISOWeeksInYear () {
@@ -23440,33 +23318,7 @@ module.exports = range;
         return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
     }
 
-    function getSetWeekYearHelper(input, week, weekday, dow, doy) {
-        var weeksTarget;
-        if (input == null) {
-            return weekOfYear(this, dow, doy).year;
-        } else {
-            weeksTarget = weeksInYear(input, dow, doy);
-            if (week > weeksTarget) {
-                week = weeksTarget;
-            }
-            return setWeekAll.call(this, input, week, weekday, dow, doy);
-        }
-    }
-
-    function setWeekAll(weekYear, week, weekday, dow, doy) {
-        var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy),
-            date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
-
-        // console.log("got", weekYear, week, weekday, "set", date.toISOString());
-        this.year(date.getUTCFullYear());
-        this.month(date.getUTCMonth());
-        this.date(date.getUTCDate());
-        return this;
-    }
-
-    // FORMATTING
-
-    addFormatToken('Q', 0, 'Qo', 'quarter');
+    addFormatToken('Q', 0, 0, 'quarter');
 
     // ALIASES
 
@@ -23484,62 +23336,6 @@ module.exports = range;
     function getSetQuarter (input) {
         return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
     }
-
-    // FORMATTING
-
-    addFormatToken('w', ['ww', 2], 'wo', 'week');
-    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
-
-    // ALIASES
-
-    addUnitAlias('week', 'w');
-    addUnitAlias('isoWeek', 'W');
-
-    // PARSING
-
-    addRegexToken('w',  match1to2);
-    addRegexToken('ww', match1to2, match2);
-    addRegexToken('W',  match1to2);
-    addRegexToken('WW', match1to2, match2);
-
-    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
-        week[token.substr(0, 1)] = toInt(input);
-    });
-
-    // HELPERS
-
-    // LOCALES
-
-    function localeWeek (mom) {
-        return weekOfYear(mom, this._week.dow, this._week.doy).week;
-    }
-
-    var defaultLocaleWeek = {
-        dow : 0, // Sunday is the first day of the week.
-        doy : 6  // The week that contains Jan 1st is the first week of the year.
-    };
-
-    function localeFirstDayOfWeek () {
-        return this._week.dow;
-    }
-
-    function localeFirstDayOfYear () {
-        return this._week.doy;
-    }
-
-    // MOMENTS
-
-    function getSetWeek (input) {
-        var week = this.localeData().week(this);
-        return input == null ? week : this.add((input - week) * 7, 'd');
-    }
-
-    function getSetISOWeek (input) {
-        var week = weekOfYear(this, 1, 4).week;
-        return input == null ? week : this.add((input - week) * 7, 'd');
-    }
-
-    // FORMATTING
 
     addFormatToken('D', ['DD', 2], 'Do', 'date');
 
@@ -23563,8 +23359,6 @@ module.exports = range;
     // MOMENTS
 
     var getSetDayOfMonth = makeGetSet('Date', true);
-
-    // FORMATTING
 
     addFormatToken('d', 0, 'do', 'day');
 
@@ -23598,8 +23392,8 @@ module.exports = range;
     addRegexToken('ddd',  matchWord);
     addRegexToken('dddd', matchWord);
 
-    addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config, token) {
-        var weekday = config._locale.weekdaysParse(input, token, config._strict);
+    addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config) {
+        var weekday = config._locale.weekdaysParse(input);
         // if we didn't get a weekday name, mark the date as invalid
         if (weekday != null) {
             week.d = weekday;
@@ -23634,9 +23428,8 @@ module.exports = range;
     // LOCALES
 
     var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
-    function localeWeekdays (m, format) {
-        return isArray(this._weekdays) ? this._weekdays[m.day()] :
-            this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+    function localeWeekdays (m) {
+        return this._weekdays[m.day()];
     }
 
     var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
@@ -23649,37 +23442,20 @@ module.exports = range;
         return this._weekdaysMin[m.day()];
     }
 
-    function localeWeekdaysParse (weekdayName, format, strict) {
+    function localeWeekdaysParse (weekdayName) {
         var i, mom, regex;
 
-        if (!this._weekdaysParse) {
-            this._weekdaysParse = [];
-            this._minWeekdaysParse = [];
-            this._shortWeekdaysParse = [];
-            this._fullWeekdaysParse = [];
-        }
+        this._weekdaysParse = this._weekdaysParse || [];
 
         for (i = 0; i < 7; i++) {
             // make the regex if we don't have it already
-
-            mom = local__createLocal([2000, 1]).day(i);
-            if (strict && !this._fullWeekdaysParse[i]) {
-                this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\.?') + '$', 'i');
-                this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\.?') + '$', 'i');
-                this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\.?') + '$', 'i');
-            }
             if (!this._weekdaysParse[i]) {
+                mom = local__createLocal([2000, 1]).day(i);
                 regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
                 this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
             }
             // test the regex
-            if (strict && format === 'dddd' && this._fullWeekdaysParse[i].test(weekdayName)) {
-                return i;
-            } else if (strict && format === 'ddd' && this._shortWeekdaysParse[i].test(weekdayName)) {
-                return i;
-            } else if (strict && format === 'dd' && this._minWeekdaysParse[i].test(weekdayName)) {
-                return i;
-            } else if (!strict && this._weekdaysParse[i].test(weekdayName)) {
+            if (this._weekdaysParse[i].test(weekdayName)) {
                 return i;
             }
         }
@@ -23688,9 +23464,6 @@ module.exports = range;
     // MOMENTS
 
     function getSetDayOfWeek (input) {
-        if (!this.isValid()) {
-            return input != null ? this : NaN;
-        }
         var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
         if (input != null) {
             input = parseWeekday(input, this.localeData());
@@ -23701,73 +23474,20 @@ module.exports = range;
     }
 
     function getSetLocaleDayOfWeek (input) {
-        if (!this.isValid()) {
-            return input != null ? this : NaN;
-        }
         var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
         return input == null ? weekday : this.add(input - weekday, 'd');
     }
 
     function getSetISODayOfWeek (input) {
-        if (!this.isValid()) {
-            return input != null ? this : NaN;
-        }
         // behaves the same as moment#day except
         // as a getter, returns 7 instead of 0 (1-7 range instead of 0-6)
         // as a setter, sunday should belong to the previous week.
         return input == null ? this.day() || 7 : this.day(this.day() % 7 ? input : input - 7);
     }
 
-    // FORMATTING
-
-    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
-
-    // ALIASES
-
-    addUnitAlias('dayOfYear', 'DDD');
-
-    // PARSING
-
-    addRegexToken('DDD',  match1to3);
-    addRegexToken('DDDD', match3);
-    addParseToken(['DDD', 'DDDD'], function (input, array, config) {
-        config._dayOfYear = toInt(input);
-    });
-
-    // HELPERS
-
-    // MOMENTS
-
-    function getSetDayOfYear (input) {
-        var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
-        return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
-    }
-
-    // FORMATTING
-
-    function hFormat() {
-        return this.hours() % 12 || 12;
-    }
-
     addFormatToken('H', ['HH', 2], 0, 'hour');
-    addFormatToken('h', ['hh', 2], 0, hFormat);
-
-    addFormatToken('hmm', 0, 0, function () {
-        return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2);
-    });
-
-    addFormatToken('hmmss', 0, 0, function () {
-        return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2) +
-            zeroFill(this.seconds(), 2);
-    });
-
-    addFormatToken('Hmm', 0, 0, function () {
-        return '' + this.hours() + zeroFill(this.minutes(), 2);
-    });
-
-    addFormatToken('Hmmss', 0, 0, function () {
-        return '' + this.hours() + zeroFill(this.minutes(), 2) +
-            zeroFill(this.seconds(), 2);
+    addFormatToken('h', ['hh', 2], 0, function () {
+        return this.hours() % 12 || 12;
     });
 
     function meridiem (token, lowercase) {
@@ -23796,11 +23516,6 @@ module.exports = range;
     addRegexToken('HH', match1to2, match2);
     addRegexToken('hh', match1to2, match2);
 
-    addRegexToken('hmm', match3to4);
-    addRegexToken('hmmss', match5to6);
-    addRegexToken('Hmm', match3to4);
-    addRegexToken('Hmmss', match5to6);
-
     addParseToken(['H', 'HH'], HOUR);
     addParseToken(['a', 'A'], function (input, array, config) {
         config._isPm = config._locale.isPM(input);
@@ -23809,32 +23524,6 @@ module.exports = range;
     addParseToken(['h', 'hh'], function (input, array, config) {
         array[HOUR] = toInt(input);
         getParsingFlags(config).bigHour = true;
-    });
-    addParseToken('hmm', function (input, array, config) {
-        var pos = input.length - 2;
-        array[HOUR] = toInt(input.substr(0, pos));
-        array[MINUTE] = toInt(input.substr(pos));
-        getParsingFlags(config).bigHour = true;
-    });
-    addParseToken('hmmss', function (input, array, config) {
-        var pos1 = input.length - 4;
-        var pos2 = input.length - 2;
-        array[HOUR] = toInt(input.substr(0, pos1));
-        array[MINUTE] = toInt(input.substr(pos1, 2));
-        array[SECOND] = toInt(input.substr(pos2));
-        getParsingFlags(config).bigHour = true;
-    });
-    addParseToken('Hmm', function (input, array, config) {
-        var pos = input.length - 2;
-        array[HOUR] = toInt(input.substr(0, pos));
-        array[MINUTE] = toInt(input.substr(pos));
-    });
-    addParseToken('Hmmss', function (input, array, config) {
-        var pos1 = input.length - 4;
-        var pos2 = input.length - 2;
-        array[HOUR] = toInt(input.substr(0, pos1));
-        array[MINUTE] = toInt(input.substr(pos1, 2));
-        array[SECOND] = toInt(input.substr(pos2));
     });
 
     // LOCALES
@@ -23863,8 +23552,6 @@ module.exports = range;
     // this rule.
     var getSetHour = makeGetSet('Hours', true);
 
-    // FORMATTING
-
     addFormatToken('m', ['mm', 2], 0, 'minute');
 
     // ALIASES
@@ -23881,8 +23568,6 @@ module.exports = range;
 
     var getSetMinute = makeGetSet('Minutes', false);
 
-    // FORMATTING
-
     addFormatToken('s', ['ss', 2], 0, 'second');
 
     // ALIASES
@@ -23898,8 +23583,6 @@ module.exports = range;
     // MOMENTS
 
     var getSetSecond = makeGetSet('Seconds', false);
-
-    // FORMATTING
 
     addFormatToken('S', 0, 0, function () {
         return ~~(this.millisecond() / 100);
@@ -23956,8 +23639,6 @@ module.exports = range;
 
     var getSetMillisecond = makeGetSet('Milliseconds', false);
 
-    // FORMATTING
-
     addFormatToken('z',  0, 0, 'zoneAbbr');
     addFormatToken('zz', 0, 0, 'zoneName');
 
@@ -23973,43 +23654,40 @@ module.exports = range;
 
     var momentPrototype__proto = Moment.prototype;
 
-    momentPrototype__proto.add               = add_subtract__add;
-    momentPrototype__proto.calendar          = moment_calendar__calendar;
-    momentPrototype__proto.clone             = clone;
-    momentPrototype__proto.diff              = diff;
-    momentPrototype__proto.endOf             = endOf;
-    momentPrototype__proto.format            = format;
-    momentPrototype__proto.from              = from;
-    momentPrototype__proto.fromNow           = fromNow;
-    momentPrototype__proto.to                = to;
-    momentPrototype__proto.toNow             = toNow;
-    momentPrototype__proto.get               = getSet;
-    momentPrototype__proto.invalidAt         = invalidAt;
-    momentPrototype__proto.isAfter           = isAfter;
-    momentPrototype__proto.isBefore          = isBefore;
-    momentPrototype__proto.isBetween         = isBetween;
-    momentPrototype__proto.isSame            = isSame;
-    momentPrototype__proto.isSameOrAfter     = isSameOrAfter;
-    momentPrototype__proto.isSameOrBefore    = isSameOrBefore;
-    momentPrototype__proto.isValid           = moment_valid__isValid;
-    momentPrototype__proto.lang              = lang;
-    momentPrototype__proto.locale            = locale;
-    momentPrototype__proto.localeData        = localeData;
-    momentPrototype__proto.max               = prototypeMax;
-    momentPrototype__proto.min               = prototypeMin;
-    momentPrototype__proto.parsingFlags      = parsingFlags;
-    momentPrototype__proto.set               = getSet;
-    momentPrototype__proto.startOf           = startOf;
-    momentPrototype__proto.subtract          = add_subtract__subtract;
-    momentPrototype__proto.toArray           = toArray;
-    momentPrototype__proto.toObject          = toObject;
-    momentPrototype__proto.toDate            = toDate;
-    momentPrototype__proto.toISOString       = moment_format__toISOString;
-    momentPrototype__proto.toJSON            = toJSON;
-    momentPrototype__proto.toString          = toString;
-    momentPrototype__proto.unix              = unix;
-    momentPrototype__proto.valueOf           = to_type__valueOf;
-    momentPrototype__proto.creationData      = creationData;
+    momentPrototype__proto.add          = add_subtract__add;
+    momentPrototype__proto.calendar     = moment_calendar__calendar;
+    momentPrototype__proto.clone        = clone;
+    momentPrototype__proto.diff         = diff;
+    momentPrototype__proto.endOf        = endOf;
+    momentPrototype__proto.format       = format;
+    momentPrototype__proto.from         = from;
+    momentPrototype__proto.fromNow      = fromNow;
+    momentPrototype__proto.to           = to;
+    momentPrototype__proto.toNow        = toNow;
+    momentPrototype__proto.get          = getSet;
+    momentPrototype__proto.invalidAt    = invalidAt;
+    momentPrototype__proto.isAfter      = isAfter;
+    momentPrototype__proto.isBefore     = isBefore;
+    momentPrototype__proto.isBetween    = isBetween;
+    momentPrototype__proto.isSame       = isSame;
+    momentPrototype__proto.isValid      = moment_valid__isValid;
+    momentPrototype__proto.lang         = lang;
+    momentPrototype__proto.locale       = locale;
+    momentPrototype__proto.localeData   = localeData;
+    momentPrototype__proto.max          = prototypeMax;
+    momentPrototype__proto.min          = prototypeMin;
+    momentPrototype__proto.parsingFlags = parsingFlags;
+    momentPrototype__proto.set          = getSet;
+    momentPrototype__proto.startOf      = startOf;
+    momentPrototype__proto.subtract     = add_subtract__subtract;
+    momentPrototype__proto.toArray      = toArray;
+    momentPrototype__proto.toObject     = toObject;
+    momentPrototype__proto.toDate       = toDate;
+    momentPrototype__proto.toISOString  = moment_format__toISOString;
+    momentPrototype__proto.toJSON       = moment_format__toISOString;
+    momentPrototype__proto.toString     = toString;
+    momentPrototype__proto.unix         = unix;
+    momentPrototype__proto.valueOf      = to_type__valueOf;
 
     // Year
     momentPrototype__proto.year       = getSetYear;
@@ -24095,7 +23773,7 @@ module.exports = range;
 
     function locale_calendar__calendar (key, mom, now) {
         var output = this._calendar[key];
-        return isFunction(output) ? output.call(mom, now) : output;
+        return typeof output === 'function' ? output.call(mom, now) : output;
     }
 
     var defaultLongDateFormat = {
@@ -24157,21 +23835,21 @@ module.exports = range;
 
     function relative__relativeTime (number, withoutSuffix, string, isFuture) {
         var output = this._relativeTime[string];
-        return (isFunction(output)) ?
+        return (typeof output === 'function') ?
             output(number, withoutSuffix, string, isFuture) :
             output.replace(/%d/i, number);
     }
 
     function pastFuture (diff, output) {
         var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
-        return isFunction(format) ? format(output) : format.replace(/%s/i, output);
+        return typeof format === 'function' ? format(output) : format.replace(/%s/i, output);
     }
 
     function locale_set__set (config) {
         var prop, i;
         for (i in config) {
             prop = config[i];
-            if (isFunction(prop)) {
+            if (typeof prop === 'function') {
                 this[i] = prop;
             } else {
                 this['_' + i] = prop;
@@ -24274,9 +23952,6 @@ module.exports = range;
     }
 
     locale_locales__getSetGlobalLocale('en', {
-        monthsParse : [/^jan/i, /^feb/i, /^mar/i, /^apr/i, /^may/i, /^jun/i, /^jul/i, /^aug/i, /^sep/i, /^oct/i, /^nov/i, /^dec/i],
-        longMonthsParse : [/^january$/i, /^february$/i, /^march$/i, /^april$/i, /^may$/i, /^june$/i, /^july$/i, /^august$/i, /^september$/i, /^october$/i, /^november$/i, /^december$/i],
-        shortMonthsParse : [/^jan$/i, /^feb$/i, /^mar$/i, /^apr$/i, /^may$/i, /^jun$/i, /^jul$/i, /^aug/i, /^sept?$/i, /^oct$/i, /^nov$/i, /^dec$/i],
         ordinalParse: /\d{1,2}(th|st|nd|rd)/,
         ordinal : function (number) {
             var b = number % 10,
@@ -24496,15 +24171,15 @@ module.exports = range;
         var years    = round(duration.as('y'));
 
         var a = seconds < thresholds.s && ['s', seconds]  ||
-                minutes <= 1           && ['m']           ||
+                minutes === 1          && ['m']           ||
                 minutes < thresholds.m && ['mm', minutes] ||
-                hours   <= 1           && ['h']           ||
+                hours   === 1          && ['h']           ||
                 hours   < thresholds.h && ['hh', hours]   ||
-                days    <= 1           && ['d']           ||
+                days    === 1          && ['d']           ||
                 days    < thresholds.d && ['dd', days]    ||
-                months  <= 1           && ['M']           ||
+                months  === 1          && ['M']           ||
                 months  < thresholds.M && ['MM', months]  ||
-                years   <= 1           && ['y']           || ['yy', years];
+                years   === 1          && ['y']           || ['yy', years];
 
         a[2] = withoutSuffix;
         a[3] = +posNegDuration > 0;
@@ -24625,8 +24300,6 @@ module.exports = range;
 
     // Side effect imports
 
-    // FORMATTING
-
     addFormatToken('X', 0, 0, 'unix');
     addFormatToken('x', 0, 0, 'valueOf');
 
@@ -24644,14 +24317,13 @@ module.exports = range;
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.11.0';
+    utils_hooks__hooks.version = '2.10.6';
 
     setHookCallback(local__createLocal);
 
     utils_hooks__hooks.fn                    = momentPrototype;
     utils_hooks__hooks.min                   = min;
     utils_hooks__hooks.max                   = max;
-    utils_hooks__hooks.now                   = now;
     utils_hooks__hooks.utc                   = create_utc__createUTC;
     utils_hooks__hooks.unix                  = moment__createUnix;
     utils_hooks__hooks.months                = lists__listMonths;
@@ -24670,7 +24342,6 @@ module.exports = range;
     utils_hooks__hooks.weekdaysShort         = lists__listWeekdaysShort;
     utils_hooks__hooks.normalizeUnits        = normalizeUnits;
     utils_hooks__hooks.relativeTimeThreshold = duration_humanize__getSetRelativeTimeThreshold;
-    utils_hooks__hooks.prototype             = momentPrototype;
 
     var _moment = utils_hooks__hooks;
 
@@ -65570,7 +65241,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 'use strict';
 module.exports = function (str) {
 	return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-		return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+		return '%' + c.charCodeAt(0).toString(16);
 	});
 };
 
@@ -78669,6 +78340,8 @@ var fontStyle = {
     fontSize: '15px'
 };
 var newData;
+var handleFetchCallBack;
+var handleSaveCallBack;
 
 var VisitInfo = (function (_ControlBase) {
     _inherits(VisitInfo, _ControlBase);
@@ -78682,22 +78355,20 @@ var VisitInfo = (function (_ControlBase) {
             data: _CurrentPregnancy2.default,
             title: locale('CurrentPregnancyTitle')
         };
+        handleSaveCallBack = _this.notifyVisitInfoSave.bind(_this);
+        handleFetchCallBack = _this.notifyVisitInfoFetch.bind(_this);
+        _VisitStore2.default.addChangeListener(AppConstants.SAVE_EVENT, handleSaveCallBack);
+        _VisitStore2.default.addChangeListener(AppConstants.FETCH_EVENT, handleFetchCallBack);
+        AppAction.executeAction(ActionType.VISIT_INFO_FETCH, null);
 
         return _this;
     }
 
     _createClass(VisitInfo, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-            _VisitStore2.default.addChangeListener(AppConstants.SAVE_EVENT, this.notifyVisitInfoSave.bind(this));
-            _VisitStore2.default.addChangeListener(AppConstants.FETCH_EVENT, this.notifyVisitInfoFetch.bind(this));
-            AppAction.executeAction(ActionType.VISIT_INFO_FETCH, null);
-        }
-    }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            _VisitStore2.default.removeChangeListener(AppConstants.SAVE_EVENT, function () {});
-            _VisitStore2.default.removeChangeListener(AppConstants.FETCH_EVENT, function () {});
+            _VisitStore2.default.removeChangeListener(AppConstants.SAVE_EVENT, handleSaveCallBack);
+            _VisitStore2.default.removeChangeListener(AppConstants.FETCH_EVENT, handleFetchCallBack);
         }
     }, {
         key: 'testCallBack',
@@ -80511,7 +80182,7 @@ module.exports = PregnancyRisk;
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _react = require('react');
@@ -80529,93 +80200,93 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var PregnancyStatus = (function (_React$Component) {
-  _inherits(PregnancyStatus, _React$Component);
+    _inherits(PregnancyStatus, _React$Component);
 
-  function PregnancyStatus() {
-    _classCallCheck(this, PregnancyStatus);
+    function PregnancyStatus() {
+        _classCallCheck(this, PregnancyStatus);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(PregnancyStatus).call(this));
-  }
-
-  _createClass(PregnancyStatus, [{
-    key: 'getWeekNumber',
-    value: function getWeekNumber(date) {
-      var dArray = date.split('/');
-      var formatedDate1 = new Date(dArray[1] + '/' + dArray[0] + '/' + dArray[2]); // Converting MM/DD/YYYY Format
-      var formatedDate2 = new Date(); // fetching current date
-      var ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
-      // Convert both dates to milliseconds
-      var date1_ms = formatedDate1.getTime();
-      var date2_ms = formatedDate2.getTime();
-      // Calculate the difference in milliseconds
-      var difference_ms = Math.abs(date1_ms - date2_ms);
-      // Convert back to weeks and return hole weeks
-      return Math.floor(difference_ms / ONE_WEEK);
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(PregnancyStatus).call(this));
     }
-  }, {
-    key: 'calculatePercentage',
-    value: function calculatePercentage(week) {
-      var n;
-      if (week < 41) {
-        n = week;
-      } else {
-        n = 40;
-      }
-      var v = 40;
-      var percent = n * 100 / v;
-      return percent;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var labelSuccessStyle = {
-        marginLeft: '-9px'
-      };
-      var pregnancyStatus = this.props.pregnancyStatus;
-      var week = 0;
-      if (pregnancyStatus !== "") {
-        var week = this.getWeekNumber(pregnancyStatus);
-      }
-      var widthPercent = this.calculatePercentage(week);
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          'div',
-          { className: 'row' },
-          _react2.default.createElement(
-            'div',
-            { className: 'col-lg-12' },
-            _react2.default.createElement(
-              'div',
-              { className: 'progress' },
-              _react2.default.createElement(_reactBootstrap.ProgressBar, { striped: true, bsStyle: 'success', min: 0, max: 40, now: week, ref: 'progressBar' })
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'row' },
-          _react2.default.createElement(
-            'div',
-            { className: 'col-lg-12' },
-            _react2.default.createElement(
-              'div',
-              { className: 'progress_val', style: { marginLeft: widthPercent + '%' } },
-              _react2.default.createElement('div', { className: 'arrow-up' }),
-              _react2.default.createElement(
-                'span',
-                { className: 'label label-success', style: labelSuccessStyle },
-                week
-              )
-            )
-          )
-        )
-      );
-    }
-  }]);
 
-  return PregnancyStatus;
+    _createClass(PregnancyStatus, [{
+        key: 'getWeekNumber',
+        value: function getWeekNumber(date) {
+            var dArray = date.split('/');
+            var formatedDate1 = new Date(dArray[1] + '/' + dArray[0] + '/' + dArray[2]); // Converting MM/DD/YYYY Format
+            var formatedDate2 = new Date(); // fetching current date
+            var ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+            // Convert both dates to milliseconds
+            var date1_ms = formatedDate1.getTime();
+            var date2_ms = formatedDate2.getTime();
+            // Calculate the difference in milliseconds
+            var difference_ms = Math.abs(date1_ms - date2_ms);
+            // Convert back to weeks and return hole weeks
+            return Math.floor(difference_ms / ONE_WEEK);
+        }
+    }, {
+        key: 'calculatePercentage',
+        value: function calculatePercentage(week) {
+            var n;
+            if (week < 41) {
+                n = week;
+            } else {
+                n = 40;
+            }
+            var v = 40;
+            var percent = n * 100 / v;
+            return percent;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var labelSuccessStyle = {
+                marginLeft: '-9px'
+            };
+            var pregnancyStatus = this.props.pregnancyStatus;
+            var week = 0;
+            if (pregnancyStatus !== "") {
+                var week = this.getWeekNumber(pregnancyStatus);
+            }
+            var widthPercent = this.calculatePercentage(week);
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'row' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'col-lg-12' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'progress' },
+                            _react2.default.createElement(_reactBootstrap.ProgressBar, { striped: true, bsStyle: 'success', min: 0, max: 40, now: week, ref: 'progressBar' })
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'row' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'col-lg-12' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'progress_val', style: { marginLeft: widthPercent + '%' } },
+                            _react2.default.createElement('div', { className: 'arrow-up' }),
+                            _react2.default.createElement(
+                                'span',
+                                { className: 'label label-success', style: labelSuccessStyle },
+                                week
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return PregnancyStatus;
 })(_react2.default.Component);
 
 exports.default = PregnancyStatus;
@@ -81789,471 +81460,471 @@ module.exports = {
 
 module.exports = {
 
-   /*App Header */
-   Janani: 'Janani',
-   WELCOME: 'WELCOME',
-   Settings: 'Settings',
-   Logout: 'Logout',
+    /*App Header */
+    Janani: 'Janani',
+    WELCOME: 'WELCOME',
+    Settings: 'Settings',
+    Logout: 'Logout',
 
-   /*PICME */
-   Import_from_PICME: 'Import from PICME',
+    /*PICME */
+    Import_from_PICME: 'Import from PICME',
 
-   /*PatientBanner */
-   ContactNo: 'Contact No',
-   Spouse: 'Spouse',
-   Obsterics: 'Obsterics',
-   Risk: 'Risk',
-   BloodGroup: 'Blood Group',
-   isHighRisk: 'Is High Risk Mother',
-   PregnancyStatus: 'Pregnancy Status',
+    /*PatientBanner */
+    ContactNo: 'Contact No',
+    Spouse: 'Spouse',
+    Obsterics: 'Obsterics',
+    Risk: 'Risk',
+    BloodGroup: 'Blood Group',
+    isHighRisk: 'Is High Risk Mother',
+    PregnancyStatus: 'Pregnancy Status',
 
-   /*VisitDetails Header*/
-   Visit_Type: 'Visit Type',
-   Created_On: 'Created On',
-   Entered_By: 'By',
+    /*VisitDetails Header*/
+    Visit_Type: 'Visit Type',
+    Created_On: 'Created On',
+    Entered_By: 'By',
 
-   /*Common Buttons*/
-   Save: 'Save',
-   Submit: 'Submit',
-   Discard: 'Discard',
-   Import: 'Import',
-   cancel: 'Cancel',
-   Print: 'Print',
-   Upload_Photo: 'Upload Photo',
+    /*Common Buttons*/
+    Save: 'Save',
+    Submit: 'Submit',
+    Discard: 'Discard',
+    Import: 'Import',
+    cancel: 'Cancel',
+    Print: 'Print',
+    Upload_Photo: 'Upload Photo',
 
-   /*Common Options*/
-   Yes: 'Yes',
-   No: 'No',
-   Positive: 'Positive',
-   Negative: 'Negative',
-   Select: 'Select',
+    /*Common Options*/
+    Yes: 'Yes',
+    No: 'No',
+    Positive: 'Positive',
+    Negative: 'Negative',
+    Select: 'Select',
 
-   /*Current Pregnancy*/
-   CurrentPregnancy: 'Current Pregnancy',
-   CurrentPregnancyRecord: 'Current Pregnancy Record',
-   CurrentPregnancyTitle: 'This section records Current Pregnancy information',
-   PregnancyAcceptedWillingly: 'If pregnancy is wanted?',
-   DateofLMP: 'LMP',
-   ExpectedDateOfDelivery: 'EDD by Date',
-   EDDByUSG: 'EDD by USG',
-   MandatoryField: 'Mandatory field',
-   First_Day_Of_Last_Mentsrual_Period: '( 1st day of last Mentsrual Period)',
-   If_already_done: '( If already done)',
-   DateofQuickening: 'Date Of Quickening',
+    /*Current Pregnancy*/
+    CurrentPregnancy: 'Current Pregnancy',
+    CurrentPregnancyRecord: 'Current Pregnancy Record',
+    CurrentPregnancyTitle: 'This section records Current Pregnancy information',
+    PregnancyAcceptedWillingly: 'If pregnancy is wanted?',
+    DateofLMP: 'LMP',
+    ExpectedDateOfDelivery: 'EDD by Date',
+    EDDByUSG: 'EDD by USG',
+    MandatoryField: 'Mandatory field',
+    First_Day_Of_Last_Mentsrual_Period: '( 1st day of last Mentsrual Period)',
+    If_already_done: '( If already done)',
+    DateofQuickening: 'Date Of Quickening',
 
-   /*History of Current Illness*/
-   HistOfCurrentIllness: 'History of Current illness',
-   HistOfCurrentIllnessTitle: 'This section records History of Current Illness information',
-   Nausea: 'Nausea',
-   Vomiting: 'Vomiting',
-   Heartburn: 'Heartburn',
-   Constipation: 'Constipation',
-   IncreasedFrequencyOfUrination: 'Increased frequency of urination',
-   Fever: 'Fever',
-   PersistentVomiting: 'Persistent Vomiting',
-   AbnormalVaginalDischargeOrItching: 'Abnormal vaginal discharge/itching',
-   PalpitationsEasyFatigability: 'Palpitations, easy fatigability',
-   BreathlessnessAtRestOnMildExertion: 'Breathlessness at rest/on mild exertion',
-   GenSwellingOfTheBodyPuffinessOfTheFace: 'Generalised swelling of the body, puffiness of the face',
-   SevereHeadacheAndBlurringOfVision: 'Severe headache and blurring of vision',
-   BurningSensationDuringMicturition: 'Passing smaller amounts of urine and burning sensation during micturition',
-   VaginalBleeding: 'Vaginal bleeding',
-   LeakingOfWateryFluidPerVaginum: 'Leaking of watery fluid per vaginum ( P/V)',
-   Decreased: 'Decreased',
-   Absent: 'Absent',
-   FoetalMoments: 'Foetal Moments',
-   CountPer12Hrs: 'Count per 12 hours',
+    /*History of Current Illness*/
+    HistOfCurrentIllness: 'History of Current illness',
+    HistOfCurrentIllnessTitle: 'This section records History of Current Illness information',
+    Nausea: 'Nausea',
+    Vomiting: 'Vomiting',
+    Heartburn: 'Heartburn',
+    Constipation: 'Constipation',
+    IncreasedFrequencyOfUrination: 'Increased frequency of urination',
+    Fever: 'Fever',
+    PersistentVomiting: 'Persistent Vomiting',
+    AbnormalVaginalDischargeOrItching: 'Abnormal vaginal discharge/itching',
+    PalpitationsEasyFatigability: 'Palpitations, easy fatigability',
+    BreathlessnessAtRestOnMildExertion: 'Breathlessness at rest/on mild exertion',
+    GenSwellingOfTheBodyPuffinessOfTheFace: 'Generalised swelling of the body, puffiness of the face',
+    SevereHeadacheAndBlurringOfVision: 'Severe headache and blurring of vision',
+    BurningSensationDuringMicturition: 'Passing smaller amounts of urine and burning sensation during micturition',
+    VaginalBleeding: 'Vaginal bleeding',
+    LeakingOfWateryFluidPerVaginum: 'Leaking of watery fluid per vaginum ( P/V)',
+    Decreased: 'Decreased',
+    Absent: 'Absent',
+    FoetalMoments: 'Foetal Moments',
+    CountPer12Hrs: 'Count per 12 hours',
 
-   /*Abdominal Examination*/
-   AbdominalExamination: 'Abdominal Examination',
-   AbdominalExaminationTitle: 'This section records Abdominal Examination information',
-   Longitudinal: 'Longitudinal',
-   Transverse: 'Transverse',
-   Oblique: 'Oblique',
-   Cephalic: 'Cephalic',
-   Breech: 'Breech',
-   Shoulder: 'Shoulder',
-   Single: 'Single',
-   Multiple: 'Multiple',
-   InspectationOfScarsOrAbdominalFindings: 'Inspectation of any scars or other relevent abdominal findings',
-   FundalHeightInCM: 'Fundal Height in cms',
-   FundalHeight: 'Fundal Height in weeks',
-   FoetalLie: 'Foetal Lie',
-   FoetalPresentation: 'Foetal presentation',
-   FHS: 'FHS ( Foetal heart Rate)',
-   SingleVsMultiplePregnancy: 'Single Vs Multiple Pregnancy',
-   FoetalMovements: 'Foetal Movements',
+    /*Abdominal Examination*/
+    AbdominalExamination: 'Abdominal Examination',
+    AbdominalExaminationTitle: 'This section records Abdominal Examination information',
+    Longitudinal: 'Longitudinal',
+    Transverse: 'Transverse',
+    Oblique: 'Oblique',
+    Cephalic: 'Cephalic',
+    Breech: 'Breech',
+    Shoulder: 'Shoulder',
+    Single: 'Single',
+    Multiple: 'Multiple',
+    InspectationOfScarsOrAbdominalFindings: 'Inspectation of any scars or other relevent abdominal findings',
+    FundalHeightInCM: 'Fundal Height in cms',
+    FundalHeight: 'Fundal Height in weeks',
+    FoetalLie: 'Foetal Lie',
+    FoetalPresentation: 'Foetal presentation',
+    FHS: 'FHS ( Foetal heart Rate)',
+    SingleVsMultiplePregnancy: 'Single Vs Multiple Pregnancy',
+    FoetalMovements: 'Foetal Movements',
 
-   /*Allergies*/
-   Allergies: 'Allergies',
-   AllergiesTitle: 'This section records General Examination information',
-   DrugAllergies: 'Drug Allergies',
-   FoodAllergies: 'Food Allergies',
-   EnviornmentalAllergies: 'Environmental Allergies',
-   If_yes_please_indicate: 'If yes, please indicate',
+    /*Allergies*/
+    Allergies: 'Allergies',
+    AllergiesTitle: 'This section records General Examination information',
+    DrugAllergies: 'Drug Allergies',
+    FoodAllergies: 'Food Allergies',
+    EnviornmentalAllergies: 'Environmental Allergies',
+    If_yes_please_indicate: 'If yes, please indicate',
 
-   /*Breast Examination*/
-   BreastExamination: 'Breast Examination',
-   BreastExaminationTitle: 'This section records Breast Examination information',
-   LeftBreast: 'Left',
-   RightBreast: 'Right',
-   Normal: 'Normal',
-   Abnormal: 'Abnormal',
-   RetractedNipple: 'Retracted nipple',
-   Nodule: 'Nodule',
-   Lump: 'Lump',
-   Scar: 'Scar',
+    /*Breast Examination*/
+    BreastExamination: 'Breast Examination',
+    BreastExaminationTitle: 'This section records Breast Examination information',
+    LeftBreast: 'Left',
+    RightBreast: 'Right',
+    Normal: 'Normal',
+    Abnormal: 'Abnormal',
+    RetractedNipple: 'Retracted nipple',
+    Nodule: 'Nodule',
+    Lump: 'Lump',
+    Scar: 'Scar',
 
-   /*Family History*/
-   FamilyHistory: 'Family History',
-   FamilyHistoryTitle: 'This section records Family History information',
-   HighBP: 'High blood pressure ( hypertension)',
-   Diabetes: 'Diabetes',
-   Tuberculosis: 'Tuberculosis',
-   TwinsInImmediateFamily: 'Twins in immediate Family',
-   CongeniatlMalfomationsInImmediateFamily: 'Congeniatl Malfomations in immediate family',
+    /*Family History*/
+    FamilyHistory: 'Family History',
+    FamilyHistoryTitle: 'This section records Family History information',
+    HighBP: 'High blood pressure ( hypertension)',
+    Diabetes: 'Diabetes',
+    Tuberculosis: 'Tuberculosis',
+    TwinsInImmediateFamily: 'Twins in immediate Family',
+    CongeniatlMalfomationsInImmediateFamily: 'Congeniatl Malfomations in immediate family',
 
-   /*General Examination*/
-   GeneralExamination: 'General Examination',
-   GeneralExaminationTitle: 'This section records General Examination information',
-   HeightIncms: 'Height in cms',
-   WeightInKgs: 'Weight in Kgs',
-   Pallor: 'Pallor',
-   Jaundice: 'Jaundice',
-   Pulse: 'Pulse',
-   RespiratoryRatePM: 'Respiratory Rate per min',
-   Oedema: 'Oedema',
-   BP: 'Blood Pressure',
-   TemperatureInFarenheit: 'Temperature in farenheit',
-   TooWeakToGetOutOfBed: 'Temperature > or = 38 degrees, display additional checkbox( too weak to get out of bed)',
-   HabbitsAndSocialHistory: 'Habbits/Social History',
-   HabbitsAndSocialHistoryTitle: 'This section records Habbits and Social History information',
-   Tobacco: 'Tobacco',
-   Smoking: 'Smoking',
-   Drugs: 'Drugs',
-   Alcohol: 'Alcohol',
+    /*General Examination*/
+    GeneralExamination: 'General Examination',
+    GeneralExaminationTitle: 'This section records General Examination information',
+    HeightIncms: 'Height in cms',
+    WeightInKgs: 'Weight in Kgs',
+    Pallor: 'Pallor',
+    Jaundice: 'Jaundice',
+    Pulse: 'Pulse',
+    RespiratoryRatePM: 'Respiratory Rate per min',
+    Oedema: 'Oedema',
+    BP: 'Blood Pressure',
+    TemperatureInFarenheit: 'Temperature in farenheit',
+    TooWeakToGetOutOfBed: 'Temperature > or = 38 degrees, display additional checkbox( too weak to get out of bed)',
+    HabbitsAndSocialHistory: 'Habbits/Social History',
+    HabbitsAndSocialHistoryTitle: 'This section records Habbits and Social History information',
+    Tobacco: 'Tobacco',
+    Smoking: 'Smoking',
+    Drugs: 'Drugs',
+    Alcohol: 'Alcohol',
 
-   /*Menstrual History*/
-   MenstrualHistory: 'Menstural History',
-   MenstrualHistoryTitle: 'This section records Menstrual History information',
-   Regularity: 'Regularity',
-   Regular: 'Regular',
-   Irregular: 'Irregular',
-   FrequencyInNumberOfDays: 'Frequency in number of days',
-   NumberOfDaysOfBleed: 'Number of days of bleed',
-   AgeAtMenarche: 'Age at Menarche',
-   PainAssociatedWithPeriods: 'Pain associated with Periods',
+    /*Menstrual History*/
+    MenstrualHistory: 'Menstural History',
+    MenstrualHistoryTitle: 'This section records Menstrual History information',
+    Regularity: 'Regularity',
+    Regular: 'Regular',
+    Irregular: 'Irregular',
+    FrequencyInNumberOfDays: 'Frequency in number of days',
+    NumberOfDaysOfBleed: 'Number of days of bleed',
+    AgeAtMenarche: 'Age at Menarche',
+    PainAssociatedWithPeriods: 'Pain associated with Periods',
 
-   /* ObstetricHistory*/
-   ObstetricHistory: 'Obstetric History',
-   ObstetricHistoryTitle: 'This section records Obstetric History information',
-   Gravida: 'Gravida',
-   Para: 'Para',
-   LiveBirths: 'Live Births',
-   RecurrentEarlyAbortion: 'Recurrent early abortion',
-   PostAbortionComplications: 'Post-abortion complications',
-   HypertensionPreEclmpsiaOrEclampsia: 'Hypertension,Pre-eclampsia or eclampsia',
-   AntePartumHaemorrhage: 'Ante-Partum Haemorrhage ( APH)',
-   BreechOrTransversePresentation: 'Breech or transverse presentation',
-   obstructedLabourIncludingDystocia: 'Obstructed labour,including dystocia',
-   PerinealInjuriesTears: 'Perineal injuries/tears',
-   ExcessiveBleedingAfterDelivery: 'Excessive bleeding after delivery',
-   PuerperalSepsis: 'Puerperal Sepsis',
-   BloodTransfusionDuringPrevPregnancies: 'Blood Transfusion during previous pregnancies',
-   StillbirthOrNeonatalLoss: 'Stillbirth or neonatal loss',
-   MoreConsecutiveAbortions: 'Three or more spontaneous consecutive abortions',
-   ObstructedLabour: 'Obstructed labour',
-   PrematureBirthsTwinsOrMultiplePregnancies: 'Premature births, twins or multiple pregnancies',
-   PrevBaby4500gOrMore: 'Weight of the previous baby 4500g or more',
-   Adm4HTOrPreEclampsiaEclampsiaInPrevpregnancy: 'Admission for hypertension or pre-eclampsia/eclampsia in the previous pregnancy',
-   SurgeryOnTheReproductiveTract: 'Surgery on the reproductive tract',
-   CongenitalAnomaly: 'Congenital anomaly',
-   Treatment4Infertility: 'Treatment for infertility',
-   SpinalDeformities: 'Spinal deformities, such as scoliosis/Kyphosis/polio',
-   RhNegInThePrevPregnancy: 'RH negative in the previous pregnancy',
+    /* ObstetricHistory*/
+    ObstetricHistory: 'Obstetric History',
+    ObstetricHistoryTitle: 'This section records Obstetric History information',
+    Gravida: 'Gravida',
+    Para: 'Para',
+    LiveBirths: 'Live Births',
+    RecurrentEarlyAbortion: 'Recurrent early abortion',
+    PostAbortionComplications: 'Post-abortion complications',
+    HypertensionPreEclmpsiaOrEclampsia: 'Hypertension,Pre-eclampsia or eclampsia',
+    AntePartumHaemorrhage: 'Ante-Partum Haemorrhage ( APH)',
+    BreechOrTransversePresentation: 'Breech or transverse presentation',
+    obstructedLabourIncludingDystocia: 'Obstructed labour,including dystocia',
+    PerinealInjuriesTears: 'Perineal injuries/tears',
+    ExcessiveBleedingAfterDelivery: 'Excessive bleeding after delivery',
+    PuerperalSepsis: 'Puerperal Sepsis',
+    BloodTransfusionDuringPrevPregnancies: 'Blood Transfusion during previous pregnancies',
+    StillbirthOrNeonatalLoss: 'Stillbirth or neonatal loss',
+    MoreConsecutiveAbortions: 'Three or more spontaneous consecutive abortions',
+    ObstructedLabour: 'Obstructed labour',
+    PrematureBirthsTwinsOrMultiplePregnancies: 'Premature births, twins or multiple pregnancies',
+    PrevBaby4500gOrMore: 'Weight of the previous baby 4500g or more',
+    Adm4HTOrPreEclampsiaEclampsiaInPrevpregnancy: 'Admission for hypertension or pre-eclampsia/eclampsia in the previous pregnancy',
+    SurgeryOnTheReproductiveTract: 'Surgery on the reproductive tract',
+    CongenitalAnomaly: 'Congenital anomaly',
+    Treatment4Infertility: 'Treatment for infertility',
+    SpinalDeformities: 'Spinal deformities, such as scoliosis/Kyphosis/polio',
+    RhNegInThePrevPregnancy: 'RH negative in the previous pregnancy',
 
-   /*Past Medical History*/
-   PastMedicalHistory: 'Past Medical History',
-   PastMedicalHistoryTitle: 'This section records past Medical History information',
-   BloodPressure: 'Blood pressure',
-   HighBloodPressure_hypertension: 'High blood pressure',
-   OnMedication: 'On medication?',
-   Diabetes_Types: 'Type1, Type 2',
-   Breathlessness: 'Breathlessness',
-   Breathlessness_on_exertion_palpitations_HeartDisease: 'On exertion, palpitations (heart disease)',
-   RenalDisease: 'Renal disease',
-   RenalDisease_KidneyFailure: 'Kidney failure?',
-   Convulsions: 'Convulsions',
-   Convulsions_Types: 'Epilepsy , Histerias etc',
-   Asthama: 'Asthama',
-   Attacksofbreathlessness_asthma: 'Attacks of breathlessness	or asthma',
-   Jaundice_Types: 'Pre-hepatic, hepatic, post?',
-   Malaria: 'Malaria',
-   Malariasymptoms: 'Any symptoms?',
-   RTI: 'RTI',
-   ReproductiveTractInfection_RTI: 'Reproductive Tract Infection',
-   STI_AIDS: 'STI/AIDS',
-   SexuallyTransmittedInfection_STI_and_HIV_AIDS: 'Sexually Transmitted Infection and HIV/AIDS',
+    /*Past Medical History*/
+    PastMedicalHistory: 'Past Medical History',
+    PastMedicalHistoryTitle: 'This section records past Medical History information',
+    BloodPressure: 'Blood pressure',
+    HighBloodPressure_hypertension: 'High blood pressure',
+    OnMedication: 'On medication?',
+    Diabetes_Types: 'Type1, Type 2',
+    Breathlessness: 'Breathlessness',
+    Breathlessness_on_exertion_palpitations_HeartDisease: 'On exertion, palpitations (heart disease)',
+    RenalDisease: 'Renal disease',
+    RenalDisease_KidneyFailure: 'Kidney failure?',
+    Convulsions: 'Convulsions',
+    Convulsions_Types: 'Epilepsy , Histerias etc',
+    Asthama: 'Asthama',
+    Attacksofbreathlessness_asthma: 'Attacks of breathlessness	or asthma',
+    Jaundice_Types: 'Pre-hepatic, hepatic, post?',
+    Malaria: 'Malaria',
+    Malariasymptoms: 'Any symptoms?',
+    RTI: 'RTI',
+    ReproductiveTractInfection_RTI: 'Reproductive Tract Infection',
+    STI_AIDS: 'STI/AIDS',
+    SexuallyTransmittedInfection_STI_and_HIV_AIDS: 'Sexually Transmitted Infection and HIV/AIDS',
 
-   /*Systemic Examination*/
-   SystemicExamination: 'Systemic Examination',
-   SystemicExaminationTitle: 'This section records Systemic Examination information',
-   Cardiovasculary: 'Cardiovasculary System',
-   Nervous_System: 'Nervous System',
-   Digestive: 'Digestive System',
-   Musculoskeltal: 'Musculoskeltal System',
+    /*Systemic Examination*/
+    SystemicExamination: 'Systemic Examination',
+    SystemicExaminationTitle: 'This section records Systemic Examination information',
+    Cardiovasculary: 'Cardiovasculary System',
+    Nervous_System: 'Nervous System',
+    Digestive: 'Digestive System',
+    Musculoskeltal: 'Musculoskeltal System',
 
-   /*Medical History*/
-   MedicalHistory: 'Medical History',
-   MedicalHistoryTitle: 'This section records Medical History',
+    /*Medical History*/
+    MedicalHistory: 'Medical History',
+    MedicalHistoryTitle: 'This section records Medical History',
 
-   /*Physical Examination*/
-   PhysicalExamination: 'Physical Examination',
-   PhysicalExaminationTitle: 'This section records Physical Examination information',
+    /*Physical Examination*/
+    PhysicalExamination: 'Physical Examination',
+    PhysicalExaminationTitle: 'This section records Physical Examination information',
 
-   /*Lab Results and Orders*/
-   LabResultsandOrders: 'Lab results and Orders',
-   LabResultsandOrdersTitle: 'This section records Lab Results and Orders information',
-   Orders: 'Orders',
-   Results: 'Results',
-   BloodGroup_including_RhFactor: 'Blood group, including Rh factor',
-   VDRL_RPR: 'VDRL/RPR',
-   HIV_testing: 'HIV testing',
-   Rapid_Malaria_Test: 'Rapid malaria test ( if unavailable at SC)',
-   BloodSugar: 'Blood Sugar',
-   HbsAg: 'HbsAg',
-   CBC_with_ESR: 'CBC with ESR',
-   PeripheralSmear: 'Peripheral Smear',
-   UPT: 'UPT',
-   Hb: 'Hb',
-   UrineSugar: 'Urine Sugar',
-   UrineProteins: 'Urine Proteins',
-   RapidMalariaTest: 'Rapid Malaria Test',
-   Select_UPT: 'Select UPT',
-   USG: 'USG',
-   Recommendationforanomalyscan: 'Recommendation for anomaly scan',
-   GCT: 'GCT ( 75gms of Glucose)',
-   HbRepeat: 'Hb( Repeat)',
-   BloodSugarRepeat: 'Blood Sugar( Repeat)',
+    /*Lab Results and Orders*/
+    LabResultsandOrders: 'Lab results and Orders',
+    LabResultsandOrdersTitle: 'This section records Lab Results and Orders information',
+    Orders: 'Orders',
+    Results: 'Results',
+    BloodGroup_including_RhFactor: 'Blood group, including Rh factor',
+    VDRL_RPR: 'VDRL/RPR',
+    HIV_testing: 'HIV testing',
+    Rapid_Malaria_Test: 'Rapid malaria test ( if unavailable at SC)',
+    BloodSugar: 'Blood Sugar',
+    HbsAg: 'HbsAg',
+    CBC_with_ESR: 'CBC with ESR',
+    PeripheralSmear: 'Peripheral Smear',
+    UPT: 'UPT',
+    Hb: 'Hb',
+    UrineSugar: 'Urine Sugar',
+    UrineProteins: 'Urine Proteins',
+    RapidMalariaTest: 'Rapid Malaria Test',
+    Select_UPT: 'Select UPT',
+    USG: 'USG',
+    Recommendationforanomalyscan: 'Recommendation for anomaly scan',
+    GCT: 'GCT ( 75gms of Glucose)',
+    HbRepeat: 'Hb( Repeat)',
+    BloodSugarRepeat: 'Blood Sugar( Repeat)',
 
-   /*Registration - Mothers Demographic Information*/
-   MothersDemographicInformation: 'Mother\'s Demographic Information',
-   MothersDemographicInformationTitle: 'This section records Mothers Demographics information',
-   AddressLine1: 'Address',
-   AddressLine2: 'Address 2',
-   AddressLine3: 'Address 3',
-   EnterAddLine1: 'Enter Address',
-   EnterAddLine2: 'Enter Address 2',
-   EnterAddLine3: 'Enter Address 3',
-   Village: 'Village',
-   SelVill: 'Select Village',
-   SelPincode: 'Select Pincode',
-   City: 'City',
-   SelCity: 'Select City',
-   State: 'State',
-   SelState: 'Select State',
-   Pincode: 'Pincode',
-   EnterPIN: 'Enter Pincode',
-   TempAddressSame: 'Temporary address same as permanent',
-   Sub_Center_ID: 'Sub-Center ID',
-   Sub_Center_Name: 'Sub-Center Name',
-   VHN_Name: 'VHN Name',
-   Select_Subcenter_ID: 'Select Sub-center ID',
-   Select_Subcenter_Name: 'Select Sub-center Name',
-   Select_VHN_Name: 'Select VHN Name',
+    /*Registration - Mothers Demographic Information*/
+    MothersDemographicInformation: 'Mother\'s Demographic Information',
+    MothersDemographicInformationTitle: 'This section records Mothers Demographics information',
+    AddressLine1: 'Address',
+    AddressLine2: 'Address 2',
+    AddressLine3: 'Address 3',
+    EnterAddLine1: 'Enter Address',
+    EnterAddLine2: 'Enter Address 2',
+    EnterAddLine3: 'Enter Address 3',
+    Village: 'Village',
+    SelVill: 'Select Village',
+    SelPincode: 'Select Pincode',
+    City: 'City',
+    SelCity: 'Select City',
+    State: 'State',
+    SelState: 'Select State',
+    Pincode: 'Pincode',
+    EnterPIN: 'Enter Pincode',
+    TempAddressSame: 'Temporary address same as permanent',
+    Sub_Center_ID: 'Sub-Center ID',
+    Sub_Center_Name: 'Sub-Center Name',
+    VHN_Name: 'VHN Name',
+    Select_Subcenter_ID: 'Select Sub-center ID',
+    Select_Subcenter_Name: 'Select Sub-center Name',
+    Select_VHN_Name: 'Select VHN Name',
 
-   /*Registration - Current Pregnancy*/
-   Select_Blood_Group: 'Select Blood Group',
+    /*Registration - Current Pregnancy*/
+    Select_Blood_Group: 'Select Blood Group',
 
-   /*Medical Prescriptions*/
-   MedicalPrescriptions: 'Medical prescriptions',
-   MedicalPrescriptionsTitle: 'This section records Medical prescriptions information',
-   Inj_TT_IM: 'Inj. TT 0.5ml IM(second dose)',
-   FolicAcidSuppliment_IFA: 'Folic Acid Suppliment ( IFA)',
-   Counselling: 'Counselling - Diet, Importance of ANC, domestic violence, sex during Pregnancy',
-   Issue_MaternalChildProtectionCard: 'Issue Maternal & Child Protection Card',
-   JSYCard: 'JSY Card',
-   BPLCard: 'BPL Card',
-   RecordPossibleLocationOfDelivery: 'Record Possible Location of Delivery',
-   PHCName: 'PHC Name',
-   Date_of_Injection: 'Date of Injection',
-   Folic_Acid_Tablets_Dispensed: 'Folic Acid Tablets dispensed',
-   IFA_Tablets_Dispensed: 'IFA Tablets dispensed',
-   Albendazole_Dispensed: 'Albendazole ( 400mg) dispensed',
-   QuantityDispensed: 'Quantity Dispensed',
+    /*Medical Prescriptions*/
+    MedicalPrescriptions: 'Medical prescriptions',
+    MedicalPrescriptionsTitle: 'This section records Medical prescriptions information',
+    Inj_TT_IM: 'Inj. TT 0.5ml IM(second dose)',
+    FolicAcidSuppliment_IFA: 'Folic Acid Suppliment ( IFA)',
+    Counselling: 'Counselling - Diet, Importance of ANC, domestic violence, sex during Pregnancy',
+    Issue_MaternalChildProtectionCard: 'Issue Maternal & Child Protection Card',
+    JSYCard: 'JSY Card',
+    BPLCard: 'BPL Card',
+    RecordPossibleLocationOfDelivery: 'Record Possible Location of Delivery',
+    PHCName: 'PHC Name',
+    Date_of_Injection: 'Date of Injection',
+    Folic_Acid_Tablets_Dispensed: 'Folic Acid Tablets dispensed',
+    IFA_Tablets_Dispensed: 'IFA Tablets dispensed',
+    Albendazole_Dispensed: 'Albendazole ( 400mg) dispensed',
+    QuantityDispensed: 'Quantity Dispensed',
 
-   /* Primary Information*/
-   PrimaryInformation: 'Primary Information',
-   PrimaryInformationTitle: 'This section records Mother Genearal information',
-   Name: 'Name',
-   EnterName: 'Enter Name',
-   DOB: 'Date of Birth',
-   ECN: 'Emergency Contact Number',
-   EnterECN: 'Enter Emergency Contact Number',
-   SpouseName: 'Spouse Name',
-   EnterSpouseName: 'Enter Spouse Name',
-   Age: 'Age',
-   JananiID: 'Janani ID',
-   NextVisitDate: 'Next Visit Date',
-   PICMEID: 'PICME ID',
-   EnterPICMEID: 'Enter PICME ID',
+    /* Primary Information*/
+    PrimaryInformation: 'Primary Information',
+    PrimaryInformationTitle: 'This section records Mother Genearal information',
+    Name: 'Name',
+    EnterName: 'Enter Name',
+    DOB: 'Date of Birth',
+    ECN: 'Emergency Contact Number',
+    EnterECN: 'Enter Emergency Contact Number',
+    SpouseName: 'Spouse Name',
+    EnterSpouseName: 'Enter Spouse Name',
+    Age: 'Age',
+    JananiID: 'Janani ID',
+    NextVisitDate: 'Next Visit Date',
+    PICMEID: 'PICME ID',
+    EnterPICMEID: 'Enter PICME ID',
 
-   /*Comments*/
-   Comments: 'Comments',
-   Edit: 'Edit',
-   Delete: 'Delete',
-   PreviousComments: 'Previous Comments',
-   GeneralComments: 'General comments if any',
-   EnterComments: 'Enter your comments',
-   IncidentCapture: 'Incident capture',
-   Prescriptions_photos_scans_Allergies: 'Prescriptions , photos , Scans , Allergies etc',
-   Attachements: 'Attachements if any',
-   Upload: 'Upload',
-   ClickToTakePhotosOrVideos: 'Click to take photos or videos',
-   PregnancyHistory: 'Pregnancy History',
-   Pregnancies: 'Pregnancies',
-   Abortions: 'Abortions',
-   VisitInformation: 'Visit Information',
-   BasicInformation: 'Basic Information',
-   PastEpisodes: 'Past Episodes',
-   ReportsAndResults: 'Reports and Results',
-   RiskProfile: 'Risk Profile',
-   AddPatient: 'Add Patient',
-   Photo: 'Photo',
+    /*Comments*/
+    Comments: 'Comments',
+    Edit: 'Edit',
+    Delete: 'Delete',
+    PreviousComments: 'Previous Comments',
+    GeneralComments: 'General comments if any',
+    EnterComments: 'Enter your comments',
+    IncidentCapture: 'Incident capture',
+    Prescriptions_photos_scans_Allergies: 'Prescriptions , photos , Scans , Allergies etc',
+    Attachements: 'Attachements if any',
+    Upload: 'Upload',
+    ClickToTakePhotosOrVideos: 'Click to take photos or videos',
+    PregnancyHistory: 'Pregnancy History',
+    Pregnancies: 'Pregnancies',
+    Abortions: 'Abortions',
+    VisitInformation: 'Visit Information',
+    BasicInformation: 'Basic Information',
+    PastEpisodes: 'Past Episodes',
+    ReportsAndResults: 'Reports and Results',
+    RiskProfile: 'Risk Profile',
+    AddPatient: 'Add Patient',
+    Photo: 'Photo',
 
-   /*Referral Letter */
-   Referral_Letter: 'Referral Letter',
-   PatientID: 'Patient ID',
-   SubCenterName: 'Sub center Name',
-   ReferredTo: 'Referred To',
-   RefferedOn: 'Reffered on:',
-   ReasonForReferral: 'Reason For Referral:',
-   ModeOfTransport: 'Mode of Transport:',
-   Information_on_Referral_provided_to_institution_referred: 'Information on Referral provided to institution referred:',
-   CurrentMedication: 'Current Medication:',
-   PatientConsentObtained: 'Patient Consent Obtained:',
-   Print_Export_to_PDF: 'Print ( Export to PDF)',
-   Cancel: 'Cancel',
-   PleaseEenter: 'Please enter',
-   PleaseEnterTheReason: 'Please enter the reason',
-   PATIENTINFORMATION: 'PATIENT INFORMATION',
+    /*Referral Letter */
+    Referral_Letter: 'Referral Letter',
+    PatientID: 'Patient ID',
+    SubCenterName: 'Sub center Name',
+    ReferredTo: 'Referred To',
+    RefferedOn: 'Reffered on:',
+    ReasonForReferral: 'Reason For Referral:',
+    ModeOfTransport: 'Mode of Transport:',
+    Information_on_Referral_provided_to_institution_referred: 'Information on Referral provided to institution referred:',
+    CurrentMedication: 'Current Medication:',
+    PatientConsentObtained: 'Patient Consent Obtained:',
+    Print_Export_to_PDF: 'Print ( Export to PDF)',
+    Cancel: 'Cancel',
+    PleaseEenter: 'Please enter',
+    PleaseEnterTheReason: 'Please enter the reason',
+    PATIENTINFORMATION: 'PATIENT INFORMATION',
 
-   /*Visit Summary */
-   VisitSummary: 'Visit Summary',
-   Type_of_Visit: 'Type of visit',
-   Date_of_Visit: 'Date of visit',
-   VHNName: 'VHN Name',
-   Obstetrics: 'Obstetrics',
-   CurrentPregnancy_only_if_ANCvisit: 'Current Pregnancy <only if ANC visit>',
-   If_Pregnancy_Wanted: 'If Pregnancy Wanted',
-   Present_Illness: 'Present illness',
-   Leak_of_Watery_fluid_PV: 'Leak of Watery fluid PV',
-   Treatment_of_infertility: 'Treatment of infertility',
-   Spinal_deformities: 'Spinal deformities',
-   High_Blood_Pressure: 'High Blood Pressure',
-   Nervous: 'Nervous',
-   Food: 'Food',
-   Environmental: 'Environmental',
-   LAB_RESULTS: 'LAB RESULTS',
-   Examination_Notes: 'Examination Notes',
-   Recorded_medication_details: 'Recorded medication details',
-   Notes: 'Notes',
-   Printed_on_pdf_generation_date: 'Printed on <pdf generation date>',
-   Signature_of_the_Physician: 'Signature of the Physician',
-   PHC: 'PHC',
-   Sub_Center: 'Sub-Center',
+    /*Visit Summary */
+    VisitSummary: 'Visit Summary',
+    Type_of_Visit: 'Type of visit',
+    Date_of_Visit: 'Date of visit',
+    VHNName: 'VHN Name',
+    Obstetrics: 'Obstetrics',
+    CurrentPregnancy_only_if_ANCvisit: 'Current Pregnancy <only if ANC visit>',
+    If_Pregnancy_Wanted: 'If Pregnancy Wanted',
+    Present_Illness: 'Present illness',
+    Leak_of_Watery_fluid_PV: 'Leak of Watery fluid PV',
+    Treatment_of_infertility: 'Treatment of infertility',
+    Spinal_deformities: 'Spinal deformities',
+    High_Blood_Pressure: 'High Blood Pressure',
+    Nervous: 'Nervous',
+    Food: 'Food',
+    Environmental: 'Environmental',
+    LAB_RESULTS: 'LAB RESULTS',
+    Examination_Notes: 'Examination Notes',
+    Recorded_medication_details: 'Recorded medication details',
+    Notes: 'Notes',
+    Printed_on_pdf_generation_date: 'Printed on <pdf generation date>',
+    Signature_of_the_Physician: 'Signature of the Physician',
+    PHC: 'PHC',
+    Sub_Center: 'Sub-Center',
 
-   /*Single Patient View Visits Per Week Range*/
-   TotalVisit: 'TotalVisit',
-   ANC_Visit: 'ANC Visit',
-   General_Visit: 'General Visit',
-   Missed_Visit: 'Missed Visit',
+    /*Single Patient View Visits Per Week Range*/
+    TotalVisit: 'TotalVisit',
+    ANC_Visit: 'ANC Visit',
+    General_Visit: 'General Visit',
+    Missed_Visit: 'Missed Visit',
 
-   /*Single Patient Whole Visits*/
-   Total_Visit: 'Total Visit',
-   ANC_Visits: 'ANC Visits',
-   General_Visits: 'General Visits',
-   PNC_Visit: 'PNC Visit',
-   Back_to_Worklist: 'Back to Worklist',
+    /*Single Patient Whole Visits*/
+    Total_Visit: 'Total Visit',
+    ANC_Visits: 'ANC Visits',
+    General_Visits: 'General Visits',
+    PNC_Visit: 'PNC Visit',
+    Back_to_Worklist: 'Back to Worklist',
 
-   /*Single Patient - Visit Information*/
-   Mandatory_visit: 'Mandatory visit',
-   W1_13: 'W1-13',
-   W13_27: 'W13-27',
-   W28_39: 'W28-39',
-   Postnatal: 'Postnatal',
-   Open: 'Open',
+    /*Single Patient - Visit Information*/
+    Mandatory_visit: 'Mandatory visit',
+    W1_13: 'W1-13',
+    W13_27: 'W13-27',
+    W28_39: 'W28-39',
+    Postnatal: 'Postnatal',
+    Open: 'Open',
 
-   /*Single Patient - SPV Table*/
-   Status: 'Status',
-   Type: 'Type',
-   Date: 'Date',
-   Last_Updated: 'Last Updated',
-   Entered_by: 'Entered by',
-   Summary: 'Summary',
-   View: 'View',
+    /*Single Patient - SPV Table*/
+    Status: 'Status',
+    Type: 'Type',
+    Date: 'Date',
+    Last_Updated: 'Last Updated',
+    Entered_by: 'Entered by',
+    Summary: 'Summary',
+    View: 'View',
 
-   /*Single Patient - DropDownSplit*/
-   Add_Visit: 'Add Visit',
-   ANC1: 'ANC1',
-   ANC2: 'ANC2',
-   ANC3: 'ANC3',
-   PNC: 'PNC',
-   General_Consultation: 'General Consultation',
+    /*Single Patient - DropDownSplit*/
+    Add_Visit: 'Add Visit',
+    ANC1: 'ANC1',
+    ANC2: 'ANC2',
+    ANC3: 'ANC3',
+    PNC: 'PNC',
+    General_Consultation: 'General Consultation',
 
-   /*Login Form*/
+    /*Login Form*/
 
-   username: 'Username',
-   password: 'Password',
-   role: 'Role',
-   rememberPassword: 'Remember Password?',
-   forgotPassword: 'Forgot Password?',
-   clickHere: 'Click Here',
-   login: 'LOGIN',
-   language: 'Language',
+    username: 'Username',
+    password: 'Password',
+    role: 'Role',
+    rememberPassword: 'Remember Password?',
+    forgotPassword: 'Forgot Password?',
+    clickHere: 'Click Here',
+    login: 'LOGIN',
+    language: 'Language',
 
-   /*Worklist */
+    /*Worklist */
 
-   addPatient: 'Add a Patient',
-   importFromPicme: 'Import from PICME',
-   vhnWorklist: 'VHN Worklist',
-   physicianWorklist: 'Physician Worklist',
-   today: 'Today',
-   thisWeek: 'This Week',
-   searchResult: 'Search Results',
-   highRisk: 'High Risk',
-   todaysPatients: 'Today\'s Patients',
-   thisWeekPatients: 'This Week Patients',
-   notifications: 'Notifications',
+    addPatient: 'Add a Patient',
+    importFromPicme: 'Import from PICME',
+    vhnWorklist: 'VHN Worklist',
+    physicianWorklist: 'Physician Worklist',
+    today: 'Today',
+    thisWeek: 'This Week',
+    searchResult: 'Search Results',
+    highRisk: 'High Risk',
+    todaysPatients: 'Today\'s Patients',
+    thisWeekPatients: 'This Week Patients',
+    notifications: 'Notifications',
 
-   /*Worklist - Table Header */
-   name: 'Name',
-   spouseName: 'Spouse Name',
-   age: 'Age',
-   phone: 'Phone Number',
-   pregStatus: 'Pregnancy Status',
-   obstetrics: 'Obstetrics',
-   risk: 'Risk',
-   subNo: 'Sub No',
-   subName: 'Sub Name',
-   vhnName: 'VHN Name',
-   nextDueDate: 'Next Visit',
-   subCentreID: 'Sub-Centre ID',
-   subCentreName: 'Sub-Centre Name',
+    /*Worklist - Table Header */
+    name: 'Name',
+    spouseName: 'Spouse Name',
+    age: 'Age',
+    phone: 'Phone Number',
+    pregStatus: 'Pregnancy Status',
+    obstetrics: 'Obstetrics',
+    risk: 'Risk',
+    subNo: 'Sub No',
+    subName: 'Sub Name',
+    vhnName: 'VHN Name',
+    nextDueDate: 'Next Visit',
+    subCentreID: 'Sub-Centre ID',
+    subCentreName: 'Sub-Centre Name',
 
-   /*Worklist - Search Filter*/
-   searchPatients: 'Search Patients',
+    /*Worklist - Search Filter*/
+    searchPatients: 'Search Patients',
 
-   /*Worklist - pagination*/
-   previous: '« Previous',
-   next: 'Next »',
+    /*Worklist - pagination*/
+    previous: '« Previous',
+    next: 'Next »',
 
-   /*Toaster Notifications*/
-   Patient_Registered_successfully_with_ID: 'Patient Registered successfully with ID : ',
-   Technical_Error: 'Technical Error',
-   Patient_Updated_successfully: 'Patient Updated successfully !!',
-   Patient_deleted_successfully: 'Patient deleted successfully !!',
-   Patient_Not_Found: 'Patient Not Found'
+    /*Toaster Notifications*/
+    Patient_Registered_successfully_with_ID: 'Patient Registered successfully with ID : ',
+    Technical_Error: 'Technical Error',
+    Patient_Updated_successfully: 'Patient Updated successfully !!',
+    Patient_deleted_successfully: 'Patient deleted successfully !!',
+    Patient_Not_Found: 'Patient Not Found'
 
 };
 
@@ -82261,460 +81932,460 @@ module.exports = {
 'use strict';
 
 module.exports = {
-  /*App Header */
-  Janani: 'ஜனனி',
-  WELCOME: 'வரவேற்பு',
-  Settings: 'அமைப்புகள்',
-  Logout: 'வெளியேறு',
+    /*App Header */
+    Janani: 'ஜனனி',
+    WELCOME: 'வரவேற்பு',
+    Settings: 'அமைப்புகள்',
+    Logout: 'வெளியேறு',
 
-  /*PICME */
-  Import_from_PICME: 'PICME இருந்து இறக்குமதி',
+    /*PICME */
+    Import_from_PICME: 'PICME இருந்து இறக்குமதி',
 
-  /*PatientBanner */
-  ContactNo: 'தொடர்பு எண்',
-  Spouse: 'மனைவி',
-  Obsterics: 'Obsterics',
-  Risk: 'இடர்',
-  BloodGroup: 'இரத்த வகை',
-  isHighRisk: 'உயர் அபாய தாய்',
-  PregnancyStatus: 'கர்ப்பம் நிலைமை',
+    /*PatientBanner */
+    ContactNo: 'தொடர்பு எண்',
+    Spouse: 'மனைவி',
+    Obsterics: 'Obsterics',
+    Risk: 'இடர்',
+    BloodGroup: 'இரத்த வகை',
+    isHighRisk: 'உயர் அபாய தாய்',
+    PregnancyStatus: 'கர்ப்பம் நிலைமை',
 
-  /*VisitDetails Header*/
-  Visit_Type: 'வருகை வகை',
-  Created_On: 'அன்று உருவாக்கப்பட்டது',
-  Entered_By: 'மூலம்',
+    /*VisitDetails Header*/
+    Visit_Type: 'வருகை வகை',
+    Created_On: 'அன்று உருவாக்கப்பட்டது',
+    Entered_By: 'மூலம்',
 
-  /*Common Buttons*/
-  Save: 'சேமி',
-  Submit: 'சமர்ப்பிக்கவும்',
-  Discard: 'நிராகரி',
-  Import: 'இறக்குமதி',
-  cancel: 'ரத்து',
-  Print: 'அச்சு',
-  Upload_Photo: 'புகைப்படம் அப்லோடு',
+    /*Common Buttons*/
+    Save: 'சேமி',
+    Submit: 'சமர்ப்பிக்கவும்',
+    Discard: 'நிராகரி',
+    Import: 'இறக்குமதி',
+    cancel: 'ரத்து',
+    Print: 'அச்சு',
+    Upload_Photo: 'புகைப்படம் அப்லோடு',
 
-  /*Common Options*/
-  Yes: 'ஆம்',
-  No: 'இல்லை',
-  Positive: 'நற்சிந்தனை',
-  Negative: 'எதிர்மறை',
-  Select: 'தேர்ந்தெடுக்கவும்',
+    /*Common Options*/
+    Yes: 'ஆம்',
+    No: 'இல்லை',
+    Positive: 'நற்சிந்தனை',
+    Negative: 'எதிர்மறை',
+    Select: 'தேர்ந்தெடுக்கவும்',
 
-  /*Current Pregnancy*/
-  CurrentPregnancy: 'தற்போதைய கர்ப்பம்',
-  CurrentPregnancyRecord: 'தற்போதைய கர்ப்பம் பதிவு',
-  CurrentPregnancyTitle: 'இந்த பிரிவு தற்போதைய கர்ப்பம் தகவல்களை பதிவு',
-  PregnancyAcceptedWillingly: 'கர்ப்ப வேண்டும்என்றால்?',
-  DateofLMP: 'LMP',
-  ExpectedDateOfDelivery: 'தேதி EDD யோடு',
-  EDDByUSG: 'USG மூலம் EDD யோடு',
-  MandatoryField: 'கட்டாயம் நிரப்ப வேண்டிய இடம்',
-  First_Day_Of_Last_Mentsrual_Period: '(கடந்த Mentsrual காலம் 1 ம் நாள்)',
-  If_already_done: '(ஏற்கனவே செய்யவில்லை என்றால்)',
+    /*Current Pregnancy*/
+    CurrentPregnancy: 'தற்போதைய கர்ப்பம்',
+    CurrentPregnancyRecord: 'தற்போதைய கர்ப்பம் பதிவு',
+    CurrentPregnancyTitle: 'இந்த பிரிவு தற்போதைய கர்ப்பம் தகவல்களை பதிவு',
+    PregnancyAcceptedWillingly: 'கர்ப்ப வேண்டும்என்றால்?',
+    DateofLMP: 'LMP',
+    ExpectedDateOfDelivery: 'தேதி EDD யோடு',
+    EDDByUSG: 'USG மூலம் EDD யோடு',
+    MandatoryField: 'கட்டாயம் நிரப்ப வேண்டிய இடம்',
+    First_Day_Of_Last_Mentsrual_Period: '(கடந்த Mentsrual காலம் 1 ம் நாள்)',
+    If_already_done: '(ஏற்கனவே செய்யவில்லை என்றால்)',
 
-  /*History of Current Illness*/
-  HistOfCurrentIllness: 'தற்போதைய நோய் வரலாறு',
-  HistOfCurrentIllnessTitle: 'தற்போதைய நோய்களில் தகவல் இந்த பிரிவில் பதிவுகள் வரலாறு',
-  Nausea: 'குமட்டல்',
-  Vomiting: 'வாந்தி',
-  Heartburn: 'நெஞ்செரிச்சல்',
-  Constipation: 'மலச்சிக்கல்',
-  IncreasedFrequencyOfUrination: 'சிறுநீர் கழித்தல் அதிகரித்த அதிர்வெண்',
-  Fever: 'காய்ச்சல்',
-  PersistentVomiting: 'தொடர்ந்து வாந்தி',
-  AbnormalVaginalDischargeOrItching: 'அசாதாரண யோனி வெளியேற்றம் / அரிப்பு',
-  PalpitationsEasyFatigability: 'நடுக்கம், சுலபமாக களைப்பு',
-  BreathlessnessAtRestOnMildExertion: 'ஓய்வு மூச்சுவிட/லேசான உள்ளடங்குபவை',
-  GenSwellingOfTheBodyPuffinessOfTheFace: 'உடல் பொதுச் வீக்கம், முகத்தில் அதைப்பு',
-  SevereHeadacheAndBlurringOfVision: 'கடுமையான தலைவலி மற்றும் பார்வை தெளிவின்மை',
-  BurningSensationDuringMicturition: 'குறைந்த அளவான சிறுநீர் கடந்து செல்லும் மற்றும் சிறுநீர்கழிவு போது உணர்வு எரியும்',
-  VaginalBleeding: 'புணர்புழை இரத்த ஒழுக்கு',
-  LeakingOfWateryFluidPerVaginum: 'Vaginum ஒன்றுக்கு தண்ணீரால் திரவம் கசிவு (பி / வி)',
-  Decreased: 'குறைந்துவிட்ட',
-  Absent: 'இருக்காது',
-  FoetalMoments: 'Foetal தருணங்கள்',
+    /*History of Current Illness*/
+    HistOfCurrentIllness: 'தற்போதைய நோய் வரலாறு',
+    HistOfCurrentIllnessTitle: 'தற்போதைய நோய்களில் தகவல் இந்த பிரிவில் பதிவுகள் வரலாறு',
+    Nausea: 'குமட்டல்',
+    Vomiting: 'வாந்தி',
+    Heartburn: 'நெஞ்செரிச்சல்',
+    Constipation: 'மலச்சிக்கல்',
+    IncreasedFrequencyOfUrination: 'சிறுநீர் கழித்தல் அதிகரித்த அதிர்வெண்',
+    Fever: 'காய்ச்சல்',
+    PersistentVomiting: 'தொடர்ந்து வாந்தி',
+    AbnormalVaginalDischargeOrItching: 'அசாதாரண யோனி வெளியேற்றம் / அரிப்பு',
+    PalpitationsEasyFatigability: 'நடுக்கம், சுலபமாக களைப்பு',
+    BreathlessnessAtRestOnMildExertion: 'ஓய்வு மூச்சுவிட/லேசான உள்ளடங்குபவை',
+    GenSwellingOfTheBodyPuffinessOfTheFace: 'உடல் பொதுச் வீக்கம், முகத்தில் அதைப்பு',
+    SevereHeadacheAndBlurringOfVision: 'கடுமையான தலைவலி மற்றும் பார்வை தெளிவின்மை',
+    BurningSensationDuringMicturition: 'குறைந்த அளவான சிறுநீர் கடந்து செல்லும் மற்றும் சிறுநீர்கழிவு போது உணர்வு எரியும்',
+    VaginalBleeding: 'புணர்புழை இரத்த ஒழுக்கு',
+    LeakingOfWateryFluidPerVaginum: 'Vaginum ஒன்றுக்கு தண்ணீரால் திரவம் கசிவு (பி / வி)',
+    Decreased: 'குறைந்துவிட்ட',
+    Absent: 'இருக்காது',
+    FoetalMoments: 'Foetal தருணங்கள்',
 
-  /*Abdominal Examination*/
-  AbdominalExamination: 'வயிற்று தேர்வு',
-  AbdominalExaminationTitle: 'இந்த பகுதி வயிற்று தேர்வு தகவல்களை பதிவு',
-  Longitudinal: 'தீர்க்கரேகை',
-  Transverse: 'குறுக்காக',
-  Oblique: 'சாய்ந்த',
-  Cephalic: 'தலைப்பாகம்',
-  Breech: 'துப்பாக்கியின் பின்பகுதி',
-  Shoulder: 'தோள்',
-  Single: 'ஒற்றை',
-  Multiple: 'பல',
-  InspectationOfScarsOrAbdominalFindings: 'எந்த வடுக்கள் அல்லது மற்ற relevent வயிற்று கண்டுபிடிப்புகள்',
-  FundalHeightInCM: 'செ.மீ. பின்னணி உயரம்',
-  FundalHeight: 'வாரங்களில் Fundal உயரம்',
-  FoetalLie: 'பிடல் பொய்',
-  FoetalPresentation: 'பிடல் வழங்கல்',
-  FHS: 'FHS ( Foetal இதய துடிப்பு)',
-  SingleVsMultiplePregnancy: 'ஒற்றை எதிராக பல கர்ப்பம்',
-  FoetalMovements: 'பிடல் இயக்கங்கள்',
+    /*Abdominal Examination*/
+    AbdominalExamination: 'வயிற்று தேர்வு',
+    AbdominalExaminationTitle: 'இந்த பகுதி வயிற்று தேர்வு தகவல்களை பதிவு',
+    Longitudinal: 'தீர்க்கரேகை',
+    Transverse: 'குறுக்காக',
+    Oblique: 'சாய்ந்த',
+    Cephalic: 'தலைப்பாகம்',
+    Breech: 'துப்பாக்கியின் பின்பகுதி',
+    Shoulder: 'தோள்',
+    Single: 'ஒற்றை',
+    Multiple: 'பல',
+    InspectationOfScarsOrAbdominalFindings: 'எந்த வடுக்கள் அல்லது மற்ற relevent வயிற்று கண்டுபிடிப்புகள்',
+    FundalHeightInCM: 'செ.மீ. பின்னணி உயரம்',
+    FundalHeight: 'வாரங்களில் Fundal உயரம்',
+    FoetalLie: 'பிடல் பொய்',
+    FoetalPresentation: 'பிடல் வழங்கல்',
+    FHS: 'FHS ( Foetal இதய துடிப்பு)',
+    SingleVsMultiplePregnancy: 'ஒற்றை எதிராக பல கர்ப்பம்',
+    FoetalMovements: 'பிடல் இயக்கங்கள்',
 
-  /*Allergies*/
-  Allergies: 'ஒவ்வாமைகள்',
-  AllergiesTitle: 'இந்த பகுதி பொது தேர்வு தகவல்களை பதிவு',
-  DrugAllergies: 'மருந்து ஒவ்வாமை',
-  FoodAllergies: 'உணவு ஒவ்வாமைகள்',
-  EnviornmentalAllergies: 'சுற்றுச்சூழல் ஒவ்வாமைகள்',
-  If_yes_please_indicate: 'ஆம், தயவு செய்து என்றால்',
+    /*Allergies*/
+    Allergies: 'ஒவ்வாமைகள்',
+    AllergiesTitle: 'இந்த பகுதி பொது தேர்வு தகவல்களை பதிவு',
+    DrugAllergies: 'மருந்து ஒவ்வாமை',
+    FoodAllergies: 'உணவு ஒவ்வாமைகள்',
+    EnviornmentalAllergies: 'சுற்றுச்சூழல் ஒவ்வாமைகள்',
+    If_yes_please_indicate: 'ஆம், தயவு செய்து என்றால்',
 
-  /*Breast Examination*/
-  BreastExamination: 'மார்பக தேர்வு',
-  BreastExaminationTitle: 'Tஇந்த பகுதி மார்பக தேர்வு தகவல்களை பதிவு',
-  LeftBreast: 'இடது',
-  RightBreast: 'வலது',
-  Normal: 'இயல்பான',
-  Abnormal: 'அசாதாரண',
-  RetractedNipple: 'திரும்பப்பெறப்பட்டது நிப்பிள்',
-  Nodule: 'முடிச்சு',
-  Lump: 'மொத்தத்',
-  Scar: 'ஸ்கார்',
+    /*Breast Examination*/
+    BreastExamination: 'மார்பக தேர்வு',
+    BreastExaminationTitle: 'Tஇந்த பகுதி மார்பக தேர்வு தகவல்களை பதிவு',
+    LeftBreast: 'இடது',
+    RightBreast: 'வலது',
+    Normal: 'இயல்பான',
+    Abnormal: 'அசாதாரண',
+    RetractedNipple: 'திரும்பப்பெறப்பட்டது நிப்பிள்',
+    Nodule: 'முடிச்சு',
+    Lump: 'மொத்தத்',
+    Scar: 'ஸ்கார்',
 
-  /*Family History*/
-  FamilyHistory: 'குடும்ப வரலாற்று',
-  FamilyHistoryTitle: 'இந்த பகுதி பதிவுகளை குடும்ப வரலாற்று தகவல்',
-  HighBP: 'உயர் இரத்த அழுத்தம் (இரத்த அழுத்தம்)',
-  Diabetes: 'நீரிழிவு',
-  Tuberculosis: 'காசநோய்',
-  TwinsInImmediateFamily: 'உடனடி குடும்ப இரட்டையர்கள்',
-  CongeniatlMalfomationsInImmediateFamily: 'குடும்பத்தார் மத்தியில் இன்பகரமான குறைபாட்டுக்கு',
+    /*Family History*/
+    FamilyHistory: 'குடும்ப வரலாற்று',
+    FamilyHistoryTitle: 'இந்த பகுதி பதிவுகளை குடும்ப வரலாற்று தகவல்',
+    HighBP: 'உயர் இரத்த அழுத்தம் (இரத்த அழுத்தம்)',
+    Diabetes: 'நீரிழிவு',
+    Tuberculosis: 'காசநோய்',
+    TwinsInImmediateFamily: 'உடனடி குடும்ப இரட்டையர்கள்',
+    CongeniatlMalfomationsInImmediateFamily: 'குடும்பத்தார் மத்தியில் இன்பகரமான குறைபாட்டுக்கு',
 
-  /*General Examination*/
-  GeneralExamination: 'பொது தேர்வு',
-  GeneralExaminationTitle: ' இந்த பகுதி பொது தேர்வு தகவல்களை பதிவு',
-  HeightIncms: 'செ.மீ. உயரம்',
-  WeightInKgs: 'அர எடை',
-  Pallor: 'டிரெட்',
-  Jaundice: 'மஞ்சள் காமாலை',
-  Pulse: 'பல்ஸ்',
-  RespiratoryRatePM: 'நிமிடம் ஒன்றுக்கு சுவாச விகிதம்',
-  Oedema: 'வீக்கம்',
-  BP: 'இரத்த அழுத்தம்',
-  TemperatureInFarenheit: 'பாரன்ஹீட் வெப்பநிலை',
-  TooWeakToGetOutOfBed: 'வெப்பநிலை> அல்லது = 38 டிகிரி, காட்சி கூடுதல் பெட்டியை (படுக்கையை விட்டு எழுந்திருக்க மிகவும் பலவீனமாக)',
-  HabbitsAndSocialHistory: 'பழக்கம்/சமூக வரலாறு',
-  HabbitsAndSocialHistoryTitle: 'அவரது பகுதியில் பழக்கவழக்கம் மற்றும் சமூக வரலாறு தகவல்களை பதிவு',
-  Tobacco: 'புகையிலை',
-  Smoking: 'புகை',
-  Drugs: 'மருந்துகள்',
-  Alcohol: 'மது',
+    /*General Examination*/
+    GeneralExamination: 'பொது தேர்வு',
+    GeneralExaminationTitle: ' இந்த பகுதி பொது தேர்வு தகவல்களை பதிவு',
+    HeightIncms: 'செ.மீ. உயரம்',
+    WeightInKgs: 'அர எடை',
+    Pallor: 'டிரெட்',
+    Jaundice: 'மஞ்சள் காமாலை',
+    Pulse: 'பல்ஸ்',
+    RespiratoryRatePM: 'நிமிடம் ஒன்றுக்கு சுவாச விகிதம்',
+    Oedema: 'வீக்கம்',
+    BP: 'இரத்த அழுத்தம்',
+    TemperatureInFarenheit: 'பாரன்ஹீட் வெப்பநிலை',
+    TooWeakToGetOutOfBed: 'வெப்பநிலை> அல்லது = 38 டிகிரி, காட்சி கூடுதல் பெட்டியை (படுக்கையை விட்டு எழுந்திருக்க மிகவும் பலவீனமாக)',
+    HabbitsAndSocialHistory: 'பழக்கம்/சமூக வரலாறு',
+    HabbitsAndSocialHistoryTitle: 'அவரது பகுதியில் பழக்கவழக்கம் மற்றும் சமூக வரலாறு தகவல்களை பதிவு',
+    Tobacco: 'புகையிலை',
+    Smoking: 'புகை',
+    Drugs: 'மருந்துகள்',
+    Alcohol: 'மது',
 
-  /*Menstrual History*/
-  MenstrualHistory: 'மாதவிடாய் வரலாறு',
-  MenstrualHistoryTitle: 'இந்த பகுதி பதிவுகளை மாதவிடாய் வரலாறு தகவல்',
-  Regularity: 'முறைப்படுத்தி',
-  Regular: 'வழக்கமான',
-  Irregular: 'ஒழுங்கற்ற',
-  FrequencyInNumberOfDays: 'நாட்கள் எண்ணிக்கை அதிர்வெண்',
-  NumberOfDaysOfBleed: 'நிரப்பிய நாட்கள் எண்ணிக்கை',
-  AgeAtMenarche: 'வயதுக்கு வருகையில் வயது',
-  PainAssociatedWithPeriods: 'வலி பீரியட்ஸ் தொடர்புடைய',
+    /*Menstrual History*/
+    MenstrualHistory: 'மாதவிடாய் வரலாறு',
+    MenstrualHistoryTitle: 'இந்த பகுதி பதிவுகளை மாதவிடாய் வரலாறு தகவல்',
+    Regularity: 'முறைப்படுத்தி',
+    Regular: 'வழக்கமான',
+    Irregular: 'ஒழுங்கற்ற',
+    FrequencyInNumberOfDays: 'நாட்கள் எண்ணிக்கை அதிர்வெண்',
+    NumberOfDaysOfBleed: 'நிரப்பிய நாட்கள் எண்ணிக்கை',
+    AgeAtMenarche: 'வயதுக்கு வருகையில் வயது',
+    PainAssociatedWithPeriods: 'வலி பீரியட்ஸ் தொடர்புடைய',
 
-  /* ObstetricHistory*/
-  ObstetricHistory: 'மகப்பேறு வரலாறு',
-  ObstetricHistoryTitle: 'இந்த பகுதி மகப்பேறு வரலாறு தகவல்களை பதிவு',
-  Gravida: 'தாய்மை',
-  Para: 'பாரா',
-  LiveBirths: 'பிறப்புக்களின்',
-  RecurrentEarlyAbortion: 'மீண்டும் மீண்டும் ஆரம்ப கருக்கலைப்பு',
-  PostAbortionComplications: 'போஸ்ட்- கருக்கலைப்பு சிக்கல்கள்',
-  HypertensionPreEclmpsiaOrEclampsia: 'உயர் இரத்த அழுத்தம் , முன்சூல்வலிப்புகளின் அல்லது எக்லம்ப்ஸியாவுடன்',
-  AntePartumHaemorrhage: 'ஆண்டி- உருவாக்குதல் இரத்தக்கசிவு ( APH )',
-  BreechOrTransversePresentation: 'துப்பாக்கியின் பின்பகுதி அல்லது குறுக்கு வழங்கல்',
-  obstructedLabourIncludingDystocia: 'பிரச்னை உட்பட தடைப்பட்ட பிரசவம் ',
-  PerinealInjuriesTears: 'கழிவிடக் காயங்கள் / கண்ணீர்',
-  ExcessiveBleedingAfterDelivery: 'பிரசவத்திற்கு பிறகு அதிக இரத்தப்போக்கு',
-  PuerperalSepsis: 'குழந்தை பெறுதல் குருதியில் நுண்ணுயிர் நச்சேற்றம்',
-  BloodTransfusionDuringPrevPregnancies: 'முந்தைய கருவுற்றிருக்கும் போது இரத்த தானம்',
-  StillbirthOrNeonatalLoss: 'குழந்தை இறந்து பிறத்தல் அல்லது குழந்தை பிறந்த இழப்பு',
-  MoreConsecutiveAbortions: 'மூன்று அல்லது அதற்கு மேற்பட்ட தன்னிச்சையான தொடர்ச்சியான கருக்கலைப்பு',
-  ObstructedLabour: 'தடைப்பட்ட பிரசவம்',
-  PrematureBirthsTwinsOrMultiplePregnancies: 'குறை பிரசவமாக , இரட்டை அல்லது பல கருவுற்றிருக்கும்',
-  PrevBaby4500gOrMore: 'முந்தைய குழந்தை 4500g அல்லது அதற்கு மேற்பட்ட எடை',
-  Adm4HTOrPreEclampsiaEclampsiaInPrevpregnancy: 'முந்தைய கர்ப்ப உயர் இரத்த அழுத்தம் அல்லது முன்சூல்வலிப்புகளின் / எக்லம்ப்ஸியாவுடன் சேர்க்கை',
-  SurgeryOnTheReproductiveTract: 'இனப்பெருக்க பாதை மீது அறுவை சிகிச்சை',
-  CongenitalAnomaly: 'பிறவியிலேயே ஒழுங்கின்மை',
-  Treatment4Infertility: 'மலட்டுத்தன்மையை சிகிச்சை',
-  SpinalDeformities: 'போன்ற ஸ்கோலியோசிஸ் / கைபோசிஸ் / போலியோ போன்ற எலும்பியல் ',
-  RhNegInThePrevPregnancy: 'முந்தைய கர்ப்ப ஆர்.எச் எதிர்மறை',
+    /* ObstetricHistory*/
+    ObstetricHistory: 'மகப்பேறு வரலாறு',
+    ObstetricHistoryTitle: 'இந்த பகுதி மகப்பேறு வரலாறு தகவல்களை பதிவு',
+    Gravida: 'தாய்மை',
+    Para: 'பாரா',
+    LiveBirths: 'பிறப்புக்களின்',
+    RecurrentEarlyAbortion: 'மீண்டும் மீண்டும் ஆரம்ப கருக்கலைப்பு',
+    PostAbortionComplications: 'போஸ்ட்- கருக்கலைப்பு சிக்கல்கள்',
+    HypertensionPreEclmpsiaOrEclampsia: 'உயர் இரத்த அழுத்தம் , முன்சூல்வலிப்புகளின் அல்லது எக்லம்ப்ஸியாவுடன்',
+    AntePartumHaemorrhage: 'ஆண்டி- உருவாக்குதல் இரத்தக்கசிவு ( APH )',
+    BreechOrTransversePresentation: 'துப்பாக்கியின் பின்பகுதி அல்லது குறுக்கு வழங்கல்',
+    obstructedLabourIncludingDystocia: 'பிரச்னை உட்பட தடைப்பட்ட பிரசவம் ',
+    PerinealInjuriesTears: 'கழிவிடக் காயங்கள் / கண்ணீர்',
+    ExcessiveBleedingAfterDelivery: 'பிரசவத்திற்கு பிறகு அதிக இரத்தப்போக்கு',
+    PuerperalSepsis: 'குழந்தை பெறுதல் குருதியில் நுண்ணுயிர் நச்சேற்றம்',
+    BloodTransfusionDuringPrevPregnancies: 'முந்தைய கருவுற்றிருக்கும் போது இரத்த தானம்',
+    StillbirthOrNeonatalLoss: 'குழந்தை இறந்து பிறத்தல் அல்லது குழந்தை பிறந்த இழப்பு',
+    MoreConsecutiveAbortions: 'மூன்று அல்லது அதற்கு மேற்பட்ட தன்னிச்சையான தொடர்ச்சியான கருக்கலைப்பு',
+    ObstructedLabour: 'தடைப்பட்ட பிரசவம்',
+    PrematureBirthsTwinsOrMultiplePregnancies: 'குறை பிரசவமாக , இரட்டை அல்லது பல கருவுற்றிருக்கும்',
+    PrevBaby4500gOrMore: 'முந்தைய குழந்தை 4500g அல்லது அதற்கு மேற்பட்ட எடை',
+    Adm4HTOrPreEclampsiaEclampsiaInPrevpregnancy: 'முந்தைய கர்ப்ப உயர் இரத்த அழுத்தம் அல்லது முன்சூல்வலிப்புகளின் / எக்லம்ப்ஸியாவுடன் சேர்க்கை',
+    SurgeryOnTheReproductiveTract: 'இனப்பெருக்க பாதை மீது அறுவை சிகிச்சை',
+    CongenitalAnomaly: 'பிறவியிலேயே ஒழுங்கின்மை',
+    Treatment4Infertility: 'மலட்டுத்தன்மையை சிகிச்சை',
+    SpinalDeformities: 'போன்ற ஸ்கோலியோசிஸ் / கைபோசிஸ் / போலியோ போன்ற எலும்பியல் ',
+    RhNegInThePrevPregnancy: 'முந்தைய கர்ப்ப ஆர்.எச் எதிர்மறை',
 
-  /*Past Medical History*/
-  PastMedicalHistory: 'கடந்த மருத்துவ வரலாறு',
-  PastMedicalHistoryTitle: 'மருத்துவ வரலாறு தகவல் கடந்த இந்த பகுதி பதிவுகள்',
-  BloodPressure: 'இரத்த அழுத்தம்',
-  HighBloodPressure_hypertension: 'உயர் இரத்த அழுத்தம்',
-  OnMedication: 'மருந்துகளை ?',
-  Diabetes_Types: 'வகை 1, வகை 2',
-  Breathlessness: 'மூச்சுவிட',
-  Breathlessness_on_exertion_palpitations_HeartDisease: 'உழைப்பு அன்று, படபடப்பு ( இதய நோய்)',
-  RenalDisease: 'சிறுநீரக நோய்',
-  RenalDisease_KidneyFailure: 'சிறுநீரக செயலிழப்பு?',
-  Convulsions: 'வலிப்பு',
-  Convulsions_Types: 'கை வலிப்பு, Histerias போன்றவை',
-  Asthama: 'ஆஸ்துமா',
-  Attacksofbreathlessness_asthma: 'மூச்சுத்திணறல் அல்லது ஆஸ்துமா தாக்குதல்',
-  Jaundice_Types: 'கல்லீரலுக்கு முன் , ஈரலின் , பதிவு ?',
-  Malaria: 'மலேரியா',
-  Malariasymptoms: 'எந்த அறிகுறிகள் ?',
-  RTI: 'தகவல் பெறும் உரிமை',
-  ReproductiveTractInfection_RTI: 'இனப்பெருக்க பாதை நோய்த்தொற்று',
-  STI_AIDS: 'பால்வினை / எய்ட்ஸ்',
-  SexuallyTransmittedInfection_STI_and_HIV_AIDS: 'பால்வினை தொற்று மற்றும் HIV / AIDS',
+    /*Past Medical History*/
+    PastMedicalHistory: 'கடந்த மருத்துவ வரலாறு',
+    PastMedicalHistoryTitle: 'மருத்துவ வரலாறு தகவல் கடந்த இந்த பகுதி பதிவுகள்',
+    BloodPressure: 'இரத்த அழுத்தம்',
+    HighBloodPressure_hypertension: 'உயர் இரத்த அழுத்தம்',
+    OnMedication: 'மருந்துகளை ?',
+    Diabetes_Types: 'வகை 1, வகை 2',
+    Breathlessness: 'மூச்சுவிட',
+    Breathlessness_on_exertion_palpitations_HeartDisease: 'உழைப்பு அன்று, படபடப்பு ( இதய நோய்)',
+    RenalDisease: 'சிறுநீரக நோய்',
+    RenalDisease_KidneyFailure: 'சிறுநீரக செயலிழப்பு?',
+    Convulsions: 'வலிப்பு',
+    Convulsions_Types: 'கை வலிப்பு, Histerias போன்றவை',
+    Asthama: 'ஆஸ்துமா',
+    Attacksofbreathlessness_asthma: 'மூச்சுத்திணறல் அல்லது ஆஸ்துமா தாக்குதல்',
+    Jaundice_Types: 'கல்லீரலுக்கு முன் , ஈரலின் , பதிவு ?',
+    Malaria: 'மலேரியா',
+    Malariasymptoms: 'எந்த அறிகுறிகள் ?',
+    RTI: 'தகவல் பெறும் உரிமை',
+    ReproductiveTractInfection_RTI: 'இனப்பெருக்க பாதை நோய்த்தொற்று',
+    STI_AIDS: 'பால்வினை / எய்ட்ஸ்',
+    SexuallyTransmittedInfection_STI_and_HIV_AIDS: 'பால்வினை தொற்று மற்றும் HIV / AIDS',
 
-  /*Systemic Examination*/
-  SystemicExamination: 'அமைப்பு ரீதியான தேர்வு',
-  SystemicExaminationTitle: 'இந்த பகுதி பதிவுகளை ஸிஸ்டமிக் தேர்வு தகவல்',
-  Cardiovasculary: 'இருதய அமைப்பு',
-  Nervous_System: 'நரம்பு மண்டலம்',
-  Digestive: 'ஜீரண மண்டலம்',
-  Musculoskeltal: 'தசைநார்',
+    /*Systemic Examination*/
+    SystemicExamination: 'அமைப்பு ரீதியான தேர்வு',
+    SystemicExaminationTitle: 'இந்த பகுதி பதிவுகளை ஸிஸ்டமிக் தேர்வு தகவல்',
+    Cardiovasculary: 'இருதய அமைப்பு',
+    Nervous_System: 'நரம்பு மண்டலம்',
+    Digestive: 'ஜீரண மண்டலம்',
+    Musculoskeltal: 'தசைநார்',
 
-  /*Medical History*/
-  MedicalHistory: 'மருத்துவ வரலாறு',
-  MedicalHistoryTitle: 'இந்த பகுதி மருத்துவ வரலாற்றில் பதிவு',
+    /*Medical History*/
+    MedicalHistory: 'மருத்துவ வரலாறு',
+    MedicalHistoryTitle: 'இந்த பகுதி மருத்துவ வரலாற்றில் பதிவு',
 
-  /*Physical Examination*/
-  PhysicalExamination: 'உடல் பரிசோதனை',
-  PhysicalExaminationTitle: 'இந்த பகுதி பதிவுகள் உடல் பரிசோதனை தகவல்',
+    /*Physical Examination*/
+    PhysicalExamination: 'உடல் பரிசோதனை',
+    PhysicalExaminationTitle: 'இந்த பகுதி பதிவுகள் உடல் பரிசோதனை தகவல்',
 
-  /*Lab Results and Orders*/
-  LabResultsandOrders: 'ஆய்வு முடிவுகள் மற்றும் ஆணைகள்',
-  LabResultsandOrdersTitle: 'இந்த பகுதி லேப் முடிவுகள் மற்றும் ஆணைகள் தகவல்களை பதிவு',
-  Orders: 'ஆணைகள்',
-  Results: 'முடிவுகள்',
-  BloodGroup_including_RhFactor: 'இந்த Rh காரணி உட்பட இரத்த பிரிவு',
-  VDRL_RPR: 'VDRL/ ஆர்.பீ.ஆர்',
-  HIV_testing: 'எச்.ஐ. வி பரிசோதனை',
-  Rapid_Malaria_Test: 'ரேபிட் மலேரியா சோதனை-எஸ்சி கிடைக்கவில்லை என்றால்',
-  BloodSugar: 'இரத்த சர்க்கரை',
-  HbsAg: 'HbsAg',
-  CBC_with_ESR: 'என்பவற்றால் கொண்டு சிபி',
-  PeripheralSmear: 'புற ஸ்மியரைப்',
-  UPT: 'UPT',
-  Hb: 'Hb',
-  UrineSugar: 'சிறுநீர் சர்க்கரை',
-  UrineProteins: 'சிறுநீர் புரதங்கள்',
-  RapidMalariaTest: 'ரேபிட் மலேரியா டெஸ்ட்',
-  Select_UPT: 'தேர்ந்தெடுக்கவும்',
+    /*Lab Results and Orders*/
+    LabResultsandOrders: 'ஆய்வு முடிவுகள் மற்றும் ஆணைகள்',
+    LabResultsandOrdersTitle: 'இந்த பகுதி லேப் முடிவுகள் மற்றும் ஆணைகள் தகவல்களை பதிவு',
+    Orders: 'ஆணைகள்',
+    Results: 'முடிவுகள்',
+    BloodGroup_including_RhFactor: 'இந்த Rh காரணி உட்பட இரத்த பிரிவு',
+    VDRL_RPR: 'VDRL/ ஆர்.பீ.ஆர்',
+    HIV_testing: 'எச்.ஐ. வி பரிசோதனை',
+    Rapid_Malaria_Test: 'ரேபிட் மலேரியா சோதனை-எஸ்சி கிடைக்கவில்லை என்றால்',
+    BloodSugar: 'இரத்த சர்க்கரை',
+    HbsAg: 'HbsAg',
+    CBC_with_ESR: 'என்பவற்றால் கொண்டு சிபி',
+    PeripheralSmear: 'புற ஸ்மியரைப்',
+    UPT: 'UPT',
+    Hb: 'Hb',
+    UrineSugar: 'சிறுநீர் சர்க்கரை',
+    UrineProteins: 'சிறுநீர் புரதங்கள்',
+    RapidMalariaTest: 'ரேபிட் மலேரியா டெஸ்ட்',
+    Select_UPT: 'தேர்ந்தெடுக்கவும்',
 
-  /*Registration - Mothers Demographic Information*/
-  MothersDemographicInformation: 'அம்மா  கள் புள்ளிவிபர தகவல்கள்',
-  MothersDemographicInformationTitle: 'இந்த பகுதி தாய்மார்கள் மக்கள் வகைப்பாடு தகவல்களை பதிவு',
-  AddressLine1: 'முகவரி',
-  AddressLine2: 'முகவரி 2',
-  AddressLine3: 'முகவரி 3',
-  EnterAddLine1: 'முகவரி சேர்க்கவும்',
-  EnterAddLine2: 'முகவரி 2 சேர்க்கவும்',
-  EnterAddLine3: 'முகவரி 3 சேர்க்கவும்',
-  Village: 'கிராமத்தில்',
-  SelVill: 'தேர்வு கிராமம்',
-  City: 'பெருநகரம்',
-  SelCity: 'நிசாமாபாத்',
-  State: 'அரசு',
-  SelState: 'மாநில தேர்ந்தெடு',
-  Pincode: 'பின்கோடு',
-  EnterPIN: 'பின்கோடு Enter',
-  TempAddressSame: 'நிரந்தர போன்ற தற்காலிக முகவரி அதே',
-  Sub_Center_ID: 'சப்-மையம் ஐடி',
-  Sub_Center_Name: 'சப்-மையம் பெயர்',
-  VHN_Name: 'VHN பெயர்',
-  Select_Subcenter_ID: 'சப்-சென்டர் ஐடி தேர்வு',
-  Select_Subcenter_Name: 'சப்-சென்டர் பெயர் தேர்வு',
-  Select_VHN_Name: 'தேர்ந்தெடு VHN பெயர்',
+    /*Registration - Mothers Demographic Information*/
+    MothersDemographicInformation: 'அம்மா  கள் புள்ளிவிபர தகவல்கள்',
+    MothersDemographicInformationTitle: 'இந்த பகுதி தாய்மார்கள் மக்கள் வகைப்பாடு தகவல்களை பதிவு',
+    AddressLine1: 'முகவரி',
+    AddressLine2: 'முகவரி 2',
+    AddressLine3: 'முகவரி 3',
+    EnterAddLine1: 'முகவரி சேர்க்கவும்',
+    EnterAddLine2: 'முகவரி 2 சேர்க்கவும்',
+    EnterAddLine3: 'முகவரி 3 சேர்க்கவும்',
+    Village: 'கிராமத்தில்',
+    SelVill: 'தேர்வு கிராமம்',
+    City: 'பெருநகரம்',
+    SelCity: 'நிசாமாபாத்',
+    State: 'அரசு',
+    SelState: 'மாநில தேர்ந்தெடு',
+    Pincode: 'பின்கோடு',
+    EnterPIN: 'பின்கோடு Enter',
+    TempAddressSame: 'நிரந்தர போன்ற தற்காலிக முகவரி அதே',
+    Sub_Center_ID: 'சப்-மையம் ஐடி',
+    Sub_Center_Name: 'சப்-மையம் பெயர்',
+    VHN_Name: 'VHN பெயர்',
+    Select_Subcenter_ID: 'சப்-சென்டர் ஐடி தேர்வு',
+    Select_Subcenter_Name: 'சப்-சென்டர் பெயர் தேர்வு',
+    Select_VHN_Name: 'தேர்ந்தெடு VHN பெயர்',
 
-  /*Registration - Current Pregnancy*/
-  Select_Blood_Group: 'தேர்ந்தெடு இரத்தப் பிரிவு',
+    /*Registration - Current Pregnancy*/
+    Select_Blood_Group: 'தேர்ந்தெடு இரத்தப் பிரிவு',
 
-  /*Medical Prescriptions*/
-  MedicalPrescriptions: 'மருத்துவ மருந்துகளும்',
-  MedicalPrescriptionsTitle: 'இந்த பிரிவு மருத்துவ மருந்துகளும் தகவல்களை பதிவு',
-  Inj_TT_IM: 'Inj. TT ஒரு 0.5ml ஐஎம் ',
-  FolicAcidSuppliment_IFA: 'ஃபோலிக் அமிலம் Suppliment (ஐஎஸ்ஏ)',
-  Counselling: 'கவுன்சிலிங் - டயட், கர்ப்ப காலத்தில் ஆபிரிக்க தேசிய காங்கிரஸ், குடும்ப வன்முறை, பாலியல் முக்கியத்துவம்',
-  Issue_MaternalChildProtectionCard: 'வெளியீடு தாய்மார் மற்றும் குழந்தைகள் பாதுகாப்பு அட்டை',
-  JSYCard: 'JSY அட்டை',
-  BPLCard: 'பிபிஎல் அட்டை',
-  RecordPossibleLocationOfDelivery: 'டெலிவரி சாத்தியமான இடம் பதிவு',
-  Date_of_Injection: 'ஊசி தேதி',
-  Folic_Acid_Tablets_Dispensed: 'போலிக் ஆசிட் மாத்திரைகள் விநியோகிப்பதற்கு',
-  IFA_Tablets_Dispensed: 'ஐஎஸ்ஏ மாத்திரைகள் விநியோகிப்பதற்கு',
-  Albendazole_Dispensed: 'Albendazole ( 400 எம்ஜி ) விநியோகிப்பதற்கு',
-  QuantityDispensed: 'அளவு விநியோகிப்பதற்கு',
+    /*Medical Prescriptions*/
+    MedicalPrescriptions: 'மருத்துவ மருந்துகளும்',
+    MedicalPrescriptionsTitle: 'இந்த பிரிவு மருத்துவ மருந்துகளும் தகவல்களை பதிவு',
+    Inj_TT_IM: 'Inj. TT ஒரு 0.5ml ஐஎம் ',
+    FolicAcidSuppliment_IFA: 'ஃபோலிக் அமிலம் Suppliment (ஐஎஸ்ஏ)',
+    Counselling: 'கவுன்சிலிங் - டயட், கர்ப்ப காலத்தில் ஆபிரிக்க தேசிய காங்கிரஸ், குடும்ப வன்முறை, பாலியல் முக்கியத்துவம்',
+    Issue_MaternalChildProtectionCard: 'வெளியீடு தாய்மார் மற்றும் குழந்தைகள் பாதுகாப்பு அட்டை',
+    JSYCard: 'JSY அட்டை',
+    BPLCard: 'பிபிஎல் அட்டை',
+    RecordPossibleLocationOfDelivery: 'டெலிவரி சாத்தியமான இடம் பதிவு',
+    Date_of_Injection: 'ஊசி தேதி',
+    Folic_Acid_Tablets_Dispensed: 'போலிக் ஆசிட் மாத்திரைகள் விநியோகிப்பதற்கு',
+    IFA_Tablets_Dispensed: 'ஐஎஸ்ஏ மாத்திரைகள் விநியோகிப்பதற்கு',
+    Albendazole_Dispensed: 'Albendazole ( 400 எம்ஜி ) விநியோகிப்பதற்கு',
+    QuantityDispensed: 'அளவு விநியோகிப்பதற்கு',
 
-  /* Primary Information*/
-  PrimaryInformation: 'முக்கிய தகவல்கள்',
-  PrimaryInformationTitle: 'இந்த பகுதி பதிவுகளை அம்மா பொது தகவல்',
-  Name: 'பெயர்',
-  EnterName: 'பெயர் சேர்க்கவும்',
-  DOB: 'பிறந்த தேதி',
-  ECN: 'அவசர தொடர்பு எண்',
-  EnterECN: 'அவசர தொடர்பு எண் Enter',
-  EnterSpouseName: 'கணவன் அல்லது மனைவியின் பெயர் Enter',
-  Age: 'வயது',
-  JananiID: 'ஜனனி ஐடி',
-  PICMEID: 'PICME ஐடி',
-  NextVisitDate: 'அடுத்த வருகை தேதி',
-  EnterPICMEID: 'PICME ஐடி உள்ளிடவும்',
+    /* Primary Information*/
+    PrimaryInformation: 'முக்கிய தகவல்கள்',
+    PrimaryInformationTitle: 'இந்த பகுதி பதிவுகளை அம்மா பொது தகவல்',
+    Name: 'பெயர்',
+    EnterName: 'பெயர் சேர்க்கவும்',
+    DOB: 'பிறந்த தேதி',
+    ECN: 'அவசர தொடர்பு எண்',
+    EnterECN: 'அவசர தொடர்பு எண் Enter',
+    EnterSpouseName: 'கணவன் அல்லது மனைவியின் பெயர் Enter',
+    Age: 'வயது',
+    JananiID: 'ஜனனி ஐடி',
+    PICMEID: 'PICME ஐடி',
+    NextVisitDate: 'அடுத்த வருகை தேதி',
+    EnterPICMEID: 'PICME ஐடி உள்ளிடவும்',
 
-  /*Comments*/
-  Comments: 'கருத்துக்கள்',
-  GeneralComments: 'பொது கருத்துகள் ஏதாவது இருந்தால்',
-  EnterComments: 'உங்கள் கருத்துக்கள் Enter',
-  IncidentCapture: 'சம்பவம் பிடிப்பு',
-  Prescriptions_photos_scans_Allergies: 'பிரஸ்கிரிப்ஷன்ஸ், புகைப்படங்கள், ஸ்கேன்கள், ஒவ்வாமைகள் போன்றவை',
-  Attachements: 'Attachements ஏதேனும்',
-  Upload: 'பதிவேற்ற',
-  ClickToTakePhotosOrVideos: 'புகைப்படங்கள் அல்லது வீடியோக்களை எடுத்து கிளிக் செய்யவும்',
-  PregnancyHistory: 'கர்ப்பம் வரலாறு',
-  Pregnancies: 'கருவுற்றிருக்கும்',
-  Abortions: 'அபார்ஷன்',
-  VisitInformation: 'வருகை தகவல்கள்',
-  BasicInformation: 'அடிப்படை தகவல்',
-  PastEpisodes: 'கடந்த பகுதிகளின்',
-  ReportsAndResults: 'அறிக்கைகள் மற்றும் முடிவுகள்',
-  RiskProfile: 'அபாய ப்ரோஃபைல்',
-  AddPatient: 'நோயாளி சேர்',
-  Photo: 'புகைப்பட',
+    /*Comments*/
+    Comments: 'கருத்துக்கள்',
+    GeneralComments: 'பொது கருத்துகள் ஏதாவது இருந்தால்',
+    EnterComments: 'உங்கள் கருத்துக்கள் Enter',
+    IncidentCapture: 'சம்பவம் பிடிப்பு',
+    Prescriptions_photos_scans_Allergies: 'பிரஸ்கிரிப்ஷன்ஸ், புகைப்படங்கள், ஸ்கேன்கள், ஒவ்வாமைகள் போன்றவை',
+    Attachements: 'Attachements ஏதேனும்',
+    Upload: 'பதிவேற்ற',
+    ClickToTakePhotosOrVideos: 'புகைப்படங்கள் அல்லது வீடியோக்களை எடுத்து கிளிக் செய்யவும்',
+    PregnancyHistory: 'கர்ப்பம் வரலாறு',
+    Pregnancies: 'கருவுற்றிருக்கும்',
+    Abortions: 'அபார்ஷன்',
+    VisitInformation: 'வருகை தகவல்கள்',
+    BasicInformation: 'அடிப்படை தகவல்',
+    PastEpisodes: 'கடந்த பகுதிகளின்',
+    ReportsAndResults: 'அறிக்கைகள் மற்றும் முடிவுகள்',
+    RiskProfile: 'அபாய ப்ரோஃபைல்',
+    AddPatient: 'நோயாளி சேர்',
+    Photo: 'புகைப்பட',
 
-  /*Referral Letter */
-  Referral_Letter: 'பரிந்துரை கடிதம்',
-  PatientID: 'நோயாளி ஐடி',
-  SubCenterName: 'துணை மையம் பெயர்',
-  ReferredTo: 'குறிப்பிடப்படுகிறது:',
-  RefferedOn: 'குறிப்பிட்டிருக்கிறார்:',
-  ReasonForReferral: 'குறிப்பு காரணம்:',
-  ModeOfTransport: 'போக்குவரத்து முறை:',
-  Information_on_Referral_provided_to_institution_referred: 'நிறுவனத்திற்கு வழங்கப்பட்ட பரிந்துரை பற்றிய தகவல் குறிப்பிட்டார்:',
-  CurrentMedication: 'தற்போதைய மருந்து:',
-  PatientConsentObtained: 'நோயாளி ஒப்புதல் பெற்றதாகவும்:',
-  Print_Export_to_PDF: 'அச்சு (PDF ஆக ஏற்றுமதி)',
-  Cancel: 'ரத்து',
-  PleaseEenter: 'உள்ளிடவும்',
-  PleaseEnterTheReason: 'காரணத்தை உள்ளிடவும்',
-  PHCName: 'PHC பெயர்',
-  SpouseName: 'கணவன் அல்லது மனைவியின் பெயர்',
-  PATIENTINFORMATION: 'நோயாளி தகவல்',
+    /*Referral Letter */
+    Referral_Letter: 'பரிந்துரை கடிதம்',
+    PatientID: 'நோயாளி ஐடி',
+    SubCenterName: 'துணை மையம் பெயர்',
+    ReferredTo: 'குறிப்பிடப்படுகிறது:',
+    RefferedOn: 'குறிப்பிட்டிருக்கிறார்:',
+    ReasonForReferral: 'குறிப்பு காரணம்:',
+    ModeOfTransport: 'போக்குவரத்து முறை:',
+    Information_on_Referral_provided_to_institution_referred: 'நிறுவனத்திற்கு வழங்கப்பட்ட பரிந்துரை பற்றிய தகவல் குறிப்பிட்டார்:',
+    CurrentMedication: 'தற்போதைய மருந்து:',
+    PatientConsentObtained: 'நோயாளி ஒப்புதல் பெற்றதாகவும்:',
+    Print_Export_to_PDF: 'அச்சு (PDF ஆக ஏற்றுமதி)',
+    Cancel: 'ரத்து',
+    PleaseEenter: 'உள்ளிடவும்',
+    PleaseEnterTheReason: 'காரணத்தை உள்ளிடவும்',
+    PHCName: 'PHC பெயர்',
+    SpouseName: 'கணவன் அல்லது மனைவியின் பெயர்',
+    PATIENTINFORMATION: 'நோயாளி தகவல்',
 
-  /*Visit Summary */
-  VisitSummary: 'வருகை சுருக்கம்',
-  Type_of_Visit: 'விஜயம் வகை',
-  Date_of_Visit: 'விஜயம் தேதி',
-  VHNName: 'VHN பெயர்',
-  Obstetrics: 'மகப்பேறியல்',
-  CurrentPregnancy_only_if_ANCvisit: 'நடப்பு கர்ப்பம் <மட்டுமே ஆபிரிக்க தேசிய காங்கிரஸ் விஜயம்>',
-  If_Pregnancy_Wanted: 'கர்ப்பம் தேவை என்றால்',
-  Present_Illness: 'தற்போதைய நோய்',
-  Leak_of_Watery_fluid_PV: 'தண்ணீரால் திரவம் ஃபோட்டோவோல்டிக்கின் கசிவு',
-  Treatment_of_infertility: 'கருவுறாமைக்கான சிகிச்சை',
-  Spinal_deformities: 'எலும்பியல்',
-  High_Blood_Pressure: 'உயர் இரத்த அழுத்தம்',
-  Nervous: 'நரம்பு',
-  Food: 'உணவு',
-  Environmental: 'சுற்றுச்சூழல்',
-  LAB_RESULTS: 'ஆய்வு முடிவுகள்',
-  Examination_Notes: 'தேர்வு குறிப்புகள்',
-  Recorded_medication_details: 'பதிவு மருந்து விவரங்கள்',
-  Notes: 'குறிப்புகள்',
-  Printed_on_pdf_generation_date: '<PDF தலைமுறை தேதி> அச்சிடப்பட்டு',
-  Signature_of_the_Physician: 'மருத்துவர் கையொப்பம்',
-  PHC: 'PHC',
-  Sub_Center: 'சப்-மையம்',
+    /*Visit Summary */
+    VisitSummary: 'வருகை சுருக்கம்',
+    Type_of_Visit: 'விஜயம் வகை',
+    Date_of_Visit: 'விஜயம் தேதி',
+    VHNName: 'VHN பெயர்',
+    Obstetrics: 'மகப்பேறியல்',
+    CurrentPregnancy_only_if_ANCvisit: 'நடப்பு கர்ப்பம் <மட்டுமே ஆபிரிக்க தேசிய காங்கிரஸ் விஜயம்>',
+    If_Pregnancy_Wanted: 'கர்ப்பம் தேவை என்றால்',
+    Present_Illness: 'தற்போதைய நோய்',
+    Leak_of_Watery_fluid_PV: 'தண்ணீரால் திரவம் ஃபோட்டோவோல்டிக்கின் கசிவு',
+    Treatment_of_infertility: 'கருவுறாமைக்கான சிகிச்சை',
+    Spinal_deformities: 'எலும்பியல்',
+    High_Blood_Pressure: 'உயர் இரத்த அழுத்தம்',
+    Nervous: 'நரம்பு',
+    Food: 'உணவு',
+    Environmental: 'சுற்றுச்சூழல்',
+    LAB_RESULTS: 'ஆய்வு முடிவுகள்',
+    Examination_Notes: 'தேர்வு குறிப்புகள்',
+    Recorded_medication_details: 'பதிவு மருந்து விவரங்கள்',
+    Notes: 'குறிப்புகள்',
+    Printed_on_pdf_generation_date: '<PDF தலைமுறை தேதி> அச்சிடப்பட்டு',
+    Signature_of_the_Physician: 'மருத்துவர் கையொப்பம்',
+    PHC: 'PHC',
+    Sub_Center: 'சப்-மையம்',
 
-  /*Single Patient View Visits Per Week Range*/
-  TotalVisit: 'மொத்த வருகை',
-  ANC_Visit: 'ஆபிரிக்க தேசிய காங்கிரஸ் வருகை',
-  General_Visit: 'பொது வருகை',
-  Missed_Visit: 'தவறிய வருகை',
+    /*Single Patient View Visits Per Week Range*/
+    TotalVisit: 'மொத்த வருகை',
+    ANC_Visit: 'ஆபிரிக்க தேசிய காங்கிரஸ் வருகை',
+    General_Visit: 'பொது வருகை',
+    Missed_Visit: 'தவறிய வருகை',
 
-  /*Single Patient Whole Visits*/
-  Total_Visit: 'மொத்த வருகை',
-  ANC_Visits: 'ஆபிரிக்க தேசிய காங்கிரஸ் வருகை',
-  General_Visits: 'பொது வருகை',
-  PNC_Visit: 'என்று PNC வருகை',
-  Back_to_Worklist: 'மீண்டும் வேலை பட்டியல்',
+    /*Single Patient Whole Visits*/
+    Total_Visit: 'மொத்த வருகை',
+    ANC_Visits: 'ஆபிரிக்க தேசிய காங்கிரஸ் வருகை',
+    General_Visits: 'பொது வருகை',
+    PNC_Visit: 'என்று PNC வருகை',
+    Back_to_Worklist: 'மீண்டும் வேலை பட்டியல்',
 
-  /*Single Patient - Visit Information*/
-  Mandatory_visit: ' கட்டாய வருகை',
-  W1_13: 'W1-13',
-  W13_27: 'W13-27',
-  W28_39: 'W28-39',
-  Postnatal: 'பிரசவத்திற்கு',
-  Open: 'திறந்த',
+    /*Single Patient - Visit Information*/
+    Mandatory_visit: ' கட்டாய வருகை',
+    W1_13: 'W1-13',
+    W13_27: 'W13-27',
+    W28_39: 'W28-39',
+    Postnatal: 'பிரசவத்திற்கு',
+    Open: 'திறந்த',
 
-  /*Single Patient - SPV Table*/
-  Status: 'நிலைமை',
-  Type: 'வகை',
-  Date: 'தேதி',
-  Last_Updated: 'கடைசியாகப் புதுப்பித்தது',
-  Entered_by: 'உள்ளிட்ட',
-  Summary: 'சுருக்கம்',
-  View: 'காண்க',
+    /*Single Patient - SPV Table*/
+    Status: 'நிலைமை',
+    Type: 'வகை',
+    Date: 'தேதி',
+    Last_Updated: 'கடைசியாகப் புதுப்பித்தது',
+    Entered_by: 'உள்ளிட்ட',
+    Summary: 'சுருக்கம்',
+    View: 'காண்க',
 
-  /*Single Patient - DropDownSplit*/
-  Add_Visit: ' வருகை சேர்க்கவும்',
-  ANC1: 'ஆபிரிக்க தேசிய காங்கிரஸ்1',
-  ANC2: 'ஆபிரிக்க தேசிய காங்கிரஸ்2',
-  ANC3: 'ஆபிரிக்க தேசிய காங்கிரஸ்3',
-  PNC: 'என்று PNC',
-  General_Consultation: 'பொது கலந்தாய்வின்',
+    /*Single Patient - DropDownSplit*/
+    Add_Visit: ' வருகை சேர்க்கவும்',
+    ANC1: 'ஆபிரிக்க தேசிய காங்கிரஸ்1',
+    ANC2: 'ஆபிரிக்க தேசிய காங்கிரஸ்2',
+    ANC3: 'ஆபிரிக்க தேசிய காங்கிரஸ்3',
+    PNC: 'என்று PNC',
+    General_Consultation: 'பொது கலந்தாய்வின்',
 
-  /*Login Form*/
+    /*Login Form*/
 
-  username: 'பயனர் பெயர்',
-  password: 'கடவுச்சொல்',
-  role: 'பங்கு',
-  rememberPassword: 'கடவுச்சொல் நினைவிருக்கிறதா?',
-  forgotPassword: 'கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
-  clickHere: 'இங்கே கிளிக் செய்யவும்',
-  login: 'உள் நுழை',
-  language: 'மொழி',
+    username: 'பயனர் பெயர்',
+    password: 'கடவுச்சொல்',
+    role: 'பங்கு',
+    rememberPassword: 'கடவுச்சொல் நினைவிருக்கிறதா?',
+    forgotPassword: 'கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
+    clickHere: 'இங்கே கிளிக் செய்யவும்',
+    login: 'உள் நுழை',
+    language: 'மொழி',
 
-  /*Worklist */
+    /*Worklist */
 
-  addPatient: 'ஒரு நோயாளி சேர்க்கவும்',
-  importFromPicme: 'PICME இருந்து இறக்குமதி',
-  vhnWorklist: 'VHN வேலை பட்டியல்',
-  physicianWorklist: 'மருத்துவர் வேலை பட்டியல்',
-  today: 'இன்று',
-  thisWeek: 'இந்த வாரம்',
-  highRisk: 'உயர் அபாயங்கள்',
-  todaysPatients: 'இன்றைய நோயாளிகள்',
-  thisWeekPatients: 'இந்த வார நோயாளிகள்',
-  notifications: 'அறிவிப்புகள்',
-  searchResult: 'தேடல் முடிவு',
+    addPatient: 'ஒரு நோயாளி சேர்க்கவும்',
+    importFromPicme: 'PICME இருந்து இறக்குமதி',
+    vhnWorklist: 'VHN வேலை பட்டியல்',
+    physicianWorklist: 'மருத்துவர் வேலை பட்டியல்',
+    today: 'இன்று',
+    thisWeek: 'இந்த வாரம்',
+    highRisk: 'உயர் அபாயங்கள்',
+    todaysPatients: 'இன்றைய நோயாளிகள்',
+    thisWeekPatients: 'இந்த வார நோயாளிகள்',
+    notifications: 'அறிவிப்புகள்',
+    searchResult: 'தேடல் முடிவு',
 
-  /*Worklist - Table Header */
-  name: 'பெயர்',
-  spouseName: 'கணவன் பெயர்',
-  age: 'வயது',
-  phone: 'தொலைபேசி',
-  pregStatus: 'கர்ப்ப நிலை',
-  obstetrics: 'மகப்பேறியல்',
-  risk: 'இடர்',
-  subNo: 'துணை எண்',
-  subName: 'துணை பெயர்',
-  vhnName: 'VHN பெயர்',
-  nextDueDate: 'அடுத்த வருகை',
-  subCentreID: 'துணை மையம் ஐடி',
-  subCentreName: 'துணை மையம் பெயர்',
+    /*Worklist - Table Header */
+    name: 'பெயர்',
+    spouseName: 'கணவன் பெயர்',
+    age: 'வயது',
+    phone: 'தொலைபேசி',
+    pregStatus: 'கர்ப்ப நிலை',
+    obstetrics: 'மகப்பேறியல்',
+    risk: 'இடர்',
+    subNo: 'துணை எண்',
+    subName: 'துணை பெயர்',
+    vhnName: 'VHN பெயர்',
+    nextDueDate: 'அடுத்த வருகை',
+    subCentreID: 'துணை மையம் ஐடி',
+    subCentreName: 'துணை மையம் பெயர்',
 
-  /*Worklist - Search Filter*/
-  searchPatients: 'தேடல் நோயாளிகள்',
+    /*Worklist - Search Filter*/
+    searchPatients: 'தேடல் நோயாளிகள்',
 
-  /*Worklist - pagination*/
-  previous: '« முந்தைய',
-  next: 'அடுத்த »',
+    /*Worklist - pagination*/
+    previous: '« முந்தைய',
+    next: 'அடுத்த »',
 
-  /*Toaster Notifications*/
-  Patient_Registered_successfully_with_ID: 'நோயாளி ஐடி கொண்டு வெற்றிகரமாக பதிவு : ',
-  Technical_Error: 'தொழில்நுட்ப பிழை',
-  Patient_Updated_successfully: 'நோயாளி வெற்றிகரமாக புதுப்பிக்கப்பட்டது !!',
-  Patient_deleted_successfully: 'நோயாளி வெற்றிகரமாக நீக்கப்பட்டது !!',
-  Patient_Not_Found: 'நோயாளி கிடைக்கவில்லை'
+    /*Toaster Notifications*/
+    Patient_Registered_successfully_with_ID: 'நோயாளி ஐடி கொண்டு வெற்றிகரமாக பதிவு : ',
+    Technical_Error: 'தொழில்நுட்ப பிழை',
+    Patient_Updated_successfully: 'நோயாளி வெற்றிகரமாக புதுப்பிக்கப்பட்டது !!',
+    Patient_deleted_successfully: 'நோயாளி வெற்றிகரமாக நீக்கப்பட்டது !!',
+    Patient_Not_Found: 'நோயாளி கிடைக்கவில்லை'
 };
 
 },{}],732:[function(require,module,exports){
@@ -84464,50 +84135,50 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /*eslint no-unused-vars: 0*/
 
 module.exports = _react2.default.createElement(
-																				_reactRouter.Router,
-																				null,
-																				_react2.default.createElement(
-																																								_reactRouter.Route,
-																																								{ component: _AuthenticatedApp2.default },
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'login', component: _Login2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'home', component: _Home2.default })
-																				),
-																				_react2.default.createElement(_reactRouter.Route, { path: '/', component: _Login4.default }),
-																				_react2.default.createElement(
-																																								_reactRouter.Route,
-																																								{ path: '/app', component: _app2.default },
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'VHNWorkList', component: _vhnWorklist2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'MOWorkList', component: _MoWorklist2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'about', component: _about2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Dashboard', component: _adminChart2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Patient/:patientid/Visit/:visitType/:visitId', component: _visitPage2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Registration/:patientid', component: _Registration2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'PatientView/:patientid', component: _SinglePatientView2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'ReferralLetter/:id', component: _ReferralLetter2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Patient/:patientid/VisitSummary/:visitid', component: _VisitSummaryPage2.default })
-																				),
-																				_react2.default.createElement(
-																																								_reactRouter.Route,
-																																								{ path: 'Developer', component: _Developer2.default },
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'DevPage1', component: null }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Menu', component: _menu_test2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Notifications', component: _test_notifications2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'banner', component: _patientContainer2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Patient', component: _Registration2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Visit', component: _visitPage2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'BidirectionalBinding', component: _BindingExample2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'LabelTest', component: _LabelTest2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'DatabindingControls', component: _DatabindingControls2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Login', component: _Login2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'VisitSummary', component: _VisitSummaryPage2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'Localization', component: _TestLocalization2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'ImportPICME', component: _ImportPICME2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'ReferralLetter', component: _ReferralLetter2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'SinglePatientView', component: _SinglePatientView2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'AlertTest', component: _AlertTest2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'SPVTable', component: _SPVTable2.default }),
-																																								_react2.default.createElement(_reactRouter.Route, { path: 'AdminChart', component: _adminChart2.default })
-																				)
+									_reactRouter.Router,
+									null,
+									_react2.default.createElement(
+																		_reactRouter.Route,
+																		{ component: _AuthenticatedApp2.default },
+																		_react2.default.createElement(_reactRouter.Route, { path: 'login', component: _Login2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'home', component: _Home2.default })
+									),
+									_react2.default.createElement(_reactRouter.Route, { path: '/', component: _Login4.default }),
+									_react2.default.createElement(
+																		_reactRouter.Route,
+																		{ path: '/app', component: _app2.default },
+																		_react2.default.createElement(_reactRouter.Route, { path: 'VHNWorkList', component: _vhnWorklist2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'MOWorkList', component: _MoWorklist2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'about', component: _about2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Dashboard', component: _adminChart2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Patient/:patientid/Visit/:visitType/:visitId', component: _visitPage2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Registration/:patientid', component: _Registration2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'PatientView/:patientid', component: _SinglePatientView2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'ReferralLetter/:id', component: _ReferralLetter2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Patient/:patientid/VisitSummary/:visitid', component: _VisitSummaryPage2.default })
+									),
+									_react2.default.createElement(
+																		_reactRouter.Route,
+																		{ path: 'Developer', component: _Developer2.default },
+																		_react2.default.createElement(_reactRouter.Route, { path: 'DevPage1', component: null }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Menu', component: _menu_test2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Notifications', component: _test_notifications2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'banner', component: _patientContainer2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Patient', component: _Registration2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Visit', component: _visitPage2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'BidirectionalBinding', component: _BindingExample2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'LabelTest', component: _LabelTest2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'DatabindingControls', component: _DatabindingControls2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Login', component: _Login2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'VisitSummary', component: _VisitSummaryPage2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'Localization', component: _TestLocalization2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'ImportPICME', component: _ImportPICME2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'ReferralLetter', component: _ReferralLetter2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'SinglePatientView', component: _SinglePatientView2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'AlertTest', component: _AlertTest2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'SPVTable', component: _SPVTable2.default }),
+																		_react2.default.createElement(_reactRouter.Route, { path: 'AdminChart', component: _adminChart2.default })
+									)
 );
 
 },{"./Spikes/DatabindingControls":629,"./Spikes/Developer":630,"./Spikes/LabelTest":632,"./Spikes/Localization/TestLocalization":635,"./Spikes/PICME/ImportPICME.js":641,"./Spikes/alert/AlertTest":642,"./Spikes/bidirectional_binding/BindingExample":643,"./Spikes/login_auth/components/AuthenticatedApp":647,"./Spikes/login_auth/components/Home":649,"./Spikes/login_auth/components/Login":650,"./Spikes/menu/menu_test":656,"./Spikes/notification/test_notifications":657,"./Spikes/singlePatientView/SPVTable.js":658,"./components/app":661,"./components/layout/about/about":662,"./components/layout/chart/adminChart":664,"./components/layout/container/patientContainer":666,"./components/login/Login":674,"./components/referral/ReferralLetter":676,"./components/registration/Registration":683,"./components/single-patient/SinglePatientView":686,"./components/visit-summary/VisitSummaryPage":691,"./components/visit/visitPage":713,"./components/worklist/MoWorklist":719,"./components/worklist/vhnWorklist":728,"react":601,"react-dom":376,"react-router":422}],754:[function(require,module,exports){
@@ -85415,12 +85086,11 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: '/api/worklists',
+                        url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
-
                         workListJSON[_AppConstants.WORKLIST_JSON] = response;
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, AppConstants.TOTAL_WORKLIST);
                         totalList = updatedWorklistJson[_AppConstants.WORKLIST_JSON];
@@ -85432,13 +85102,12 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: '/api/worklists',
+                        url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
                         workListJSON[_AppConstants.WORKLIST_JSON] = WorkListStore.translate(response, RequestType.GET, _AppConstants.DAY_TYPE);
-                        totalList = workListJSON[_AppConstants.WORKLIST_JSON];
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, _AppConstants.DAY_TYPE);
                         WorkListStore.emitChange(ActionType.GET_TODAYS_WORKLIST, updatedWorklistJson);
                     });
@@ -85448,13 +85117,12 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: '/api/worklists',
+                        url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
                         workListJSON[_AppConstants.WORKLIST_JSON] = WorkListStore.translate(response, RequestType.GET, _AppConstants.WEEK_TYPE);
-                        totalList = workListJSON[_AppConstants.WORKLIST_JSON];
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, _AppConstants.WEEK_TYPE);
                         WorkListStore.emitChange(ActionType.GET_WEEKLY_WORKLIST, updatedWorklistJson);
                     });
@@ -85495,8 +85163,8 @@ var WorkListStore = (function (_BaseStore) {
                 sortedWorkList = searchData;
             } else {
                 searchData.filter(function (row) {
-                    var jsonString = JSON.stringify(row).toLowerCase();
-                    if (jsonString.indexOf(searchBy.toLowerCase()) > -1) {
+                    var jsonString = JSON.stringify(row);
+                    if (jsonString.indexOf(searchBy) > -1) {
                         sortedWorkList.push(row);
                         return true;
                     } else {
@@ -85505,6 +85173,10 @@ var WorkListStore = (function (_BaseStore) {
                 });
             }
             updatedJson[_AppConstants.WORKLIST_JSON] = sortedWorkList;
+            updatedJson[_AppConstants.DONUT_DAY_VALUES] = this.getDonutData(this.translate(sortedWorkList, '', _AppConstants.DAY_TYPE), _AppConstants.DAY_TYPE);
+            updatedJson[_AppConstants.DONUT_WEEK_VALUES] = this.getDonutData(this.translate(sortedWorkList, '', _AppConstants.WEEK_TYPE), _AppConstants.WEEK_TYPE);
+            updatedJson[_AppConstants.DONUT_DAY_LEGENDS] = this.getDonutLegend(_AppConstants.DAY_TYPE);
+            updatedJson[_AppConstants.DONUT_WEEK_LEGENDS] = this.getDonutLegend(_AppConstants.WEEK_TYPE);
             return updatedJson;
         }
     }, {
@@ -85778,9 +85450,9 @@ var BaseTranslator = (function () {
 
             /*   if (7 <= objVisit.LabResults.Hb && objVisit.LabResults.Hb >= 11) // get  IFA dispence date and Hb record date
                {
-                }
+                 }
             */
-            if (objVisit.isPrstntVomtng) {
+            if (bool(objVisit.isPrstntVomtng)) {
                 output.push({
                     text: 'Persistant Vomitting: Refer to nearest PHC'
                 });
