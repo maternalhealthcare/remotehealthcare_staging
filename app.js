@@ -19,17 +19,9 @@ app.get('/', function(req, res) {
 }
 );
 
-
 app.get('/api/worklists', function(req, res, next) {
-	var headerSet = {
-        uri: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-    };
-   
-    request(headerSet, function(error, response, body) {
+    var url = 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search';
+    request(url, function(error, response, body) {
         if (error) {
             console.log('get worklist');
             next(error);
