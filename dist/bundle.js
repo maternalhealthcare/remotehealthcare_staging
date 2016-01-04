@@ -67332,7 +67332,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-mixed-spaces-and-tabs:0*/
 /*eslint no-unused-vars: 0*/
 
-var classSet = "checkBox checkedCB";
+var classSet = 'checkBox checkedCB';
 
 var DatabindingControls = (function (_ControlBase) {
     _inherits(DatabindingControls, _ControlBase);
@@ -67370,12 +67370,12 @@ var DatabindingControls = (function (_ControlBase) {
     _createClass(DatabindingControls, [{
         key: 'valueChanged',
         value: function valueChanged(value) {
-            //console.log(value);
+            // console.log(value);
         }
     }, {
         key: 'checkOrUncheck',
         value: function checkOrUncheck() {
-            if (this.state.prop10 == true) classSet = "checkBox checkedCB";else classSet = "checkBox";
+            if (this.state.prop10 == true) classSet = 'checkBox checkedCB';else classSet = 'checkBox';
             var checkOption = !this.state.prop10;
             this.setState({ prop10: checkOption });
         }
@@ -67473,7 +67473,7 @@ var DatabindingControls = (function (_ControlBase) {
                     ),
                     'Label placed here'
                 ),
-                _react2.default.createElement(CustomRadioButton, { label: 'Label', status: this.state.prop10 })
+                _react2.default.createElement(_CustomRadioButton2.default, { label: 'Label', status: this.state.prop10 })
             );
         }
     }]);
@@ -70764,7 +70764,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var StyleHeader = {
-    height: '65px',
+    height: '73px',
     backgroundColor: 'black',
     border: '1px solid black',
     width: '100%',
@@ -70776,7 +70776,9 @@ var appName = {
     color: '#fff',
     paddingLeft: '9px',
     paddingTop: '11px',
-    fontSize: '21px'
+    fontSize: '28px',
+    fontWeight: 'bold',
+    fontFamily: 'GEInspira'
 };
 var imgHeader = {
     marginLeft: '21px',
@@ -71577,8 +71579,8 @@ var LoginForm = (function (_React$Component) {
 
             var rememberPasswordLabel = {
                 'font-size': '15px',
-                opacity: '0.6',
-                paddingLeft: '0px'
+                paddingLeft: '0px',
+                fontWeight: 'lighter'
             };
 
             var btn = {
@@ -71713,7 +71715,7 @@ var LoginForm = (function (_React$Component) {
                         ),
                         _react2.default.createElement(
                             'div',
-                            { className: 'form-group' },
+                            { className: 'form-group login-style' },
                             _react2.default.createElement('input', { type: 'checkbox', id: 'check' }),
                             _react2.default.createElement(
                                 'label',
@@ -74465,6 +74467,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _reactBootstrap = require('react-bootstrap');
 
 var _StageIndicator = require('./../../controls/StageIndicator');
@@ -74552,174 +74558,174 @@ var VisitSummary = (function (_ControlBase) {
             // let visitData = this.state.visitSummary;
             var labelClass = 'col-xs-6';
             if (this.state.visitSummary) {
-                return React.createElement(
+                return _react2.default.createElement(
                     'div',
                     null,
-                    React.createElement(
+                    _react2.default.createElement(
                         'div',
                         { className: 'col-12', style: StyleHeader },
-                        React.createElement(
+                        _react2.default.createElement(
                             'div',
                             { style: appName },
-                            React.createElement(
+                            _react2.default.createElement(
                                 'b',
                                 null,
                                 locale('VisitSummary')
                             )
                         ),
-                        React.createElement(
+                        _react2.default.createElement(
                             'form',
                             { className: 'form-horizontal' },
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 { style: fontStyle },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(_reactBootstrap.Input, { label: locale('Type_of_Visit'), labelClassName: labelClass }),
-                                    React.createElement(
+                                    _react2.default.createElement(_reactBootstrap.Input, { label: locale('Type_of_Visit'), labelClassName: labelClass }),
+                                    _react2.default.createElement(
                                         'p',
                                         { style: contentStyle },
                                         this.state.visitSummary.type
                                     )
                                 ),
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(_reactBootstrap.Input, { label: locale('Date_of_Visit'), labelClassName: labelClass }),
-                                    React.createElement(
+                                    _react2.default.createElement(_reactBootstrap.Input, { label: locale('Date_of_Visit'), labelClassName: labelClass }),
+                                    _react2.default.createElement(
                                         'p',
                                         { style: contentStyle },
                                         this.state.visitSummary.dateOfVisit
                                     )
                                 )
                             ),
-                            React.createElement('hr', { style: hrLineRedStyle }),
-                            React.createElement(
+                            _react2.default.createElement('hr', { style: hrLineRedStyle }),
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 { style: fontStyle },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(_reactBootstrap.Input, { label: locale('Sub_Center'), labelClassName: labelClass }),
-                                    React.createElement(
+                                    _react2.default.createElement(_reactBootstrap.Input, { label: locale('Sub_Center'), labelClassName: labelClass }),
+                                    _react2.default.createElement(
                                         'p',
                                         { style: contentStyle },
                                         this.state.visitSummary.subCenterName
                                     )
                                 ),
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(_reactBootstrap.Input, { label: locale('PHC'), labelClassName: labelClass }),
-                                    React.createElement(
+                                    _react2.default.createElement(_reactBootstrap.Input, { label: locale('PHC'), labelClassName: labelClass }),
+                                    _react2.default.createElement(
                                         'p',
                                         { style: contentStyle },
                                         this.state.visitSummary.PHCName
                                     )
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 { style: fontStyle },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(_reactBootstrap.Input, { label: locale('VHNName'), labelClassName: labelClass }),
-                                    React.createElement(
+                                    _react2.default.createElement(_reactBootstrap.Input, { label: locale('VHNName'), labelClassName: labelClass }),
+                                    _react2.default.createElement(
                                         'p',
                                         { style: contentStyle },
                                         this.state.visitSummary.VHNName
                                     )
                                 ),
-                                React.createElement(_reactBootstrap.Col, { xs: 6 })
+                                _react2.default.createElement(_reactBootstrap.Col, { xs: 6 })
                             )
                         )
                     ),
-                    React.createElement('br', null),
-                    React.createElement('br', null),
-                    React.createElement(
+                    _react2.default.createElement('br', null),
+                    _react2.default.createElement('br', null),
+                    _react2.default.createElement(
                         'div',
                         { className: 'col-12' },
-                        React.createElement(
+                        _react2.default.createElement(
                             'div',
                             { style: StyleHeader },
                             locale('PATIENTINFORMATION')
                         ),
-                        React.createElement(
+                        _react2.default.createElement(
                             _reactBootstrap.Row,
                             null,
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 2 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('Name'), labelClassName: labelClass },
                                     this.state.visitSummary.patName
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 2 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('SpouseName'), labelClassName: labelClass },
                                     this.state.visitSummary.patSpouseName
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 2 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('Age'), labelClassName: labelClass },
                                     this.state.visitSummary.patAge
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 3 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('ContactNo'), labelClassName: labelClass },
                                     this.state.visitSummary.patcontactNumber
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 2 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('BloodGroup'), labelClassName: labelClass },
                                     this.state.visitSummary.patBG
                                 )
                             )
                         ),
-                        React.createElement(
+                        _react2.default.createElement(
                             _reactBootstrap.Row,
                             null,
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 6 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('PregnancyStatus'), labelClassName: 'col-xs-3' },
-                                    React.createElement(_StageIndicator2.default, { options: pregnancystat, value: this.state.visitSummary.patPregnancyStatus, wrapperClassName: wrapperClass })
+                                    _react2.default.createElement(_StageIndicator2.default, { options: pregnancystat, value: this.state.visitSummary.patPregnancyStatus, wrapperClassName: wrapperClass })
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 3 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('Obstetrics'), labelClassName: labelClass },
                                     this.state.visitSummary.patObstetrics
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 2 },
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Input,
                                     { label: locale('Risk'), labelClassName: labelClass },
                                     this.state.visitSummary.patRisk
@@ -74727,53 +74733,53 @@ var VisitSummary = (function (_ControlBase) {
                             )
                         )
                     ),
-                    React.createElement('hr', { style: hrLineStyle }),
-                    React.createElement('br', null),
-                    React.createElement(
+                    _react2.default.createElement('hr', { style: hrLineStyle }),
+                    _react2.default.createElement('br', null),
+                    _react2.default.createElement(
                         'div',
                         { className: 'Yscroll' },
-                        React.createElement(
+                        _react2.default.createElement(
                             'div',
                             null,
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 null,
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: StyleHeader },
                                             locale('CurrentPregnancy_only_if_ANCvisit')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('If_Pregnancy_Wanted'), labelClassName: labelClass },
                                             this.state.visitSummary.PregnancyWanted
                                         )
                                     )
                                 ),
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: StyleHeader },
                                             locale('Present_Illness')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Vomiting'), labelClassName: labelClass },
                                             this.state.visitSummary.Vomiting
                                         ),
-                                        React.createElement('br', null),
-                                        React.createElement(
+                                        _react2.default.createElement('br', null),
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Leak_of_Watery_fluid_PV'), labelClassName: labelClass },
                                             this.state.visitSummary.LeakingOfWateryFluidPerVaginum_PV
@@ -74781,45 +74787,45 @@ var VisitSummary = (function (_ControlBase) {
                                     )
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 null,
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: StyleHeader },
                                             locale('ObstetricHistory')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Treatment_of_infertility'), labelClassName: labelClass },
                                             this.state.visitSummary.TreatmentForInfertility
                                         ),
-                                        React.createElement('br', null),
-                                        React.createElement(
+                                        _react2.default.createElement('br', null),
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Spinal_deformities'), labelClassName: labelClass },
                                             this.state.visitSummary.TreatmentForInfertility
                                         )
                                     )
                                 ),
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: StyleHeader },
                                             locale('PastMedicalHistory')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('High_Blood_Pressure'), labelClassName: labelClass },
                                             this.state.visitSummary.HighBloodPressure_hypertension
@@ -74827,45 +74833,45 @@ var VisitSummary = (function (_ControlBase) {
                                     )
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 null,
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: StyleHeader },
                                             locale('Allergies')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Food'), labelClassName: labelClass },
                                             this.state.visitSummary.isFood
                                         ),
-                                        React.createElement('br', null),
-                                        React.createElement(
+                                        _react2.default.createElement('br', null),
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Environmental'), labelClassName: labelClass },
                                             this.state.visitSummary.isEnv
                                         )
                                     )
                                 ),
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: StyleHeader },
                                             locale('SystemicExamination')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Input,
                                             { label: locale('Nervous'), labelClassName: labelClass },
                                             this.state.visitSummary.NormalNervousSystem
@@ -74873,42 +74879,42 @@ var VisitSummary = (function (_ControlBase) {
                                     )
                                 )
                             ),
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 null,
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 12 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         null,
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { style: LabResultHeader },
                                             locale('LAB_RESULTS')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             _reactBootstrap.Row,
                                             null,
-                                            React.createElement(
+                                            _react2.default.createElement(
                                                 _reactBootstrap.Col,
                                                 { xs: 6 },
-                                                React.createElement(
+                                                _react2.default.createElement(
                                                     _reactBootstrap.Input,
                                                     { label: locale('UPT'), labelClassName: labelClass },
                                                     this.state.visitSummary.upt
                                                 ),
-                                                React.createElement('br', null),
-                                                React.createElement(
+                                                _react2.default.createElement('br', null),
+                                                _react2.default.createElement(
                                                     _reactBootstrap.Input,
                                                     { label: locale('RapidMalariaTest'), labelClassName: labelClass },
                                                     this.state.visitSummary.rapidMalariaTest
                                                 )
                                             ),
-                                            React.createElement(
+                                            _react2.default.createElement(
                                                 _reactBootstrap.Col,
                                                 { xs: 6 },
-                                                React.createElement(
+                                                _react2.default.createElement(
                                                     _reactBootstrap.Input,
                                                     { label: locale('Hb'), labelClassName: labelClass },
                                                     this.state.visitSummary.hB
@@ -74918,29 +74924,29 @@ var VisitSummary = (function (_ControlBase) {
                                     )
                                 )
                             ),
-                            React.createElement('br', null)
+                            _react2.default.createElement('br', null)
                         ),
-                        React.createElement('br', null),
-                        React.createElement('hr', { style: hrLineStyle }),
-                        React.createElement(
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement('hr', { style: hrLineStyle }),
+                        _react2.default.createElement(
                             'div',
                             null,
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 null,
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         _reactBootstrap.Panel,
                                         { header: locale('Examination_Notes') },
                                         this.state.visitSummary.ExaminationNotes
                                     )
                                 ),
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         _reactBootstrap.Panel,
                                         { header: locale('Recorded_medication_details') },
                                         this.state.visitSummary.RecordedMedicationDetails
@@ -74948,46 +74954,46 @@ var VisitSummary = (function (_ControlBase) {
                                 )
                             )
                         ),
-                        React.createElement(
+                        _react2.default.createElement(
                             'div',
                             null,
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Row,
                                 null,
-                                React.createElement(
+                                _react2.default.createElement(
                                     _reactBootstrap.Col,
                                     { xs: 6 },
-                                    React.createElement(
+                                    _react2.default.createElement(
                                         'div',
                                         { className: 'panel panel-default' },
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             { className: 'panel-heading' },
                                             locale('Notes')
                                         ),
-                                        React.createElement(
+                                        _react2.default.createElement(
                                             'div',
                                             null,
-                                            React.createElement('textarea', { type: 'textarea', className: 'editable form-control', valueLink: this.linkState(this.state.visitSummary, 'Notes') })
+                                            _react2.default.createElement('textarea', { type: 'textarea', className: 'editable form-control', valueLink: this.linkState(this.state.visitSummary, 'Notes') })
                                         )
                                     )
                                 )
                             )
                         ),
-                        React.createElement(
+                        _react2.default.createElement(
                             _reactBootstrap.Row,
                             null,
-                            React.createElement(_reactBootstrap.Col, { xs: 8 }),
-                            React.createElement(
+                            _react2.default.createElement(_reactBootstrap.Col, { xs: 8 }),
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 4 },
                                 locale('Signature_of_the_Physician')
                             )
                         ),
-                        React.createElement(
+                        _react2.default.createElement(
                             _reactBootstrap.Row,
                             null,
-                            React.createElement(
+                            _react2.default.createElement(
                                 _reactBootstrap.Col,
                                 { xs: 8 },
                                 locale('Printed_on_pdf_generation_date')
@@ -74996,25 +75002,25 @@ var VisitSummary = (function (_ControlBase) {
                     )
                 );
             }
-            return React.createElement(
+            return _react2.default.createElement(
                 'div',
                 { className: 'col-lg-8 col-lg-offset-4' },
-                React.createElement(
+                _react2.default.createElement(
                     'button',
                     { className: 'btn btn-lg btn-warning' },
-                    React.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' }),
+                    _react2.default.createElement('span', { className: 'glyphicon glyphicon-refresh glyphicon-refresh-animate' }),
                     ' Loading data',
-                    React.createElement(
+                    _react2.default.createElement(
                         'span',
                         { className: 'dot_one' },
                         '.'
                     ),
-                    React.createElement(
+                    _react2.default.createElement(
                         'span',
                         { className: 'dot_two' },
                         '.'
                     ),
-                    React.createElement(
+                    _react2.default.createElement(
                         'span',
                         { className: 'dot_three' },
                         '.'
@@ -75029,7 +75035,7 @@ var VisitSummary = (function (_ControlBase) {
 
 exports.default = VisitSummary;
 
-},{"./../../controls/ControlBase":737,"./../../controls/StageIndicator":748,"react-bootstrap":255}],694:[function(require,module,exports){
+},{"./../../controls/ControlBase":737,"./../../controls/StageIndicator":748,"react":631,"react-bootstrap":255}],694:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -75230,45 +75236,45 @@ var AbdominalExamination = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('InspectationOfScarsOrAbdominalFindings'), placeholder: 'Abdominal Findings', labelClassName: labelClass, wrapperClassName: wcTextArea, valueLink: this.linkState(this.state.context.AbdominalExamination, 'InspectationOfScars') })
+                        _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', className: 'paddingStyleBottom', label: locale('InspectationOfScarsOrAbdominalFindings'), placeholder: 'Abdominal Findings', labelClassName: labelClass, wrapperClassName: wcTextArea, valueLink: this.linkState(this.state.context.AbdominalExamination, 'InspectationOfScars') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeightInCM'), placeholder: 'Height cms', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInCMS') })
+                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeightInCM'), className: 'paddingStyleBottom', placeholder: 'Height cms', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInCMS') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeight'), placeholder: 'Height weeks', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInWeeks') })
+                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeight'), className: 'paddingStyleBottom', placeholder: 'Height weeks', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInWeeks') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalLie'), placeholder: 'select', labelClassName: labelClass,
+                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalLie'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
                             wrapperClassName: wcDropDown, options: foetalLie, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FoetalLie') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalPresentation'), placeholder: 'select', labelClassName: labelClass,
+                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalPresentation'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
                             wrapperClassName: wcDropDown, options: foetalPresentation, valueLink: this.linkState(this.state.context.AbdominalExamination, 'Foetalpresentation') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FHS'), placeholder: 'Foetal heart Rate', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FHS') })
+                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FHS'), className: 'paddingStyleBottom', placeholder: 'Foetal heart Rate', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FHS') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('SingleVsMultiplePregnancy'), placeholder: 'select', labelClassName: labelClass,
+                        _react2.default.createElement(_DropDown2.default, { label: locale('SingleVsMultiplePregnancy'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
                             wrapperClassName: wcDropDown, options: pregnancy, valueLink: this.linkState(this.state.context.AbdominalExamination, 'SingleVsMultiplePregnancy') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalMovements'), placeholder: 'select', labelClassName: labelClass,
+                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalMovements'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
                             wrapperClassName: wcDropDown, options: FoetalMovements, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FoetalMovements') })
                     )
                 )
@@ -75773,10 +75779,10 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                 text: locale('Absent')
             }];
             var foetalMoments = _react2.default.createElement('span', null);
-            var foetalMoments_text = _react2.default.createElement('span', null);
+            var foetalMoments_textbox = [];
 
-            if (this.state.context.CurrentIllnessHistory.FoetalMoments == 'Yes') {
-                foetalMoments_text = _react2.default.createElement(_reactBootstrap.Input, { type: 'text', label: locale(''), placeholder: '', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'foetalMomentsCountPer12Hrs') });
+            if (this.state.context.CurrentIllnessHistory.foetalMoments == 'Yes') {
+                foetalMoments_textbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'text', label: locale(''), label: locale('CountPer12Hrs'), placeholder: '', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'foetalMomentsCountPer12Hrs') });
             }
             if (this.state.context.visitType == 'ANC2' || this.state.context.visitType == 'ANC3') {
                 foetalMoments = _react2.default.createElement(
@@ -75790,7 +75796,7 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { xs: 4 },
-                        foetalMoments_text
+                        foetalMoments_textbox
                     )
                 );
             }
@@ -76199,12 +76205,12 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ xs: 6, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('HeightIncms'), placeholder: 'Height in cms', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Height') })
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ xs: 6, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('RespiratoryRatePM'), placeholder: 'Respiratory Rate per min', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'RespiratoryRate') })
 																								)
 																				),
@@ -76213,7 +76219,7 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ xs: 6, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('WeightInKgs'), placeholder: 'Weight in Kgs', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Weight') })
 																								),
 																								_react2.default.createElement(
@@ -76232,7 +76238,7 @@ var GeneralExamination = (function (_ControlBase) {
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ xs: 6, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'text', label: locale('BP'), placeholder: '00/00', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'BloodPressure') })
 																								)
 																				),
@@ -76246,7 +76252,7 @@ var GeneralExamination = (function (_ControlBase) {
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ xs: 6, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('TemperatureInFarenheit'), placeholder: 'Temperature in farenheit', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'TemperatureInFarenheit') })
 																								)
 																				),
@@ -76255,7 +76261,7 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ xs: 6, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('Pulse'), placeholder: 'Pulse', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Pulse') })
 																								),
 																								_react2.default.createElement(
@@ -76465,12 +76471,12 @@ var LabOrders = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BloodGroup_including_RhFactor'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'BloodGroup_including_RhFactor') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('VDRL_RPR'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'VDRL_RPR') })
                         )
                     ),
@@ -76479,12 +76485,12 @@ var LabOrders = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('HIV_testing'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'HIV_testing') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Rapid_Malaria_Test'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'Rapid_Malaria_Test') })
                         )
                     ),
@@ -76493,12 +76499,12 @@ var LabOrders = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BloodSugar'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'BloodSugar') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('HbsAg'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'HbsAg') })
                         )
                     ),
@@ -76507,12 +76513,12 @@ var LabOrders = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('CBC_with_ESR'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'CBC_with_ESR') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PeripheralSmear'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'PeripheralSmear') })
                         )
                     ),
@@ -76617,13 +76623,13 @@ var LabResults = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
                             upt,
                             usg
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12, className: 'paddingStyleBottom' },
                             _react2.default.createElement(_reactBootstrap.Input, { type: 'text', label: locale('Hb'), placeholder: 'Hb', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabResults, 'Hb') })
                         )
                     ),
@@ -76632,12 +76638,12 @@ var LabResults = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('UrineSugar'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabResults, 'UrineSugar') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('UrineProteins'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabResults, 'UrineProteins') })
                         )
                     ),
@@ -76646,8 +76652,8 @@ var LabResults = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
-                            _react2.default.createElement(_DropDown2.default, { label: locale('RapidMalariaTest'), placeholder: 'select', labelClassName: labelClass,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_DropDown2.default, { className: 'col-xs-12 col-lg-6 col-md-12', label: locale('RapidMalariaTest'), placeholder: 'select', labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, options: RapidMalariaTestoptions, valueLink: this.linkState(this.state.context.LabResults, 'RapidMalariaTest') })
                         )
                     )
@@ -77000,24 +77006,32 @@ var MedicalPrescriptions = (function (_ControlBase) {
             var wrapperClass = 'col-xs-2';
             var isInj_TT_IM = _react2.default.createElement('span', null);
             var isInj_TT_IM_Date = _react2.default.createElement('span', null);
+            var isInj_TT_IM_Quantity = _react2.default.createElement('span', null);
             var iFA_Tablets_Dispensed = _react2.default.createElement('span', null);
             var iFA_Tablets_Dispensed_Date = _react2.default.createElement('span', null);
+            var iFA_Tablets_Dispensed_Quantity = _react2.default.createElement('span', null);
             var albendazole = _react2.default.createElement('span', null);
             var albendazole_Date = _react2.default.createElement('span', null);
+            var albendazole_Dispensed_Quantity = _react2.default.createElement('span', null);
             var folicAcid_Tablets_dispensed = _react2.default.createElement('span', null);
             var folicAcidSupplimentIFADate = _react2.default.createElement('span', null);
+            var folicAcidTablet_Quantity = _react2.default.createElement('span', null);
 
             if (this.state.context.MedicalPrescriptions.Inj_TT_IM) {
                 isInj_TT_IM_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date of Injection ', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'injTT0_5mlIMDate') });
+                isInj_TT_IM_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'Height') });
             }
             if (this.state.context.MedicalPrescriptions.IFA_Tablets_Dispensed) {
                 iFA_Tablets_Dispensed_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed ', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed_Date') });
+                iFA_Tablets_Dispensed_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'iFATabletsDispensedQuantity') });
             }
             if (this.state.context.MedicalPrescriptions.Albendazole) {
                 albendazole_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole_Date') });
+                albendazole_Dispensed_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'albendazoledispensedQuantity') });
             }
             if (this.state.context.MedicalPrescriptions.folicAcidSuppliment_IFA) {
                 folicAcidSupplimentIFADate = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSupplimentIFADate') });
+                folicAcidTablet_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'folicAcidTabletsQuantity') });
             }
 
             if (this.state.context.visitType == 'ANC2') {
@@ -77033,6 +77047,11 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         _reactBootstrap.Col,
                         { xs: 4 },
                         isInj_TT_IM_Date
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 4 },
+                        isInj_TT_IM_Quantity
                     )
                 );
                 iFA_Tablets_Dispensed = _react2.default.createElement(
@@ -77047,6 +77066,11 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         _reactBootstrap.Col,
                         { xs: 4 },
                         iFA_Tablets_Dispensed_Date
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 4 },
+                        iFA_Tablets_Dispensed_Quantity
                     )
                 );
                 albendazole = _react2.default.createElement(
@@ -77061,6 +77085,11 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         _reactBootstrap.Col,
                         { xs: 4 },
                         albendazole_Date
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 4 },
+                        albendazole_Dispensed_Quantity
                     )
                 );
             } else if (this.state.context.visitType == 'ANC1') {
@@ -77074,8 +77103,13 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 8 },
+                        { xs: 4 },
                         folicAcidSupplimentIFADate
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 4 },
+                        folicAcidTablet_Quantity
                     )
                 );
             } else if (this.state.context.visitType == 'ANC3') {
@@ -77091,6 +77125,11 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         _reactBootstrap.Col,
                         { xs: 4 },
                         isInj_TT_IM_Date
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Col,
+                        { xs: 4 },
+                        isInj_TT_IM_Quantity
                     )
                 );
                 iFA_Tablets_Dispensed = _react2.default.createElement(
@@ -77157,7 +77196,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 12 },
+                            { xs: 12, className: 'paddingStyleBottom' },
                             _react2.default.createElement(_DropDown2.default, { label: locale('RecordPossibleLocationOfDelivery'), placeholder: 'select', labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, options: DeliveryLocationoptions, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Select') })
                         )
@@ -77350,7 +77389,7 @@ var ObstetricHistory = (function (_ControlBase) {
             var wrapperClass = 'col-xs-2';
             var isRecurrentEarlyAbortion = _react2.default.createElement('span', null);
 
-            if (this.state.context.ObstetricHistory.RecurrentEarlyAbortion) isRecurrentEarlyAbortion = _react2.default.createElement(_reactBootstrap.Input, { type: 'text', wrapperClassName: 'col-xs-2' });
+            if (this.state.context.ObstetricHistory.RecurrentEarlyAbortion) isRecurrentEarlyAbortion = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', wrapperClassName: 'col-xs-2', valueLink: this.linkState(this.state.context.ObstetricHistory, 'abortions') });
 
             return _react2.default.createElement(
                 'div',
@@ -77379,12 +77418,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { xs: 6, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PostAbortionComplications'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Post_abortionComplications') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { xs: 6, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('ObstructedLabour'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ObstructedLabour') })
                         )
@@ -77439,7 +77478,7 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { xs: 6, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('obstructedLabourIncludingDystocia'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ObstructedLabour_IncludingDystocia') })
                         ),
                         _react2.default.createElement(
@@ -77454,7 +77493,7 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { xs: 6, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PerinealInjuriesTears'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'PerinealInjuries_tears') })
                         ),
                         _react2.default.createElement(
@@ -77469,7 +77508,7 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { xs: 6, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('ExcessiveBleedingAfterDelivery'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ExcessiveBleedingAfterDelivery') })
                         ),
                         _react2.default.createElement(
@@ -77514,7 +77553,7 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { xs: 6, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Pregnancies'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Pregnancies') })
                         ),
@@ -77587,6 +77626,10 @@ var labStyle = {
     'color': '#2899CD',
     'font-size': '20px'
 };
+var contentStyle = {
+    'marginBottom': '4%',
+    'paddingTop': '3%'
+};
 
 var PastMedicalHistory = (function (_ControlBase) {
     _inherits(PastMedicalHistory, _ControlBase);
@@ -77626,7 +77669,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('HighBloodPressure_hypertension'), style: { 'paddingLeft': '10px' }, labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'HighBloodPressure_hypertension') })
                                 ),
@@ -77647,7 +77690,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('Diabetes_Types'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'Diabetes') })
                                 ),
@@ -77668,7 +77711,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('Breathlessness_on_exertion_palpitations_HeartDisease'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'Breathlessness_on_exertion_palpitations_HeartDisease') })
                                 ),
@@ -77693,7 +77736,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('RenalDisease_KidneyFailure'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'RenalDisease') })
                                 ),
@@ -77714,7 +77757,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('Convulsions_Types'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'Convulsions_epilepsy') })
                                 ),
@@ -77735,7 +77778,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('Attacksofbreathlessness_asthma'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'Attacksofbreathlessness_asthma') })
                                 ),
@@ -77760,7 +77803,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('Jaundice_Types'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'Jaundice') })
                                 ),
@@ -77781,7 +77824,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('Malariasymptoms'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'Malaria') })
                                 ),
@@ -77802,7 +77845,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('ReproductiveTractInfection_RTI'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'ReproductiveTractInfection_RTI') })
                                 ),
@@ -77827,7 +77870,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(
                                     _reactBootstrap.Row,
-                                    null,
+                                    { style: contentStyle },
                                     _react2.default.createElement(_ToggleButton2.default, { label: locale('SexuallyTransmittedInfection_STI_and_HIV_AIDS'), labelClassName: labelClass1,
                                         wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'SexuallyTransmittedInfection_STI_and_HIV_AIDS') })
                                 ),
@@ -78298,7 +78341,7 @@ var StyleHeader = {
 var borderStyle = {};
 var borderStyle1 = {
     'overflow-x': 'hidden',
-    marginTop: '-1%',
+    background: '#ffffff',
     marginLeft: '0.8%',
     marginRight: '0.8%'
 };
@@ -79046,17 +79089,17 @@ var GridBody = (function (_React$Component) {
             if (totalRowCount % rowsPerPage > 0) {
                 totalPages = totalPages + 1;
             }
-            var SlicedList = [];
+            var slicedList = [];
             for (i = 1; i <= totalPages; i++) {
                 if (offsetIndex == i) {
                     var endNo = offsetIndex * rowsPerPage;
                     var startNo = endNo - rowsPerPage;
-                    SlicedList = PatientDetailsArray.slice(startNo, endNo);
+                    slicedList = PatientDetailsArray.slice(startNo, endNo);
                 }
             }
-            for (i = 0; i < SlicedList.length; i++) {
-                SlicedList[i].alt = alt;
-                rows.push(_react2.default.createElement(WorkListRow, _extends({ rowContent: SlicedList[i] }, this.props)));
+            for (i = 0; i < slicedList.length; i++) {
+                slicedList[i].alt = alt;
+                rows.push(_react2.default.createElement(WorkListRow, _extends({ rowContent: slicedList[i] }, this.props)));
                 alt = !alt;
             }
             if (PatientDetailsArray.length == 0) {
@@ -79390,9 +79433,6 @@ var WorklistView = (function (_React$Component) {
                 console.log("undefined");
                 this.setState({ showSearchResult: true });
             } else {
-                console.log("show tab");
-                //  this.setState({showTab: true});
-                //  this.setState({tabActive: 4});
                 this.setState({ showSearchResult: false });
             }
             this.state.workListData = data.args.worklist;
@@ -79531,7 +79571,6 @@ var WorklistView = (function (_React$Component) {
                 paddingRight: '0px',
                 backgroundColor: '#f5f6f7'
             };
-
             var clearPadding = { marginRight: '6px' };
 
             var importFromPicmeIcon = {
@@ -79543,7 +79582,6 @@ var WorklistView = (function (_React$Component) {
                 background: 'url(./worklist/addPatient_icon.png) no-repeat scroll 0px 0px',
                 paddingLeft: '22px'
             };
-
             var h3Top = { margin: '3px 0 6px' };
 
             var contentHeader = {
@@ -80188,11 +80226,9 @@ var PregnancyStatus = (function (_React$Component) {
         key: 'getWeekNumber',
         value: function getWeekNumber(date) {
             var dArray = date.split('/');
-
             var formatedDate1 = new Date(dArray[1] + '/' + dArray[0] + '/' + dArray[2]); // Converting MM/DD/YYYY Format
             var formatedDate2 = new Date(); // fetching current date
             var ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
-
             // Convert both dates to milliseconds
             var date1_ms = formatedDate1.getTime();
             var date2_ms = formatedDate2.getTime();
@@ -80202,14 +80238,64 @@ var PregnancyStatus = (function (_React$Component) {
             return Math.floor(difference_ms / ONE_WEEK);
         }
     }, {
+        key: 'calculatePercentage',
+        value: function calculatePercentage(week) {
+            var n;
+            if (week < 41) {
+                n = week;
+            } else {
+                n = 40;
+            }
+            var v = 40;
+            var percent = n * 100 / v;
+            return percent;
+        }
+    }, {
         key: 'render',
         value: function render() {
-
-            var week = this.getWeekNumber(this.props.pregnancyStatus);
+            var labelSuccessStyle = {
+                marginLeft: '-9px'
+            };
+            var pregnancyStatus = this.props.pregnancyStatus;
+            var week = 0;
+            if (pregnancyStatus !== "") {
+                var week = this.getWeekNumber(pregnancyStatus);
+            }
+            var widthPercent = this.calculatePercentage(week);
             return _react2.default.createElement(
                 'div',
-                { id: 'row' },
-                _react2.default.createElement(_reactBootstrap.ProgressBar, { striped: true, bsStyle: 'success', min: 0, max: 45, now: week })
+                null,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'row' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'col-lg-12' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'progress' },
+                            _react2.default.createElement(_reactBootstrap.ProgressBar, { striped: true, bsStyle: 'success', min: 0, max: 40, now: week, ref: 'progressBar' })
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'row' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'col-lg-12' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'progress_val', style: { marginLeft: widthPercent + '%' } },
+                            _react2.default.createElement('div', { className: 'arrow-up' }),
+                            _react2.default.createElement(
+                                'span',
+                                { className: 'label label-success', style: labelSuccessStyle },
+                                week
+                            )
+                        )
+                    )
+                )
             );
         }
     }]);
@@ -80251,21 +80337,18 @@ var SearchFilter = (function (_React$Component) {
         _this.state = {
             searchBy: '',
             searchType: '',
-            searchData: ''
+            searchData: '',
+            searchPatientPlaceHolder: locale('searchPatients')
         };
         return _this;
     }
-
-    //    handleSearchAction() {
-    //        this.state.searchType = AppConstants.MANUAL_SEARCH;
-    //        AppAction.executeAction(ActionType.PATIENT_SEARCH_ACTION, this.state);
-    //    }
 
     _createClass(SearchFilter, [{
         key: 'handleChange',
         value: function handleChange(event) {
             this.state.searchBy = '';
             this.state.searchBy = event.target.value;
+            this.setState({ searchPatientPlaceHolder: locale('searchPatients') });
             var filterJson = {
                 searchType: AppConstants.AUTO_SEARCH,
                 searchBy: event.target.value
@@ -80273,9 +80356,15 @@ var SearchFilter = (function (_React$Component) {
             AppAction.executeAction(ActionType.PATIENT_SEARCH_ACTION, filterJson);
         }
     }, {
+        key: 'validateSearch',
+        value: function validateSearch() {
+            this.setState({ searchPatientPlaceHolder: "Please enter search data" });
+        }
+    }, {
         key: 'render',
         value: function render() {
             this.state.searchData = this.props.tableContents;
+            var searchPatientPlaceHolder = this.state.searchPatientPlaceHolder;
             var innerAddon = {
                 position: 'relative',
                 marginTop: '20px',
@@ -80285,17 +80374,21 @@ var SearchFilter = (function (_React$Component) {
                 color: '#7a7b7b',
                 fontFamily: 'GEInspira'
             };
+            var searchBoxStyle = {};
+            if (searchPatientPlaceHolder == "Please enter search data") {
+                searchBoxStyle = { borderColor: 'red', color: 'red', fontStyle: 'italic' };
+            }
             var searchBy = this.state.searchBy;
             return _react2.default.createElement(
                 'div',
                 { className: 'serachFilter input-group add-on pull-right', style: innerAddon },
-                _react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: locale('searchPatients'), onChange: this.handleChange.bind(this) }),
+                _react2.default.createElement('input', { type: 'text', style: searchBoxStyle, className: 'form-control', placeholder: searchPatientPlaceHolder, onChange: this.handleChange.bind(this) }),
                 _react2.default.createElement(
                     'div',
                     { className: 'input-group-btn' },
                     _react2.default.createElement(
                         'button',
-                        { className: 'btn btn-default', onClick: this.props.onClick.bind(this, searchBy), type: 'button' },
+                        { className: 'btn btn-default', onClick: searchBy == '' ? this.validateSearch.bind(this) : this.props.onClick.bind(this, searchBy), type: 'button' },
                         _react2.default.createElement('i', { className: 'glyphicon glyphicon-search' })
                     )
                 )
@@ -80607,9 +80700,7 @@ var Tabs = (function (_React$Component) {
             data: parent.showStatus,
             tabActive: parent.tabActive
         };
-
         AppAction.executeAction(ActionType.GET_TOTAL_WORKLIST, null);
-
         return _this;
     }
 
@@ -80944,7 +81035,6 @@ var WorklistView = (function (_React$Component) {
                 console.log("undefined");
                 this.setState({ showSearchResult: true });
             } else {
-                console.log("show tab");
                 //  this.setState({showTab: true});
                 //  this.setState({tabActive: 4});
                 this.setState({ showSearchResult: false });
@@ -81063,7 +81153,6 @@ var WorklistView = (function (_React$Component) {
                 paddingRight: '0px',
                 backgroundColor: '#f5f6f7'
             };
-
             var clearPadding = { marginRight: '6px' };
 
             var importFromPicmeIcon = {
@@ -81075,7 +81164,6 @@ var WorklistView = (function (_React$Component) {
                 background: 'url(./worklist/addPatient_icon.png) no-repeat scroll 0px 0px',
                 paddingLeft: '22px'
             };
-
             var h3Top = { margin: '3px 0 6px' };
 
             var contentHeader = {
@@ -81459,6 +81547,7 @@ module.exports = {
     Decreased: 'Decreased',
     Absent: 'Absent',
     FoetalMoments: 'Foetal Moments',
+    CountPer12Hrs: 'Count per 12 hours',
 
     /*Abdominal Examination*/
     AbdominalExamination: 'Abdominal Examination',
@@ -81664,7 +81753,7 @@ module.exports = {
     /*Medical Prescriptions*/
     MedicalPrescriptions: 'Medical prescriptions',
     MedicalPrescriptionsTitle: 'This section records Medical prescriptions information',
-    Inj_TT_IM: 'Inj. TT 0.5ml IM',
+    Inj_TT_IM: 'Inj. TT 0.5ml IM(second dose)',
     FolicAcidSuppliment_IFA: 'Folic Acid Suppliment ( IFA)',
     Counselling: 'Counselling - Diet, Importance of ANC, domestic violence, sex during Pregnancy',
     Issue_MaternalChildProtectionCard: 'Issue Maternal & Child Protection Card',
@@ -81676,6 +81765,7 @@ module.exports = {
     Folic_Acid_Tablets_Dispensed: 'Folic Acid Tablets dispensed',
     IFA_Tablets_Dispensed: 'IFA Tablets dispensed',
     Albendazole_Dispensed: 'Albendazole ( 400mg) dispensed',
+    QuantityDispensed: 'Quantity Dispensed',
 
     /* Primary Information*/
     PrimaryInformation: 'Primary Information',
@@ -82138,6 +82228,7 @@ module.exports = {
     Folic_Acid_Tablets_Dispensed: 'போலிக் ஆசிட் மாத்திரைகள் விநியோகிப்பதற்கு',
     IFA_Tablets_Dispensed: 'ஐஎஸ்ஏ மாத்திரைகள் விநியோகிப்பதற்கு',
     Albendazole_Dispensed: 'Albendazole ( 400 எம்ஜி ) விநியோகிப்பதற்கு',
+    QuantityDispensed: 'அளவு விநியோகிப்பதற்கு',
 
     /* Primary Information*/
     PrimaryInformation: 'முக்கிய தகவல்கள்',
@@ -82686,12 +82777,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-unused-vars: 0*/
 /*eslint no-unused-vars: 0*/
 
-var classSet = "checkBox checkedCB";
+var classSet = 'checkBox checkedCB';
 
 var CustomRadioButton = (function (_ControlBase) {
     _inherits(CustomRadioButton, _ControlBase);
 
-    //export default class CheckBox extends React.Component {
+    // export default class CheckBox extends React.Component {
 
     function CustomRadioButton() {
         _classCallCheck(this, CustomRadioButton);
@@ -82705,14 +82796,14 @@ var CustomRadioButton = (function (_ControlBase) {
     _createClass(CustomRadioButton, [{
         key: 'checkOrUncheck',
         value: function checkOrUncheck() {
-            if (this.state.status == true) classSet = "checkBox checkedCB";else classSet = "checkBox";
+            if (this.state.status == true) classSet = 'checkBox checkedCB';else classSet = 'checkBox';
             var checkOption = !this.state.status;
             this.setState({ status: checkOption });
         }
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            if (this.props.status == true) classSet = "checkBox checkedCB";else classSet = "checkBox";
+            if (this.props.status == true) classSet = 'checkBox checkedCB';else classSet = 'checkBox';
             this.setState({ status: this.props.status });
         }
     }, {
@@ -83103,7 +83194,7 @@ var LabeledControl = (function (_ControlBase) {
             ));
             if (this.props.subLabel) controls.push(_react2.default.createElement(
                 'span',
-                { className: 'subLabel' },
+                { className: 'subLabel labelPadding' },
                 this.props.subLabel
             ));
 
@@ -85014,9 +85105,10 @@ var WorkListStore = (function (_BaseStore) {
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
+
                         workListJSON[_AppConstants.WORKLIST_JSON] = response;
+                        totalList = response;
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, AppConstants.TOTAL_WORKLIST);
-                        totalList = updatedWorklistJson[_AppConstants.WORKLIST_JSON];
                         WorkListStore.emitChange(ActionType.GET_TOTAL_WORKLIST, updatedWorklistJson);
                     });
                     break;
@@ -85032,6 +85124,7 @@ var WorkListStore = (function (_BaseStore) {
                     };
                     ServiceManager.doGet(getData).then(function (response) {
                         workListJSON[_AppConstants.WORKLIST_JSON] = WorkListStore.translate(response, RequestType.GET, _AppConstants.DAY_TYPE);
+                        totalList = workListJSON[_AppConstants.WORKLIST_JSON];
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, _AppConstants.DAY_TYPE);
                         WorkListStore.emitChange(ActionType.GET_TODAYS_WORKLIST, updatedWorklistJson);
                     });
@@ -85041,13 +85134,13 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-
                         url: '/api/worklists',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
                     ServiceManager.doGet(getData).then(function (response) {
                         workListJSON[_AppConstants.WORKLIST_JSON] = WorkListStore.translate(response, RequestType.GET, _AppConstants.WEEK_TYPE);
+                        totalList = workListJSON[_AppConstants.WORKLIST_JSON];
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, _AppConstants.WEEK_TYPE);
                         WorkListStore.emitChange(ActionType.GET_WEEKLY_WORKLIST, updatedWorklistJson);
                     });
@@ -85069,11 +85162,9 @@ var WorkListStore = (function (_BaseStore) {
                         ServiceManager.doGet(getData).then(function (response) {
                             var updatedWorklistJson = WorkListStore.getSortedList(response, action.data.searchType);
                             if (updatedWorklistJson[_AppConstants.WORKLIST_JSON].length == 0) {
-                                console.log("null data");
                                 WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, 'No data found');
                             } else {
                                 WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
-                                console.log("emit is called");
                             }
                         });
                     }
@@ -85086,11 +85177,11 @@ var WorkListStore = (function (_BaseStore) {
             var sortedWorkList = [];
             var updatedJson = {};
             if (searchBy === AppConstants.MANUAL_SEARCH) {
-                sortedWorkList = searchData;
+                sortedWorkList = searchData.toLowerCase();
             } else {
                 searchData.filter(function (row) {
-                    var jsonString = JSON.stringify(row);
-                    if (jsonString.indexOf(searchBy) > -1) {
+                    var jsonString = JSON.stringify(row).toLowerCase();
+                    if (jsonString.indexOf(searchBy.toLowerCase()) > -1) {
                         sortedWorkList.push(row);
                         return true;
                     } else {
@@ -85099,10 +85190,6 @@ var WorkListStore = (function (_BaseStore) {
                 });
             }
             updatedJson[_AppConstants.WORKLIST_JSON] = sortedWorkList;
-            updatedJson[_AppConstants.DONUT_DAY_VALUES] = this.getDonutData(this.translate(sortedWorkList, '', _AppConstants.DAY_TYPE), _AppConstants.DAY_TYPE);
-            updatedJson[_AppConstants.DONUT_WEEK_VALUES] = this.getDonutData(this.translate(sortedWorkList, '', _AppConstants.WEEK_TYPE), _AppConstants.WEEK_TYPE);
-            updatedJson[_AppConstants.DONUT_DAY_LEGENDS] = this.getDonutLegend(_AppConstants.DAY_TYPE);
-            updatedJson[_AppConstants.DONUT_WEEK_LEGENDS] = this.getDonutLegend(_AppConstants.WEEK_TYPE);
             return updatedJson;
         }
     }, {
@@ -86174,7 +86261,8 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                     CongenitalAnomaly: visitData ? bool(visitData.isCongenitalAnomalies) : false,
                     TreatmentForInfertility: visitData ? bool(visitData.isTreatmentForInfertility) : false,
                     SpinalDeformitiesSuchAs_Acoliosis_kyphosis_polio: visitData ? bool(visitData.isSpinalDeformities) : false,
-                    Rh_negative_inThePreviousPregnancy: visitData ? bool(visitData.isRhNgtvPrvsPrgncy) : false
+                    Rh_negative_inThePreviousPregnancy: visitData ? bool(visitData.isRhNgtvPrvsPrgncy) : false,
+                    abortions: visitData ? visitData.abortions : 0
                 },
                 PastMedicalHistory: {
                     HighBloodPressure_hypertension: visitData ? bool(visitData.isHighBldPrssre) : false,
@@ -86219,25 +86307,35 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                     CBC_with_ESR: visitData ? bool(visitData.isCBCWithESR) : false,
                     PeripheralSmear: visitData ? bool(visitData.isPeripheralSmear) : false,
                     recommendAnomalyScan: visitData ? bool(visitData.isAnomalyScan) : false,
-                    GCT: visitData ? bool(visitData.isGCT) : false
+                    GCT: visitData ? bool(visitData.isGCT) : false,
+                    HbRepeat: visitData ? bool(visitData.ishbRepeat) : false,
+                    BloodSugarRepeat: visitData ? bool(visitData.isbloodSugarRepeat) : false
                 },
                 LabResults: {
                     UPT: visitData ? visitData.uPT : '',
                     Hb: visitData ? visitData.hB : 0,
                     UrineSugar: visitData ? bool(visitData.urineSugar) : false,
                     UrineProteins: visitData ? bool(visitData.urineProteins) : false,
-                    RapidMalariaTest: visitData ? visitData.rapidMalariaTest : ''
+                    RapidMalariaTest: visitData ? visitData.rapidMalariaTest : '',
+                    USG: visitData ? bool(visitData.uSG) : false
                 },
                 MedicalPrescriptions: {
                     Inj_TT_IM: visitData ? bool(visitData.injTT0_5mlIM) : false,
-                    folicAcidSuppliment_IFA: visitData ? bool(visitData.folicAcidSupplimentIFA) : false,
-                    folicAcidSupplimentIFADate: visitData ? visitData.folicAcidSupplimentIFADate : '',
                     Counselling: visitData ? bool(visitData.counsellingDiet) : false,
                     Issue_MaternalChildProtectionCard: visitData ? bool(visitData.issueMaternal_ChildProtectionCard) : false,
                     JSYCard: visitData ? bool(visitData.jSYCard) : false,
                     BPLCard: visitData ? bool(visitData.bPLCard) : false,
                     RecordPossibleLocationOfDelivery: visitData ? visitData.possibleLocationofDelivery : '',
-                    injTT0_5mlIMDate: visitData ? visitData.injTT0_5mlIMDate : ''
+                    injTT0_5mlIMDate: visitData ? visitData.injTT0_5mlIMDate : '',
+                    Albendazole: visitData ? bool(visitData.albendazoledispensed) : false,
+                    Albendazole_Date: visitData ? visitData.albendazoledispensedDate : '',
+                    IFA_Tablets_Dispensed: visitData ? bool(visitData.iFATabletsDispensed) : false,
+                    IFA_Tablets_Dispensed_Date: visitData ? visitData.iFATabletsDispensedDate : '',
+                    folicAcidSuppliment_IFA: visitData ? bool(visitData.folicAcidTabletsDispensed) : false,
+                    folicAcidSupplimentIFADate: visitData ? visitData.folicAcidTabletsDate : '',
+                    iFATabletsDispensedQuantity: visitData ? visitData.folicAcidTabletsQuantity : 0,
+                    albendazoledispensedQuantity: visitData ? visitData.albendazoledispensedQuantity : 0,
+                    folicAcidTabletsQuantity: visitData ? visitData.folicAcidTabletsQuantity : 0
                 },
                 Comments: {
                     GeneralComments: visitData ? visitData.comments : ''
@@ -86422,6 +86520,19 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 isGCT: str(visitData.LabOrder.GCT),
                 impOfANC: '',
                 domesticViolence: '',
+                // albendazoledispensed: str(visitData.MedicalPrescriptions.Albendazole, ''),
+                // albendazoledispensedDate: visitData.MedicalPrescriptions.Albendazole_Date,
+                // albendazoledispensedQuantity: visitData.MedicalPrescriptions.albendazoledispensedQuantity,
+                // iFATabletsDispensed: str(visitData.MedicalPrescriptions.IFA_Tablets_Dispensed, ''),
+                // iFATabletsDispensedDate : visitData.MedicalPrescriptions.IFA_Tablets_Dispensed_Date,
+                // iFATabletsDispensedQuantity: visitData.MedicalPrescriptions.iFATabletsDispensedQuantity,
+                // folicAcidTabletsDispensed: str(visitData.MedicalPrescriptions.folicAcidSuppliment_IFA, ''),
+                // folicAcidTabletsDate: visitData.MedicalPrescriptions.folicAcidSupplimentIFADate,
+                // folicAcidTabletsQuantity: visitData.MedicalPrescriptions.folicAcidTabletsQuantity,
+                // uSG: visitData.LabResults.USG,
+                // ishbRepeat: str(visitData.LabOrder.HbRepeat,''),
+                // isbloodSugarRepeat: str(visitData.LabOrder.BloodSugarRepeat,''),
+                // abortions: visitData.ObstetricHistory.abortions,
                 visitId: visitData.visitId
 
             };
@@ -86860,7 +86971,7 @@ var ServiceManager = (function () {
                 // console.log('Inside ServiceManager : function PromisedGet'); 
 
                 if (null == obj.timeout) {
-                    timeout = 100000;
+                    timeout = 200000;
                 }
                 // //console.log('timeout '+timeout);
 
@@ -86927,7 +87038,7 @@ var ServiceManager = (function () {
                 // console.log('Inside ServiceManager : function PromisedGet'); 
 
                 if (null == obj.timeout) {
-                    timeout = 100000;
+                    timeout = 200000;
                 }
 
                 $.ajax({
