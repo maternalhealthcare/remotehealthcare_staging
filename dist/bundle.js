@@ -71849,7 +71849,7 @@ var textColor = { color: '#0000A3' };
 
 var labelStyle = {
     float: 'left',
-    marginLeft: '10px'
+    marginLeft: '13px'
 
 };
 var wrapperStyle = { marginTop: '30px' };
@@ -72030,25 +72030,25 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { lg: 4, sm: 12, xs: 12, style: { marginTop: '1%' } },
-                                _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('ReferredTo'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
-                                    wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'referredTo') }),
+                                { lg: 6, sm: 12, xs: 12, style: { marginTop: '1%' } },
+                                _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('ReferredTo'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-2 marginMinus',
+                                    wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'referredTo') }),
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
-                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('ReasonForReferral'), className: 'editable', placeholder: locale('PleaseEnterTheReason'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
-                                        wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'reasonForReferral') }),
+                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('ReasonForReferral'), className: 'editable', placeholder: locale('PleaseEnterTheReason'), labelClassName: 'col-xs-12 col-lg-2 marginMinus',
+                                        wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'reasonForReferral') }),
                                     '  '
                                 )
                             ),
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { lg: 4, sm: 12, xs: 12 },
-                                _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YY', className: 'editable', label: locale('RefferedOn'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
-                                    wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'referredOn') }),
+                                { lg: 6, sm: 12, xs: 12 },
+                                _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YY', className: 'editable', label: locale('RefferedOn'), labelClassName: 'col-xs-12 col-lg-2 marginMinus',
+                                    wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'referredOn') }),
                                 _react2.default.createElement(
                                     'div',
-                                    { className: 'referral' },
+                                    { className: 'referral', style: { 'width': '38%' } },
                                     _react2.default.createElement(
                                         'label',
                                         { style: labelStyle },
@@ -72069,8 +72069,8 @@ var ReferralLetter = (function (_ControlBase) {
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
-                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('CurrentMedication'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
-                                        wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'CurrentMedication') }),
+                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('CurrentMedication'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-3 marginMinus',
+                                        wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'CurrentMedication') }),
                                     ' '
                                 )
                             )
@@ -72082,7 +72082,7 @@ var ReferralLetter = (function (_ControlBase) {
                                 _reactBootstrap.Col,
                                 { lg: 4, sm: 12, xs: 12 },
                                 _react2.default.createElement(_RadioButton2.default, { label: 'Information on referral provided to institution referred',
-                                    labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context, 'informationOnReferral', this.valueChanged), name: 'informationOnReferral', trueText: 'Yes', falseText: 'No' })
+                                    labelClassName: 'col-xs-12 col-lg-6', wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.context, 'informationOnReferral', this.valueChanged), name: 'informationOnReferral', trueText: 'Yes', falseText: 'No' })
                             )
                         ),
                         _react2.default.createElement(
@@ -72092,7 +72092,7 @@ var ReferralLetter = (function (_ControlBase) {
                                 _reactBootstrap.Col,
                                 { lg: 4, sm: 12, xs: 12 },
                                 _react2.default.createElement(_RadioButton2.default, { label: 'PatientConsentObtained',
-                                    labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context, 'PatientConsentObtained', this.valueChanged), name: 'PatientConsentObtained', trueText: 'Yes', falseText: 'No' })
+                                    labelClassName: 'col-xs-12 col-lg-6', wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.context, 'PatientConsentObtained', this.valueChanged), name: 'PatientConsentObtained', trueText: 'Yes', falseText: 'No' })
                             )
                         ),
                         _react2.default.createElement('br', null),
