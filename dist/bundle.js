@@ -69441,6 +69441,7 @@ var DONUT_WEEK_LEGENDS = 'WEEK_LEGEND';
 var FETCH_SUBCENTER = 'FETCH_SUBCENTER';
 var AUTO_SEARCH = 'AUTO_SEARCH';
 var MANUAL_SEARCH = 'MANUAL_SEARCH';
+var NO_DATA_FOUND = 'no data found';
 var ACTION_TYPE = {
     REGISTER_PATIENT_ACTION: 'REGISTER_PATIENT_ACTION',
     SAVE_VISIT_INFO_ACTION: 'SAVE_VISIT_INFO',
@@ -69558,7 +69559,8 @@ module.exports = {
     FETCH_SUBCENTER: FETCH_SUBCENTER,
     FETCH_SUBCENTER_DETAILS: FETCH_SUBCENTER_DETAILS,
     AUTO_SEARCH: AUTO_SEARCH,
-    MANUAL_SEARCH: MANUAL_SEARCH
+    MANUAL_SEARCH: MANUAL_SEARCH,
+    NO_DATA_FOUND: NO_DATA_FOUND
 };
 
 },{}],663:[function(require,module,exports){
@@ -72028,22 +72030,22 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { xs: 6, style: { marginTop: '1%' } },
-                                _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('ReferredTo'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-3 marginMinus',
-                                    wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.patientData, 'referredTo') }),
+                                { lg: 4, sm: 12, xs: 12, style: { marginTop: '1%' } },
+                                _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('ReferredTo'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
+                                    wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'referredTo') }),
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
-                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('ReasonForReferral'), className: 'editable', placeholder: locale('PleaseEnterTheReason'), labelClassName: 'col-xs-3 marginMinus',
-                                        wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.patientData, 'reasonForReferral') }),
+                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('ReasonForReferral'), className: 'editable', placeholder: locale('PleaseEnterTheReason'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
+                                        wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'reasonForReferral') }),
                                     '  '
                                 )
                             ),
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { xs: 4 },
-                                _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YY', className: 'editable', label: locale('RefferedOn'), labelClassName: 'col-xs-4 marginMinus',
-                                    wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.patientData, 'referredOn') }),
+                                { lg: 4, sm: 12, xs: 12 },
+                                _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YY', className: 'editable', label: locale('RefferedOn'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
+                                    wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'referredOn') }),
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
@@ -72067,8 +72069,8 @@ var ReferralLetter = (function (_ControlBase) {
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
-                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('CurrentMedication'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-5 marginMinus',
-                                        wrapperClassName: 'col-xs-7', valueLink: this.linkState(this.state.patientData, 'CurrentMedication') }),
+                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('CurrentMedication'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-6 marginMinus',
+                                        wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.patientData, 'CurrentMedication') }),
                                     ' '
                                 )
                             )
@@ -72078,7 +72080,7 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { xs: 12 },
+                                { lg: 4, sm: 12, xs: 12 },
                                 _react2.default.createElement(_RadioButton2.default, { label: 'Information on referral provided to institution referred',
                                     labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context, 'informationOnReferral', this.valueChanged), name: 'informationOnReferral', trueText: 'Yes', falseText: 'No' })
                             )
@@ -72088,7 +72090,7 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { xs: 12 },
+                                { lg: 4, sm: 12, xs: 12 },
                                 _react2.default.createElement(_RadioButton2.default, { label: 'PatientConsentObtained',
                                     labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context, 'PatientConsentObtained', this.valueChanged), name: 'PatientConsentObtained', trueText: 'Yes', falseText: 'No' })
                             )
@@ -72101,7 +72103,7 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { xs: 4, style: layoutBtn },
+                                { lg: 4, sm: 12, xs: 12, style: layoutBtn },
                                 _react2.default.createElement(
                                     'button',
                                     { type: 'button', className: 'btn-success', onClick: this.exportToPdf.bind(this) },
@@ -72622,28 +72624,28 @@ var CurrentPregnancy = (function (_ControlBase) {
                 value: 'Select BloodGroup',
                 text: locale('Select_Blood_Group')
             }, {
-                value: 'Onve',
+                value: 'O-',
                 text: 'O-'
             }, {
-                value: 'Opve',
+                value: 'O+',
                 text: 'O+'
             }, {
-                value: 'Anve',
+                value: 'A−',
                 text: 'A−'
             }, {
-                value: 'Apve',
+                value: 'A+',
                 text: 'A+'
             }, {
-                value: 'Bnve',
+                value: 'B−',
                 text: 'B−'
             }, {
-                value: 'Bpve',
+                value: 'B+',
                 text: 'B+'
             }, {
-                value: 'ABnve',
+                value: 'AB−',
                 text: 'AB−'
             }, {
-                value: 'ABpve',
+                value: 'AB+',
                 text: 'AB+'
             }];
 
@@ -75342,9 +75344,9 @@ var Allergies = (function (_ControlBase) {
             var isFoodTextbox = _react2.default.createElement('span', null);
             var isEnvTextbox = _react2.default.createElement('span', null);
 
-            if (this.state.context.Allergies.isDrug) isDrugTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'drugAllergyDetail') });
-            if (this.state.context.Allergies.isFood) isFoodTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'foodAllergyDetail') });
-            if (this.state.context.Allergies.isEnv) isEnvTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'envAllergyDetail') });
+            if (this.state.context.Allergies.isDrug) isDrugTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'drugAllergyDetail') });
+            if (this.state.context.Allergies.isFood) isFoodTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'foodAllergyDetail') });
+            if (this.state.context.Allergies.isEnv) isEnvTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'envAllergyDetail') });
 
             return _react2.default.createElement(
                 'div',
@@ -75357,7 +75359,7 @@ var Allergies = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 4, sm: 12, xs: 12 },
+                            { lg: 4, sm: 6, xs: 6 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('DrugAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isDrug') }),
                             isDrugTextbox
                         )
@@ -75367,7 +75369,7 @@ var Allergies = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 4, sm: 12, xs: 12 },
+                            { lg: 4, sm: 6, xs: 6 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('FoodAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isFood') }),
                             isFoodTextbox
                         )
@@ -75377,7 +75379,7 @@ var Allergies = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 4, sm: 12, xs: 12 },
+                            { lg: 4, sm: 6, xs: 6 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('EnviornmentalAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isEnv') }),
                             isEnvTextbox
                         )
@@ -75646,7 +75648,7 @@ var Comments = (function (_ControlBase) {
                                 'div',
                                 { className: 'space' },
                                 ' ',
-                                _react2.default.createElement('textarea', { rows: '10', cols: '100', placeholder: locale('EnterComments'), className: 'textareaComments', valueLink: this.linkState(this.state.context.Comments, 'GeneralComments') }),
+                                _react2.default.createElement('textarea', { rows: '10', placeholder: locale('EnterComments'), className: 'textareaComments col-lg-8 col-xs-12', valueLink: this.linkState(this.state.context.Comments, 'GeneralComments') }),
                                 ' '
                             )
                         ),
@@ -75811,17 +75813,17 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Nausea'), labelClassName: labelClassFirst, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'Nausea') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 3 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Fever'), labelClassName: 'col-xs-5 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'Fever') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 5 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('GenSwellingOfTheBodyPuffinessOfTheFace'), labelClassName: labelClassThird, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'GeneralisedSwellingOfTheBody_PuffinessOfTheFace') })
                         )
                     ),
@@ -75830,17 +75832,17 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Vomiting'), labelClassName: labelClassFirst, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'Vomiting') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 3 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PersistentVomiting'), labelClassName: 'col-xs-5 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'PersistentVomiting') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 5 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('SevereHeadacheAndBlurringOfVision'), labelClassName: labelClassThird, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'SevereHeadacheAndBlurringOfVision') })
                         )
                     ),
@@ -75849,17 +75851,17 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Heartburn'), labelClassName: labelClassFirst, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'Heartburn') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 3 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('AbnormalVaginalDischargeOrItching'), labelClassName: 'col-xs-5 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'AbnormalVaginalDischarge_itching') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 5 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BurningSensationDuringMicturition'), labelClassName: labelClassThird, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'PassingSmallerAmountsOfUrineAndBurningSensationDuringMicturition') })
                         )
                     ),
@@ -75868,17 +75870,17 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Constipation'), labelClassName: labelClassFirst, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'Constipation') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 3 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PalpitationsEasyFatigability'), labelClassName: 'col-xs-5 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'PalpitationsEasyFatigability') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 5 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('VaginalBleeding'), labelClassName: labelClassThird, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'VaginalBleeding') })
                         )
                     ),
@@ -75887,17 +75889,17 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('IncreasedFrequencyOfUrination'), labelClassName: labelClassFirst, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'IncreasedFrequencyOfUrination') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 3 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BreathlessnessAtRestOnMildExertion'), labelClassName: 'col-xs-5 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'Breathlessness') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 5 },
+                            { lg: 4, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('LeakingOfWateryFluidPerVaginum'), labelClassName: labelClassThird, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'LeakingOfWateryFluidPerVaginum_PV') })
                         )
                     ),
@@ -76104,17 +76106,17 @@ var FamilyHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('HighBP'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.FamilyHistory, 'Highbloodpressurehypertension') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Tuberculosis'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.FamilyHistory, 'Tuberculosis') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('CongeniatlMalfomationsInImmediateFamily'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.FamilyHistory, 'CongeniatlMalfomationsinimmediatefamily') })
                         )
                     ),
@@ -76123,12 +76125,12 @@ var FamilyHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Diabetes'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.FamilyHistory, 'Diabetes') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('TwinsInImmediateFamily'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.FamilyHistory, 'TwinsinimmediateFamily') })
                         )
                     )
@@ -76341,17 +76343,17 @@ var HabbitsSocialHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Tobacco'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.HabbitsSocialHistory, 'Tobacco') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Drugs'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.HabbitsSocialHistory, 'Drugs') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Smoking'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.HabbitsSocialHistory, 'Smoking') })
                         )
                     ),
@@ -76360,7 +76362,7 @@ var HabbitsSocialHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 4 },
+                            { lg: 4, sm: 12, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Alcohol'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.HabbitsSocialHistory, 'Alcohol') })
                         )
                     )
@@ -77002,8 +77004,8 @@ var MedicalPrescriptions = (function (_ControlBase) {
     _createClass(MedicalPrescriptions, [{
         key: 'childRender',
         value: function childRender() {
-            var labelClass = 'col-xs-3 alignLeft';
-            var wrapperClass = 'col-xs-2';
+            var labelClass = 'col-xs-12 col-lg-4 alignLeft';
+            var wrapperClass = 'col-xs-12 col-lg-4';
             var isInj_TT_IM = _react2.default.createElement('span', null);
             var isInj_TT_IM_Date = _react2.default.createElement('span', null);
             var isInj_TT_IM_Quantity = _react2.default.createElement('span', null);
@@ -77018,20 +77020,20 @@ var MedicalPrescriptions = (function (_ControlBase) {
             var folicAcidTablet_Quantity = _react2.default.createElement('span', null);
 
             if (this.state.context.MedicalPrescriptions.Inj_TT_IM) {
-                isInj_TT_IM_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date of Injection ', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'injTT0_5mlIMDate') });
-                isInj_TT_IM_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'Height') });
+                isInj_TT_IM_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date of Injection ', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'injTT0_5mlIMDate') });
+                isInj_TT_IM_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.GeneralExamination, 'Height') });
             }
             if (this.state.context.MedicalPrescriptions.IFA_Tablets_Dispensed) {
-                iFA_Tablets_Dispensed_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed ', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed_Date') });
-                iFA_Tablets_Dispensed_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'iFATabletsDispensedQuantity') });
+                iFA_Tablets_Dispensed_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed ', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed_Date') });
+                iFA_Tablets_Dispensed_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.GeneralExamination, 'iFATabletsDispensedQuantity') });
             }
             if (this.state.context.MedicalPrescriptions.Albendazole) {
-                albendazole_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole_Date') });
-                albendazole_Dispensed_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'albendazoledispensedQuantity') });
+                albendazole_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole_Date') });
+                albendazole_Dispensed_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.GeneralExamination, 'albendazoledispensedQuantity') });
             }
             if (this.state.context.MedicalPrescriptions.folicAcidSuppliment_IFA) {
-                folicAcidSupplimentIFADate = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSupplimentIFADate') });
-                folicAcidTablet_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-xs-4 marginMinus', wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.context.GeneralExamination, 'folicAcidTabletsQuantity') });
+                folicAcidSupplimentIFADate = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSupplimentIFADate') });
+                folicAcidTablet_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.GeneralExamination, 'folicAcidTabletsQuantity') });
             }
 
             if (this.state.context.visitType == 'ANC2') {
@@ -77040,17 +77042,17 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
+                        { lg: 6, xs: 12 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         isInj_TT_IM_Date
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         isInj_TT_IM_Quantity
                     )
                 );
@@ -77059,17 +77061,17 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
+                        { lg: 6, xs: 12 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         iFA_Tablets_Dispensed_Date
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         iFA_Tablets_Dispensed_Quantity
                     )
                 );
@@ -77078,17 +77080,17 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Albendazole_Dispensed'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole') })
+                        { lg: 6, xs: 12 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Albendazole_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         albendazole_Date
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         albendazole_Dispensed_Quantity
                     )
                 );
@@ -77098,17 +77100,17 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Folic_Acid_Tablets_Dispensed'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSuppliment_IFA') })
+                        { lg: 3, xs: 12 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Folic_Acid_Tablets_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSuppliment_IFA') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 8, xs: 12 },
                         folicAcidSupplimentIFADate
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 8, xs: 12 },
                         folicAcidTablet_Quantity
                     )
                 );
@@ -77118,17 +77120,17 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
+                        { lg: 3, xs: 12 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         isInj_TT_IM_Date
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         isInj_TT_IM_Quantity
                     )
                 );
@@ -77137,12 +77139,12 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-9 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
+                        { lg: 6, xs: 12 },
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 6, xs: 12 },
                         iFA_Tablets_Dispensed_Date
                     )
                 );
@@ -77160,7 +77162,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 12 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Counselling'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Counselling') })
                         )
                     ),
@@ -77169,7 +77171,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 12 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Issue_MaternalChildProtectionCard'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Issue_MaternalChildProtectionCard') })
                         )
                     ),
@@ -77178,7 +77180,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 12 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('JSYCard'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'JSYCard') })
                         )
                     ),
@@ -77187,7 +77189,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 12 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BPLCard'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'BPLCard') })
                         )
                     ),
@@ -77196,7 +77198,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 12, className: 'paddingStyleBottom' },
+                            { lg: 6, xs: 12, className: 'paddingStyleBottom' },
                             _react2.default.createElement(_DropDown2.default, { label: locale('RecordPossibleLocationOfDelivery'), placeholder: 'select', labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, options: DeliveryLocationoptions, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Select') })
                         )
@@ -77266,8 +77268,8 @@ var MenstrualHistory = (function (_ControlBase) {
 				_createClass(MenstrualHistory, [{
 								key: 'childRender',
 								value: function childRender() {
-												var labelClass = 'col-xs-2 alignLeft';
-												var wrapperClass = 'col-xs-2';
+												var labelClass = 'col-xs-12 alignLeft';
+												var wrapperClass = 'col-xs-12';
 
 												var RegularValues = {
 																value: 'Regular',
@@ -77290,7 +77292,7 @@ var MenstrualHistory = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 12 },
+																												{ lg: 4, sm: 12, xs: 12 },
 																												_react2.default.createElement(_RadioButton2.default, { label: 'Regularity',
 																																labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MenstrualHistory, 'Regularity', this.valueChanged), name: 'Regularity', trueText: 'Regular', falseText: 'Irregular' })
 																								)
@@ -77300,7 +77302,7 @@ var MenstrualHistory = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 12 },
+																												{ lg: 4, sm: 12, xs: 12 },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FrequencyInNumberOfDays'), placeholder: 'Frequency in number of days', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MenstrualHistory, 'Frequencyinnumberofdays') })
 																								)
 																				),
@@ -77309,7 +77311,7 @@ var MenstrualHistory = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 12 },
+																												{ lg: 4, sm: 12, xs: 12 },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('NumberOfDaysOfBleed'), placeholder: 'Number of days of bleed', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MenstrualHistory, 'Numberofdaysofbleed') })
 																								)
 																				),
@@ -77318,7 +77320,7 @@ var MenstrualHistory = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 12 },
+																												{ lg: 4, sm: 12, xs: 12 },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('AgeAtMenarche'), placeholder: 'Age at Menarche', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MenstrualHistory, 'AgeatMenarche') })
 																								)
 																				),
@@ -77327,7 +77329,7 @@ var MenstrualHistory = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 12 },
+																												{ lg: 4, sm: 12, xs: 12 },
 																												_react2.default.createElement(_ToggleButton2.default, { label: locale('PainAssociatedWithPeriods'), labelClassName: labelClass, wrapperClassName: 'col-xs-1', valueLink: this.linkState(this.state.context.MenstrualHistory, 'PainassociatedwithPeriods') })
 																								)
 																				)
@@ -77385,8 +77387,8 @@ var ObstetricHistory = (function (_ControlBase) {
     _createClass(ObstetricHistory, [{
         key: 'childRender',
         value: function childRender() {
-            var labelClass = 'col-xs-5 alignLeft';
-            var wrapperClass = 'col-xs-2';
+            var labelClass = 'col-xs-4 alignLeft';
+            var wrapperClass = 'col-xs-4';
             var isRecurrentEarlyAbortion = _react2.default.createElement('span', null);
 
             if (this.state.context.ObstetricHistory.RecurrentEarlyAbortion) isRecurrentEarlyAbortion = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', wrapperClassName: 'col-xs-2', valueLink: this.linkState(this.state.context.ObstetricHistory, 'abortions') });
@@ -77402,13 +77404,13 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('RecurrentEarlyAbortion'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'RecurrentEarlyAbortion') }),
                             isRecurrentEarlyAbortion
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('MoreConsecutiveAbortions'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ThreeOrMoreSpontaneousConsecutiveAbortions') })
                         )
@@ -77418,12 +77420,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6, className: 'padBottom' },
+                            { lg: 6, xs: 12, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PostAbortionComplications'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Post_abortionComplications') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6, className: 'padBottom' },
+                            { lg: 6, xs: 12, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('ObstructedLabour'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ObstructedLabour') })
                         )
@@ -77433,12 +77435,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('HypertensionPreEclmpsiaOrEclampsia'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Hypertension_preeclampsia_eclampsia') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PrematureBirthsTwinsOrMultiplePregnancies'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'PrematureBirths_twins_multiplePregnancies') })
                         )
@@ -77448,12 +77450,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('AntePartumHaemorrhage'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'AntePartumHaemorrhage_APH') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PrevBaby4500gOrMore'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'WeightOfThePreviousBaby') })
                         )
@@ -77463,12 +77465,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BreechOrTransversePresentation'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Breech_TransversePresentation') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Adm4HTOrPreEclampsiaEclampsiaInPrevpregnancy'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'AdmissionFoHypertensionOrPreEclampsia_eclampsiaInThePreviousPregnancy') })
                         )
@@ -77478,12 +77480,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6, className: 'padBottom' },
+                            { lg: 6, xs: 12, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('obstructedLabourIncludingDystocia'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ObstructedLabour_IncludingDystocia') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('SurgeryOnTheReproductiveTract'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'SurgeryOnTheReproductiveTract') })
                         )
@@ -77493,12 +77495,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6, className: 'padBottom' },
+                            { lg: 6, xs: 12, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PerinealInjuriesTears'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'PerinealInjuries_tears') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('CongenitalAnomaly'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'CongenitalAnomaly') })
                         )
@@ -77508,12 +77510,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6, className: 'padBottom' },
+                            { lg: 6, xs: 12, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('ExcessiveBleedingAfterDelivery'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'ExcessiveBleedingAfterDelivery') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Treatment4Infertility'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'TreatmentForInfertility') })
                         )
@@ -77523,12 +77525,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('PuerperalSepsis'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'PuerperalSepsis') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('SpinalDeformities'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'SpinalDeformitiesSuchAs_Acoliosis_kyphosis_polio') })
                         )
@@ -77538,12 +77540,12 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('BloodTransfusionDuringPrevPregnancies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'BloodTransfusionDuringPreviousPregnancies') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('RhNegInThePrevPregnancy'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Rh_negative_inThePreviousPregnancy') })
                         )
@@ -77553,13 +77555,13 @@ var ObstetricHistory = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6, className: 'padBottom' },
+                            { lg: 6, xs: 12, className: 'padBottom' },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Pregnancies'), labelClassName: labelClass,
                                 wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'Pregnancies') })
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { xs: 6 },
+                            { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('StillbirthOrNeonatalLoss'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.ObstetricHistory, 'StillbirthOrNeonatalLoss') })
                         )
                     )
@@ -77615,7 +77617,7 @@ var colStyle = {
     'background': '#fff',
     'padding': '20px',
     'margin-bottom': '30px',
-    'height': '210px',
+    'height': '212px',
     'marginTop': '3%'
 };
 var rowStyle = {
@@ -77626,10 +77628,7 @@ var labStyle = {
     'color': '#2899CD',
     'font-size': '20px'
 };
-var contentStyle = {
-    'marginBottom': '4%',
-    'paddingTop': '3%'
-};
+var contentStyle = {};
 
 var PastMedicalHistory = (function (_ControlBase) {
     _inherits(PastMedicalHistory, _ControlBase);
@@ -78358,6 +78357,8 @@ var fontStyle = {
     fontSize: '15px'
 };
 var newData;
+var handleFetchCallBack;
+var handleSaveCallBack;
 
 var VisitInfo = (function (_ControlBase) {
     _inherits(VisitInfo, _ControlBase);
@@ -78371,22 +78372,20 @@ var VisitInfo = (function (_ControlBase) {
             data: _CurrentPregnancy2.default,
             title: locale('CurrentPregnancyTitle')
         };
+        handleSaveCallBack = _this.notifyVisitInfoSave.bind(_this);
+        handleFetchCallBack = _this.notifyVisitInfoFetch.bind(_this);
+        _VisitStore2.default.addChangeListener(AppConstants.SAVE_EVENT, handleSaveCallBack);
+        _VisitStore2.default.addChangeListener(AppConstants.FETCH_EVENT, handleFetchCallBack);
+        AppAction.executeAction(ActionType.VISIT_INFO_FETCH, null);
 
         return _this;
     }
 
     _createClass(VisitInfo, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-            _VisitStore2.default.addChangeListener(AppConstants.SAVE_EVENT, this.notifyVisitInfoSave.bind(this));
-            _VisitStore2.default.addChangeListener(AppConstants.FETCH_EVENT, this.notifyVisitInfoFetch.bind(this));
-            AppAction.executeAction(ActionType.VISIT_INFO_FETCH, null);
-        }
-    }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            _VisitStore2.default.removeChangeListener(AppConstants.SAVE_EVENT, function () {});
-            _VisitStore2.default.removeChangeListener(AppConstants.FETCH_EVENT, function () {});
+            _VisitStore2.default.removeChangeListener(AppConstants.SAVE_EVENT, handleSaveCallBack);
+            _VisitStore2.default.removeChangeListener(AppConstants.FETCH_EVENT, handleFetchCallBack);
         }
     }, {
         key: 'testCallBack',
@@ -79086,6 +79085,7 @@ var GridBody = (function (_React$Component) {
             var rowsPerPage = this.props.rowsPerPage;
             var totalPages = Math.round(totalRowCount / rowsPerPage);
             var i;
+            var searchType = this.props.searchType;
             if (totalRowCount % rowsPerPage > 0) {
                 totalPages = totalPages + 1;
             }
@@ -79102,7 +79102,7 @@ var GridBody = (function (_React$Component) {
                 rows.push(_react2.default.createElement(WorkListRow, _extends({ rowContent: slicedList[i] }, this.props)));
                 alt = !alt;
             }
-            if (PatientDetailsArray.length == 0) {
+            if (PatientDetailsArray.length == 0 && searchType != AppConstants.AUTO_SEARCH) {
                 rows.push(_react2.default.createElement(
                     'tr',
                     null,
@@ -79420,6 +79420,7 @@ var WorklistView = (function (_React$Component) {
                     searchType: AppConstants.MANUAL_SEARCH,
                     searchBy: searchValue
                 };
+                this.state.searchType = AppConstants.MANUAL_SEARCH;
                 this.setState({ showTab: true });
                 this.setState({ tabActive: 4 });
                 AppAction.executeAction(ActionType.PATIENT_SEARCH_ACTION, filterJson);
@@ -79429,11 +79430,13 @@ var WorklistView = (function (_React$Component) {
         key: 'notifyTotalWorklistFetch',
         value: function notifyTotalWorklistFetch(data) {
 
-            if (typeof data.args.worklist == 'undefined') {
-                console.log("undefined");
+            if (data.args.worklist == AppConstants.NO_DATA_FOUND) {
                 this.setState({ showSearchResult: true });
             } else {
                 this.setState({ showSearchResult: false });
+            }
+            if (typeof data.args.searchType !== 'undefined') {
+                this.state.searchType = data.args.searchType;
             }
             this.state.workListData = data.args.worklist;
             this.state.offsetIndex = 1;
@@ -79780,7 +79783,7 @@ var WorklistView = (function (_React$Component) {
                                             _react2.default.createElement(
                                                 _DataGrid2.default,
                                                 { headerJson: headerJson },
-                                                _react2.default.createElement(_MoGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10' }, this.props))
+                                                _react2.default.createElement(_MoGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10', searchType: this.state.searchType }, this.props))
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -79806,7 +79809,7 @@ var WorklistView = (function (_React$Component) {
                                             _react2.default.createElement(
                                                 _DataGrid2.default,
                                                 { headerJson: headerJson },
-                                                _react2.default.createElement(_MoGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10' }, this.props))
+                                                _react2.default.createElement(_MoGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10', searchType: this.state.searchType }, this.props))
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -79850,7 +79853,7 @@ var WorklistView = (function (_React$Component) {
                                             ) : _react2.default.createElement(
                                                 _DataGrid2.default,
                                                 { headerJson: headerJson },
-                                                _react2.default.createElement(_MoGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10' }, this.props))
+                                                _react2.default.createElement(_MoGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10', searchType: this.state.searchType }, this.props))
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -80461,6 +80464,7 @@ var GridBody = (function (_React$Component) {
             var rowsPerPage = this.props.rowsPerPage;
             var totalPages = Math.round(totalRowCount / rowsPerPage);
             var i;
+            var searchType = this.props.searchType;
             if (totalRowCount % rowsPerPage > 0) {
                 totalPages = totalPages + 1;
             }
@@ -80477,7 +80481,7 @@ var GridBody = (function (_React$Component) {
                 rows.push(_react2.default.createElement(WorkListRow, _extends({ rowContent: slicedList[i], key: slicedList[i].patientId }, this.props)));
                 alt = !alt;
             }
-            if (PatientDetailsArray.length == 0) {
+            if (PatientDetailsArray.length == 0 && searchType != AppConstants.AUTO_SEARCH) {
                 rows.push(_react2.default.createElement(
                     'tr',
                     null,
@@ -81020,24 +81024,23 @@ var WorklistView = (function (_React$Component) {
                     searchType: AppConstants.MANUAL_SEARCH,
                     searchBy: searchValue
                 };
+                this.state.searchType = AppConstants.MANUAL_SEARCH;
                 this.setState({ showTab: true });
                 this.setState({ tabActive: 4 });
-
                 AppAction.executeAction(ActionType.PATIENT_SEARCH_ACTION, filterJson);
             }
         }
     }, {
         key: 'notifyTotalWorklistFetch',
         value: function notifyTotalWorklistFetch(data) {
-            console.log("called notify");
 
-            if (typeof data.args.worklist == 'undefined') {
-                console.log("undefined");
+            if (data.args.worklist == AppConstants.NO_DATA_FOUND) {
                 this.setState({ showSearchResult: true });
             } else {
-                //  this.setState({showTab: true});
-                //  this.setState({tabActive: 4});
                 this.setState({ showSearchResult: false });
+            }
+            if (typeof data.args.searchType !== 'undefined') {
+                this.state.searchType = data.args.searchType;
             }
             this.state.workListData = data.args.worklist;
             this.state.offsetIndex = 1;
@@ -81357,7 +81360,7 @@ var WorklistView = (function (_React$Component) {
                                             _react2.default.createElement(
                                                 _DataGrid2.default,
                                                 { headerJson: headerJson },
-                                                _react2.default.createElement(_VhnGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10' }, this.props))
+                                                _react2.default.createElement(_VhnGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10', searchType: this.state.searchType }, this.props))
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -81383,7 +81386,7 @@ var WorklistView = (function (_React$Component) {
                                             _react2.default.createElement(
                                                 _DataGrid2.default,
                                                 { headerJson: headerJson },
-                                                _react2.default.createElement(_VhnGridBody2.default, { tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10' })
+                                                _react2.default.createElement(_VhnGridBody2.default, { tableContents: formatedData, offsetIndex: offsetIndex, searchType: this.state.searchType, rowsPerPage: '10' })
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -81427,7 +81430,7 @@ var WorklistView = (function (_React$Component) {
                                             ) : _react2.default.createElement(
                                                 _DataGrid2.default,
                                                 { headerJson: headerJson },
-                                                _react2.default.createElement(_VhnGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10' }, this.props))
+                                                _react2.default.createElement(_VhnGridBody2.default, _extends({ tableContents: formatedData, offsetIndex: offsetIndex, rowsPerPage: '10', searchType: this.state.searchType }, this.props))
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -85107,8 +85110,8 @@ var WorkListStore = (function (_BaseStore) {
                     ServiceManager.doGet(getData).then(function (response) {
 
                         workListJSON[_AppConstants.WORKLIST_JSON] = response;
-                        totalList = response;
                         var updatedWorklistJson = WorkListStore.getDonutParameter(workListJSON, AppConstants.TOTAL_WORKLIST);
+                        totalList = updatedWorklistJson[_AppConstants.WORKLIST_JSON];
                         WorkListStore.emitChange(ActionType.GET_TOTAL_WORKLIST, updatedWorklistJson);
                     });
                     break;
@@ -85117,7 +85120,6 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-
                         url: '/api/worklists',
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
@@ -85146,11 +85148,10 @@ var WorkListStore = (function (_BaseStore) {
                     });
                     break;
                 case ActionType.PATIENT_SEARCH_ACTION:
-                    WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, {
-                        worklist: []
-                    });
+
                     if (action.data.searchType === AppConstants.AUTO_SEARCH) {
                         var updatedWorklistJson = WorkListStore.getSortedList(totalList, action.data.searchBy);
+                        updatedWorklistJson['searchType'] = AppConstants.AUTO_SEARCH;
                         WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
                     } else {
                         var searchBy = action.data.searchBy;
@@ -85162,8 +85163,11 @@ var WorkListStore = (function (_BaseStore) {
                         ServiceManager.doGet(getData).then(function (response) {
                             var updatedWorklistJson = WorkListStore.getSortedList(response, action.data.searchType);
                             if (updatedWorklistJson[_AppConstants.WORKLIST_JSON].length == 0) {
-                                WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, 'No data found');
+                                updatedWorklistJson['searchType'] = AppConstants.MANUAL_SEARCH;
+                                updatedWorklistJson[_AppConstants.WORKLIST_JSON] = AppConstants.NO_DATA_FOUND;
+                                WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
                             } else {
+                                updatedWorklistJson['searchType'] = AppConstants.MANUAL_SEARCH;
                                 WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
                             }
                         });
@@ -85177,7 +85181,7 @@ var WorkListStore = (function (_BaseStore) {
             var sortedWorkList = [];
             var updatedJson = {};
             if (searchBy === AppConstants.MANUAL_SEARCH) {
-                sortedWorkList = searchData.toLowerCase();
+                sortedWorkList = searchData;
             } else {
                 searchData.filter(function (row) {
                     var jsonString = JSON.stringify(row).toLowerCase();
@@ -85402,12 +85406,11 @@ var BaseTranslator = (function () {
             if (lmpDate) {
 
                 var deliveryDate = Utils.calculateEDD(lmpDate);
-
-                if (lmpDate <= toDate && toDate < lmpDate.addDays(90)) {
+                if (lmpDate <= toDate && toDate <= lmpDate.addDays(90)) {
                     trimester = 'W1-13';
-                } else if (lmpDate.addDays(90) < toDate && toDate < lmpDate.addDays(180)) {
+                } else if (lmpDate.addDays(90) < toDate && toDate <= lmpDate.addDays(180)) {
                     trimester = 'W13-27';
-                } else if (lmpDate.addDays(90) < toDate && toDate < deliveryDate) {
+                } else if (lmpDate.addDays(180) < toDate && toDate < deliveryDate) {
                     trimester = 'W28-39';
                 } else if (toDate > deliveryDate) {
                     trimester = 'postnatal';
@@ -85465,7 +85468,7 @@ var BaseTranslator = (function () {
                {
                  }
             */
-            if (objVisit.isPrstntVomtng) {
+            if (bool(objVisit.isPrstntVomtng)) {
                 output.push({
                     text: 'Persistant Vomitting: Refer to nearest PHC'
                 });
@@ -85737,7 +85740,7 @@ var RegistrationDataTranslator = (function (_BaseTranslator) {
                 subCentreName: obj ? obj.subCentreName : '',
                 vhnName: obj ? obj.vhnName : '',
                 bloodGroup: obj ? obj.bloodGroup : '',
-                highRiskMother: obj ? obj.highRiskMother : '',
+                highRiskMother: obj ? bool(obj.highRiskMother) : false,
                 highRiskMotherComments: obj ? obj.highRiskMotherComments : '',
                 obstetrics: obj ? obj.obstetrics : '',
                 gravida: obj ? gpal.gravida : '',
@@ -85776,7 +85779,7 @@ var RegistrationDataTranslator = (function (_BaseTranslator) {
                 subCentreName: a.subCentreName,
                 vhnName: a.vhnName,
                 bloodGroup: a.bloodGroup,
-                highRiskMother: a.highRiskMother,
+                highRiskMother: str(a.highRiskMother),
                 highRiskMotherComments: a.highRiskMotherComments,
                 obstetrics: this.calculateObsterics(a)
 
@@ -87077,7 +87080,7 @@ var ServiceManager = (function () {
         key: 'handleError',
         value: function handleError(error) {
             // console.log('Inside ServiceManager : function HandleError :' + error);
-            toast.show(error, 'error');
+            //        toast.show(error, 'error');
         }
     }]);
 

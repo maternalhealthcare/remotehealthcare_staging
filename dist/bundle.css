@@ -1456,7 +1456,7 @@ input[type=checkbox]:checked + label:after {
   background: #1AA5DE;
   margin-left: 46%;
   color: #FFF;
-  margin-top: -1%;
+  margin-top: 1%;
   width: 100px;
   border-radius: 25px;
   padding: 1px 5px 5px 5px; }
