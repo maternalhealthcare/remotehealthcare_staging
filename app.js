@@ -13,20 +13,38 @@ var port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/dist/'));
-
 // var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
 // var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
 // request = request.defaults({proxy: proxyUrl});
-
-
-
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/dist/index.html'));
+res.sendFile(path.join(__dirname + '/dist/index.html'));
 }
 );
-
-
 app.get('/api/worklists', function(req, res, next) {
+    var options = '';
+    var datas = JSON.stringify(req.body);
+   	options = {
+	uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
+	method: 'GET',
+	headers: {
+	'Content-Type': 'application/json; charset=utf-8'
+	},
+	body: datas
+    };
+    
+    
+     request(options, function(error, response, body) {
+	if (error) {
+	next(error);
+	}
+	if (!error && response.statusCode == 200) {
+	res.json(JSON.parse(body));
+	}
+	});
+
+});
+
+app.get('/api/getWorklists', function(req, res, next) {
     var options = '';
     var datas = JSON.stringify(req.body);
     var searchString = req.headers['searchstring'];

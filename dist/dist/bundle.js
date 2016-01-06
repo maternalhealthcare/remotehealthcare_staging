@@ -74659,6 +74659,7 @@ var PATIENT_VISIT_FETCH_URL = '/api/getVisits'; //'http://ec2-52-10-19-65.us-wes
 var PATIENT_DETAILS_URL = '/api/getPatientDetail'; //'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/searchByID?id=';
 var FETCH_SUBCENTER_DETAILS = '/api/getSubCenterDetails';
 var PATIENT_SEARCH_URL = '/api/worklists'; //'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search';
+var PATIENT_MANUAL_SEARCH_URL = '/api/getWorklists';
 var REGISTRATION_URL_PATTERN = 'app/Registration/patientId';
 var VISIT_SUMMARY_URL_PATTERN = 'app/Patient/patientId/VisitSummary/visitId';
 var VISIT_URL_PATTERN = 'app/Patient/patientId/Visit/visitType/visitId';
@@ -74807,7 +74808,8 @@ module.exports = {
     NO_DATA_FOUND: NO_DATA_FOUND,
     PATIENT_SEARCH_URL: PATIENT_SEARCH_URL,
     SEARCH_TYPE: SEARCH_TYPE,
-    SEARCH_STRING: SEARCH_STRING
+    SEARCH_STRING: SEARCH_STRING,
+    PATIENT_MANUAL_SEARCH_URL: PATIENT_MANUAL_SEARCH_URL
 };
 
 },{}],846:[function(require,module,exports){
@@ -76947,7 +76949,7 @@ var LoginForm = function (_React$Component) {
                 height: '20px',
                 width: '15px',
                 border: 'white',
-                background: 'white',
+                background: 'transparent',
                 outline: '0'
             };
 
@@ -85337,7 +85339,7 @@ var GridBody = function (_React$Component) {
             PatientDetailsArray = this.props.tableContents;
             var offsetIndex = this.props.offsetIndex;
             var totalRowCount = PatientDetailsArray.length;
-            var rowsPerPage = this.props.rowsPerPage;
+            var rowsPerPage = AppConstants.ROWS_PER_PAGE;
             var totalPages = Math.round(totalRowCount / rowsPerPage);
             var i;
             var searchType = this.props.searchType;
@@ -85358,7 +85360,8 @@ var GridBody = function (_React$Component) {
                 alt = !alt;
             }
             var spinnerStyle = {
-                width: '10%'
+                width: '10%',
+                border: 'none'
             };
 
             if (PatientDetailsArray.length == 0 && searchType != AppConstants.AUTO_SEARCH) {
@@ -85740,9 +85743,9 @@ var WorklistView = function (_React$Component) {
     }, {
         key: 'closeTab',
         value: function closeTab() {
-            this.setState({ tabActive: 4 });
+            AppAction.executeAction(ActionType.GET_WEEKLY_WORKLIST, null);
+            this.setState({ tabActive: 2 });
             this.setState({ showTab: false });
-            AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
         }
     }, {
         key: 'paginationEvent',
@@ -85924,6 +85927,7 @@ var WorklistView = function (_React$Component) {
                 });
             }
             var offsetIndex = this.state.offsetIndex;
+            var searchKey = this.state.searchKey;
             return _react2.default.createElement(
                 'div',
                 { className: 'grid-wrapper content-wrapper col-md-12', style: wrapperStyle },
@@ -85948,7 +85952,7 @@ var WorklistView = function (_React$Component) {
                             { className: 'pull-right' },
                             _react2.default.createElement(
                                 'button',
-                                { type: 'button', className: 'btn btn-default btn-md', style: clearPadding, onClick: function () {
+                                { type: 'button', className: 'btn btn-default btn-md worklistHeaderButton', style: clearPadding, onClick: function () {
                                         Utils.navigate(this.props.history, Route.REGISTRATION + '/-1');
                                     }.bind(this) },
                                 _react2.default.createElement('span', { style: addPatientIcon, 'aria-hidden': 'true' }),
@@ -85956,7 +85960,7 @@ var WorklistView = function (_React$Component) {
                             ),
                             _react2.default.createElement(
                                 'button',
-                                { type: 'button', className: 'btn btn-default btn-md', onClick: this.clickUploadButton.bind(this) },
+                                { type: 'button', className: 'btn btn-default btn-md worklistHeaderButton', onClick: this.clickUploadButton.bind(this) },
                                 _react2.default.createElement('span', { style: importFromPicmeIcon, 'aria-hidden': 'true' }),
                                 ' ',
                                 locale('importFromPicme')
@@ -86050,7 +86054,7 @@ var WorklistView = function (_React$Component) {
                         { className: 'box tabBox' },
                         _react2.default.createElement(
                             _WorkListTabs2.default,
-                            { tabActive: this.state.tabActive, showStatus: this.state.showTab, onClick: this.closeTab.bind(this) },
+                            { tabActive: this.state.tabActive, showStatus: this.state.showTab, onClick: this.closeTab.bind(this), searchKey: this.state.searchBy },
                             _react2.default.createElement(
                                 _WorkListTabs2.default.Panel,
                                 { title: locale('today') },
@@ -86752,7 +86756,7 @@ var GridBody = function (_React$Component) {
             PatientDetailsArray = this.props.tableContents;
             var offsetIndex = this.props.offsetIndex;
             var totalRowCount = PatientDetailsArray.length;
-            var rowsPerPage = this.props.rowsPerPage;
+            var rowsPerPage = AppConstants.ROWS_PER_PAGE;
             var totalPages = Math.round(totalRowCount / rowsPerPage);
             var i;
             var searchType = this.props.searchType;
@@ -86773,7 +86777,8 @@ var GridBody = function (_React$Component) {
                 alt = !alt;
             }
             var spinner1Style = {
-                width: '10%'
+                width: '10%',
+                border: 'none'
             };
 
             if (PatientDetailsArray.length == 0 && searchType != AppConstants.AUTO_SEARCH) {
@@ -87014,7 +87019,8 @@ var Tabs = function (_React$Component) {
         var parent = state;
         _this.state = {
             data: parent.showStatus,
-            tabActive: parent.tabActive
+            tabActive: parent.tabActive,
+            searchKey: ''
         };
         AppAction.executeAction(ActionType.GET_TOTAL_WORKLIST, null);
         return _this;
@@ -87077,8 +87083,14 @@ var Tabs = function (_React$Component) {
                 AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
             } else if (index === 2) {
                 AppAction.executeAction(ActionType.GET_WEEKLY_WORKLIST, null);
+            } else if (index === 4) {
+                var filterJson = {
+                    searchType: AppConstants.MANUAL_SEARCH,
+                    searchBy: this.props.searchKey
+                };
+                AppAction.executeAction(ActionType.PATIENT_SEARCH_ACTION, filterJson);
             } else {
-                // Notification condition comes here
+                //notification comes here
             }
         }
     }, {
@@ -87380,9 +87392,9 @@ var WorklistView = function (_React$Component) {
     }, {
         key: 'closeTab',
         value: function closeTab() {
-            this.setState({ tabActive: 4 });
+            AppAction.executeAction(ActionType.GET_WEEKLY_WORKLIST, null);
+            this.setState({ tabActive: 2 });
             this.setState({ showTab: false });
-            AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
         }
     }, {
         key: 'paginationEvent',
@@ -87540,7 +87552,7 @@ var WorklistView = function (_React$Component) {
                 });
             }
             var offsetIndex = this.state.offsetIndex;
-
+            var searchKey = this.state.searchKey;
             return _react2.default.createElement(
                 'div',
                 { className: 'grid-wrapper content-wrapper col-md-12', style: wrapperStyle },
@@ -87565,7 +87577,7 @@ var WorklistView = function (_React$Component) {
                             { className: 'pull-right' },
                             _react2.default.createElement(
                                 'button',
-                                { type: 'button', className: 'btn btn-default btn-md', style: clearPadding, onClick: function () {
+                                { type: 'button', className: 'btn btn-default btn-md worklistHeaderButton', style: clearPadding, onClick: function () {
                                         Utils.navigate(this.props.history, Route.REGISTRATION + '/-1');
                                     }.bind(this) },
                                 _react2.default.createElement('span', { style: addPatientIcon, 'aria-hidden': 'true' }),
@@ -87573,7 +87585,7 @@ var WorklistView = function (_React$Component) {
                             ),
                             _react2.default.createElement(
                                 'button',
-                                { type: 'button', className: 'btn btn-default btn-md', onClick: this.clickUploadButton.bind(this) },
+                                { type: 'button', className: 'btn btn-default btn-md worklistHeaderButton', onClick: this.clickUploadButton.bind(this) },
                                 _react2.default.createElement('span', { style: importFromPicmeIcon, 'aria-hidden': 'true' }),
                                 ' ',
                                 locale('importFromPicme')
@@ -87663,7 +87675,7 @@ var WorklistView = function (_React$Component) {
                         { className: 'box tabBox', style: boxPadding },
                         _react2.default.createElement(
                             _WorkListTabs2.default,
-                            { tabActive: this.state.tabActive, showStatus: this.state.showTab, onClick: this.closeTab.bind(this) },
+                            { tabActive: this.state.tabActive, showStatus: this.state.showTab, onClick: this.closeTab.bind(this), searchKey: this.state.searchBy },
                             _react2.default.createElement(
                                 _WorkListTabs2.default.Panel,
                                 { title: locale('today') },
@@ -91620,7 +91632,7 @@ var WorkListStore = function (_BaseStore) {
                         var searchBy = action.data.searchBy;
 
                         getData = {
-                            url: AppConstants.PATIENT_SEARCH_URL,
+                            url: AppConstants.PATIENT_MANUAL_SEARCH_URL,
                             dataType: DataType.JSON,
                             contentType: ContentType.JSON,
                             notifyError: true,

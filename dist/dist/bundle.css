@@ -795,6 +795,9 @@ svg .c3-chart-arcs-title {
 .dataTables_wrapper {
   width: 100%; }
 
+.dataTable td {
+  vertical-align: middle !important; }
+
 .dataTable thead {
   background-color: #E9E9E9;
   font-size: 15px;
@@ -840,6 +843,11 @@ svg .c3-chart-arcs-title {
   box-shadow: none;
   -webkit-box-shadow: none;
   border-color: #cccccc; }
+
+.worklistHeaderButton {
+  background: #FFF; }
+  .worklistHeaderButton .worklistHeaderButton:hover {
+    background: #e6e6e6; }
 
 @media (max-width: 650px) {
   .chart .col-md-4 {
@@ -1921,6 +1929,58 @@ a.btn.trimisterBtn.breadcrumbSelect {
   background-repeat: none;
   background-position: 3px 0px; }
 
+body {
+  font-family: GEInspira;
+  background: #FFFFFF; }
+
+.Dboard {
+  background: #FFFFFF;
+  top: 6px; }
+
+.Dboard .date {
+  font-size: 25px; }
+
+.Dboard .monthName {
+  float: left;
+  position: absolute;
+  top: 1px; }
+
+.Dboard .yearName {
+  float: left;
+  top: 15px;
+  position: absolute;
+  font-size: 10px;
+  padding-top: 4px; }
+
+.boxes > div {
+  height: 105px;
+  padding-top: 15px;
+  border-right: solid 1px #E0E0E0; }
+
+.boxes.row {
+  border-top: solid 1px #E0E0E0;
+  border-bottom: solid 1px #E0E0E0; }
+
+.right {
+  border-left: solid 1px #E0E0E0; }
+
+@media (min-width: 480px) {
+  .boxes > div {
+    height: auto; } }
+
+.print_export {
+  padding-top: 7px; }
+
+.border {
+  border: solid 1px #E0E0E0;
+  height: auto; }
+
+.row.one-border {
+  border-top: solid 1px #CFCFCF; }
+
+.col-lg-5.right-border {
+  border-right: solid 1px #CFCFCF;
+  height: 343px; }
 
 .chart {
   height: 190px; }
@@ -2589,6 +2649,9 @@ svg .c3-chart-arcs-title {
 .dataTables_wrapper {
   width: 100%; }
 
+.dataTable td {
+  vertical-align: middle !important; }
+
 .dataTable thead {
   background-color: #E9E9E9;
   font-size: 15px;
@@ -2634,6 +2697,11 @@ svg .c3-chart-arcs-title {
   box-shadow: none;
   -webkit-box-shadow: none;
   border-color: #cccccc; }
+
+.worklistHeaderButton {
+  background: #FFF; }
+  .worklistHeaderButton .worklistHeaderButton:hover {
+    background: #e6e6e6; }
 
 @media (max-width: 650px) {
   .chart .col-md-4 {
