@@ -1560,18 +1560,80 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
     padding-bottom: 19%;
     width: 32%; } }
 
-@media (max-width: 1199px) {
-  .Yscroll {
-    top: 45%;
+@media only screen and (max-width: 1224px) {
+  .visitContainerResponsive {
+    top: 49%;
     position: absolute;
     width: 98%; } }
 
-@media (max-width: 767px) {
-  .Yscroll {
-    top: 60%;
-    position: absolute; } }
-
 /*Media query ends here*/
+/*PopupContent starts here*/
+.ReferralModelboxBody {
+  border: solid 1px #DCDCDC;
+  border-radius: 5px; }
+
+.modelPageTitle {
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold; }
+
+@media (max-width: 768px) {
+  .ReferralModelboxBody button {
+    margin-top: 2%; } }
+
+.ModelHeader {
+  background: #EFEFEF;
+  padding: 20px 0px 11px 20px; }
+
+.ModelBtnAlign {
+  padding-top: 5px; }
+
+.ModelAddressBx, .ModelMatterTxtBx {
+  padding-top: 25px; }
+
+.footer {
+  padding-top: 25px;
+  padding-bottom: 25px; }
+
+.patientRow {
+  border: solid 2px #D5D5D5;
+  border-radius: 5px;
+  margin-left: .5%;
+  width: 99%;
+  margin-top: 1.5%; }
+
+.patientTableHeader {
+  background: #E9E9E9; }
+
+.borderRight {
+  border-right: solid 1px #CFCFCF;
+  height: 57px;
+  padding-top: 14px; }
+
+.borderRightNo {
+  border-right: none; }
+
+.spacer {
+  height: 200px; }
+
+.printBtn {
+  border-radius: 25px;
+  background: #2197DF;
+  color: #FFFFFF;
+  height: 27px;
+  padding-top: 2px;
+  width: 71px;
+  text-shadow: 0 0px 0 #fff; }
+
+.shareBtn {
+  border-radius: 25px;
+  background: #FFF;
+  height: 27px;
+  padding-top: 2px;
+  width: 71px;
+  text-shadow: 0 0px 0 #fff; }
+
+/*PopupContent ends here*/
 
 /** The Magic **/
 .btn-breadcrumb .btn {

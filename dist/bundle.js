@@ -74001,7 +74001,7 @@ var PATIENT_VISIT_FETCH_URL = '/api/getVisits'; //'http://ec2-52-10-19-65.us-wes
 var PATIENT_DETAILS_URL = '/api/getPatientDetail'; //'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/searchByID?id=';
 var FETCH_SUBCENTER_DETAILS = '/api/getSubCenterDetails';
 var PATIENT_SEARCH_URL = '/api/worklists'; //'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search';
-var REGISTRATION_URL_PATTERN = 'Developer/Registration/RegistrationId';
+var REGISTRATION_URL_PATTERN = 'app/Registration/patientId';
 var VISIT_SUMMARY_URL_PATTERN = 'app/Patient/patientId/VisitSummary/visitId';
 var VISIT_URL_PATTERN = 'app/Patient/patientId/Visit/visitType/visitId';
 var PATIENT_URL_PATTERN = 'app/Patient/patientId';
@@ -74011,6 +74011,7 @@ var FETCH_EVENT = 'fetch';
 var WORKLIST_JSON = 'worklist';
 var WEEK_TYPE = 'week';
 var DAY_TYPE = 'day';
+var SORT_TYPE = 'SORT_TYPE';
 var TOTAL_WORKLIST = 'TOTAL_WORKLIST';
 var RISK_PARAM = 'yes';
 var DONUT_DAY_VALUES = 'DAY_VALUE';
@@ -74051,6 +74052,7 @@ var ROUTE_PATH = {
     REFERRAL_LETTER: '/app/ReferralLetter',
     VISIT_SUMMARY: 'VisitSummary',
     MO_WORKLIST: '/app/MOWorkList',
+    VHN_WORKLIST: '/app/VHNWorkList',
     VISIT_TYPE: 'visitType'
 };
 
@@ -74126,6 +74128,7 @@ module.exports = {
     ROUTE_PATH: ROUTE_PATH,
     WEEK_TYPE: WEEK_TYPE,
     DAY_TYPE: DAY_TYPE,
+    SORT_TYPE: SORT_TYPE,
     TOTAL_WORKLIST: TOTAL_WORKLIST,
     RISK_PARAM: RISK_PARAM,
     WORKLIST_JSON: WORKLIST_JSON,
@@ -74258,7 +74261,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-unused-vars: 0*/
 
 var AdminChart = (function (_ControlBase) {
 	_inherits(AdminChart, _ControlBase);
@@ -74282,7 +74285,6 @@ var AdminChart = (function (_ControlBase) {
 			[new Date(2015, 10), 30, '#bbbbbb'], // English color name
 			[new Date(2015, 11), 20, '#bbbbbb']],
 			options: {
-				title: 'Referral ratios',
 				width: 487,
 				height: 250,
 				bar: {
@@ -74318,7 +74320,6 @@ var AdminChart = (function (_ControlBase) {
 			chartType: 'LineChart',
 			div_id: 'LineChart',
 			options: {
-				title: 'VHN Perfomance Index',
 				width: 487,
 				height: 250
 			}
@@ -74328,7 +74329,6 @@ var AdminChart = (function (_ControlBase) {
 			columns: ['date', 'number'],
 			dataArray: [['Task', 'Completion'], ['Complete', 1], ['In-complete', 1]],
 			options: {
-				title: 'Patient profiles - by completions',
 				pieHole: 0.7,
 				width: 487,
 				height: 250
@@ -74348,7 +74348,6 @@ var AdminChart = (function (_ControlBase) {
 			columns: ['number'],
 			dataArray: [['Risk', 'Completion'], ['Risk type 1', 25], ['Risk type 2', 25], ['Risk type 3', 25], ['Risk type 4', 25]],
 			options: {
-				title: 'Risk ratio analyses',
 				pieHole: 0.7,
 				width: 487,
 				height: 250
@@ -74945,12 +74944,6 @@ var PatientBanner = (function (_React$Component) {
 		key: 'componentWillUpdate',
 		value: function componentWillUpdate() {
 			widthPercent = _react2.default.findDOMNode(this.refs.progressBar).children[0]['style']['width'];
-			var patientData = this.props.patientData;
-			if (patientData.pregnancyweekValue > 40) {
-				widthPercent = '100';
-			} else {
-				widthPercent = _react2.default.findDOMNode(this.refs.progressBar).children[0]['style']['width'];
-			}
 		}
 	}, {
 		key: 'render',
@@ -77879,7 +77872,7 @@ var MotherGeneralInfo = (function (_ControlBase) {
 		key: 'dOBHandler',
 		value: function dOBHandler() {
 
-			this.state.context.Age = Utils.findAge(this.state.context.dOB);
+			this.state.context.age = Utils.findAge(this.state.context.dOB);
 			this.forceUpdate();
 		}
 	}, {
@@ -77929,7 +77922,7 @@ var MotherGeneralInfo = (function (_ControlBase) {
 							_react2.default.createElement(
 								'div',
 								{ className: 'space' },
-								_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('Age'), className: 'readonlyd', readOnly: true, placeholder: locale('Age'), valueLink: this.linkState(this.state.context, 'Age') })
+								_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('Age'), className: 'readonlyd', readOnly: true, placeholder: locale('Age'), valueLink: this.linkState(this.state.context, 'age') })
 							)
 						),
 						_react2.default.createElement(
@@ -78216,6 +78209,10 @@ var _ControlBase2 = require('./../../controls/ControlBase');
 
 var _ControlBase3 = _interopRequireDefault(_ControlBase2);
 
+var _LoginStore = require('./../../stores/LoginStore');
+
+var _LoginStore2 = _interopRequireDefault(_LoginStore);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -78268,7 +78265,14 @@ var Registration = (function (_ControlBase) {
         }
     }, {
         key: 'notifyPatientRegistration',
-        value: function notifyPatientRegistration(data) {}
+        value: function notifyPatientRegistration(data) {
+            var userRole = _LoginStore2.default.userRole;
+            if (userRole === 'medicalOfficer') {
+                this.navigate(Route.MO_WORKLIST);
+            } else if (userRole === 'vhnUser') {
+                this.navigate(Route.VHN_WORKLIST);
+            }
+        }
     }, {
         key: 'notifyPatientFetch',
         value: function notifyPatientFetch(data) {
@@ -78371,7 +78375,7 @@ var Registration = (function (_ControlBase) {
 
 exports.default = Registration;
 
-},{"../../stores/RegistrationStore":791,"./../../controls/ControlBase":767,"./../layout/menu/menu":702,"./CurrentPregnancy":711,"./MotherDemographics":712,"./MotherGeneralInfo":713,"./PregnancyHistory":715,"react":658,"react-bootstrap":269}],717:[function(require,module,exports){
+},{"../../stores/RegistrationStore":791,"./../../controls/ControlBase":767,"./../../stores/LoginStore":789,"./../layout/menu/menu":702,"./CurrentPregnancy":711,"./MotherDemographics":712,"./MotherGeneralInfo":713,"./PregnancyHistory":715,"react":658,"react-bootstrap":269}],717:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -78649,6 +78653,10 @@ var _menu = require('./../layout/menu/menu');
 
 var _menu2 = _interopRequireDefault(_menu);
 
+var _Registration = require('./../registration/Registration');
+
+var _Registration2 = _interopRequireDefault(_Registration);
+
 var _VisitInformation = require('./VisitInformation');
 
 var _VisitInformation2 = _interopRequireDefault(_VisitInformation);
@@ -78670,6 +78678,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // eslint-disable-line  no-unused-vars
 
 var menudivStyle = { width: '100%' };
+var patientId = -1;
 
 var SinglePatientView = (function (_ControlBase) {
     _inherits(SinglePatientView, _ControlBase);
@@ -78691,6 +78700,7 @@ var SinglePatientView = (function (_ControlBase) {
     _createClass(SinglePatientView, [{
         key: 'notifyPatientViewDataFetch',
         value: function notifyPatientViewDataFetch(data) {
+            patientId = data.args.patientId;
             this.setState({ patientData: data.args });
         }
     }, {
@@ -78698,6 +78708,9 @@ var SinglePatientView = (function (_ControlBase) {
         value: function testCallBack(targetData, targetTitle) {
             this.setState({ data: targetData });
             this.setState({ title: targetTitle });
+            if (locale('BasicInformation') == targetTitle) {
+                Utils.navigate(this.props.history, Route.REGISTRATION + '/' + patientId);
+            }
         }
     }, {
         key: 'childRender',
@@ -78706,22 +78719,27 @@ var SinglePatientView = (function (_ControlBase) {
                 options: [{
                     text: locale('VisitInformation'),
                     target: _VisitInformation2.default,
+                    title: locale('VisitInformation'),
                     icon: './../../patient/vistinfo_icon.png'
                 }, {
                     text: locale('BasicInformation'),
-                    target: _VisitInformation2.default,
+                    target: _Registration2.default,
+                    title: locale('BasicInformation'),
                     icon: './../../patient/basicInfo_icon.png'
                 }, {
                     text: locale('PastEpisodes'),
                     target: _VisitInformation2.default,
+                    title: locale('PastEpisodes'),
                     icon: './../../patient/pastEpisode_icon.png'
                 }, {
                     text: locale('ReportsAndResults'),
                     target: _VisitInformation2.default,
+                    title: locale('ReportsAndResults'),
                     icon: './../../patient/reports_icon.png'
                 }, {
                     text: locale('RiskProfile'),
                     target: _VisitInformation2.default,
+                    title: locale('RiskProfile'),
                     icon: './../../patient/riskProfile_icon.png'
                 }]
             };
@@ -78752,7 +78770,7 @@ var SinglePatientView = (function (_ControlBase) {
 
 exports.default = SinglePatientView;
 
-},{"../../stores/SinglePatientStore":792,"./../../controls/ControlBase":767,"./../layout/container/patientContainer":699,"./../layout/menu/menu":702,"./VisitInformation":720,"react":658}],720:[function(require,module,exports){
+},{"../../stores/SinglePatientStore":792,"./../../controls/ControlBase":767,"./../layout/container/patientContainer":699,"./../layout/menu/menu":702,"./../registration/Registration":716,"./VisitInformation":720,"react":658}],720:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -83204,16 +83222,14 @@ var VisitInfo = (function (_ControlBase) {
                     target: _Comments2.default,
                     title: locale('Comments'),
                     icon: './../../visit/comment_icon.png'
-                }, {
-                    text: locale('Referral_Letter'),
-                    target: _ReferralLetter2.default,
-                    title: locale('Referral_Letter'),
-                    icon: './../../visit/referralLetter_icon.png'
                 }]
             };
 
             if (this.state.visitData) {
                 newData = this.state.visitData;
+                if (newData.isReferralLetterShown) {
+                    data.options.push({ text: locale('Referral_Letter'), target: _ReferralLetter2.default, title: locale('Referral_Letter'), icon: './../../visit/referralLetter_icon.png' });
+                }
                 return _react2.default.createElement(
                     'div',
                     { className: 'visitContainerResponsive' },
@@ -84198,15 +84214,20 @@ var WorklistView = (function (_React$Component) {
             if (typeof data.args[_AppConstants.DONUT_WEEK_VALUES] !== 'undefined') {
                 this.state.donutWeekKeys = data.args[_AppConstants.DONUT_WEEK_LEGENDS];
             }
+            if (data.args[_AppConstants.SORT_TYPE] == _AppConstants.DAY_TYPE) {
+                this.setState({ tabActive: 1 });
+            }
+            if (data.args[_AppConstants.SORT_TYPE] == _AppConstants.WEEK_TYPE) {
+                this.setState({ tabActive: 2 });
+            }
             this.forceUpdate();
         }
     }, {
         key: 'closeTab',
         value: function closeTab() {
+            this.setState({ tabActive: 4 });
             this.setState({ showTab: false });
-            AppAction.executeAction(ActionType.GET_TOTAL_WORKLIST, null);
             AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
-            this.setState({ tabActive: 1 });
         }
     }, {
         key: 'paginationEvent',
@@ -85549,7 +85570,8 @@ var Tabs = (function (_React$Component) {
                 var closeButtonStyle = {
                     background: 'url(./worklist/close_icon.png) no-repeat scroll 0px 0px',
                     paddingLeft: '22px',
-                    opacity: '0.5'
+                    opacity: '0.5',
+                    paddingTop: '2px'
                 };
                 var closeStyle = {
                     border: 'none',
@@ -85802,15 +85824,20 @@ var WorklistView = (function (_React$Component) {
             if (typeof data.args[_AppConstants.DONUT_WEEK_VALUES] !== 'undefined') {
                 this.state.donutWeekKeys = data.args[_AppConstants.DONUT_WEEK_LEGENDS];
             }
+            if (data.args[_AppConstants.SORT_TYPE] == _AppConstants.DAY_TYPE) {
+                this.setState({ tabActive: 1 });
+            }
+            if (data.args[_AppConstants.SORT_TYPE] == _AppConstants.WEEK_TYPE) {
+                this.setState({ tabActive: 2 });
+            }
             this.forceUpdate();
         }
     }, {
         key: 'closeTab',
         value: function closeTab() {
+            this.setState({ tabActive: 4 });
             this.setState({ showTab: false });
-            AppAction.executeAction(ActionType.GET_TOTAL_WORKLIST, null);
             AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
-            this.setState({ tabActive: 1 });
         }
     }, {
         key: 'paginationEvent',
@@ -89245,6 +89272,11 @@ var LoginStore = (function (_BaseStore) {
             return this._user;
         }
     }, {
+        key: 'userRole',
+        get: function get() {
+            return this._role;
+        }
+    }, {
         key: 'jwt',
         get: function get() {
             return this._jwt;
@@ -89503,7 +89535,7 @@ var RegistrationStore = (function (_BaseStore) {
                     break;
 
                 case ActionType.REGISTERED_PATIENT_FETCH:
-                    var patientId = Utils.parseUrl(AppConstants.REGISTRATION_URL_PATTERN).RegistrationId;
+                    var patientId = Utils.parseUrl(AppConstants.REGISTRATION_URL_PATTERN).patientId;
                     // patientId = '1';
                     this.fetchPatientDetails(patientId);
                     break;
@@ -90066,9 +90098,11 @@ var WorkListStore = (function (_BaseStore) {
             if (sortType == _AppConstants.DAY_TYPE) {
                 updatedJson[_AppConstants.DONUT_DAY_VALUES] = this.getDonutData(workListData, _AppConstants.DAY_TYPE);
                 updatedJson[_AppConstants.DONUT_DAY_LEGENDS] = this.getDonutLegend(_AppConstants.DAY_TYPE);
+                updatedJson[_AppConstants.SORT_TYPE] = _AppConstants.DAY_TYPE;
             } else if (sortType == _AppConstants.WEEK_TYPE) {
                 updatedJson[_AppConstants.DONUT_WEEK_VALUES] = this.getDonutData(workListData, _AppConstants.WEEK_TYPE);
                 updatedJson[_AppConstants.DONUT_WEEK_LEGENDS] = this.getDonutLegend(_AppConstants.WEEK_TYPE);
+                updatedJson[_AppConstants.SORT_TYPE] = _AppConstants.WEEK_TYPE;
             } else {
                 var worklistArray = workListData[_AppConstants.WORKLIST_JSON];
                 updatedJson[_AppConstants.WORKLIST_JSON] = this.translate(worklistArray, RequestType.GET, _AppConstants.DAY_TYPE);
@@ -90576,8 +90610,6 @@ var RegistrationDataTranslator = (function (_BaseTranslator) {
     _createClass(RegistrationDataTranslator, null, [{
         key: 'getDataModelForView',
         value: function getDataModelForView(obj) {
-
-            var risk = this.getRisk(obj);
             var weekValue = obj ? this.calculateCurrentPregnancyWeek(Utils.convertToDateString(new Date()), obj.lmp) : null;
             var pregnancyWeekText = weekValue >= 0 ? 'W' + weekValue : '';
             var gpal = this.findGPALfromObsterics(obj);
@@ -90615,13 +90647,15 @@ var RegistrationDataTranslator = (function (_BaseTranslator) {
                 abortion: obj ? gpal.abortion : '',
                 pregnancyweekValue: weekValue ? weekValue : 0,
                 pregnancyweekText: pregnancyWeekText,
-                risk: risk
+                risk: ''
+
             };
         }
     }, {
         key: 'getDataModelForService',
         value: function getDataModelForService(a) {
-            return {
+            var patientData = {
+                id: a.id,
                 name: a.name,
                 spouseName: a.spouseName,
                 dOB: a.dOB,
@@ -90649,17 +90683,8 @@ var RegistrationDataTranslator = (function (_BaseTranslator) {
                 obstetrics: this.calculateObsterics(a)
 
             };
-        }
-    }, {
-        key: 'getRisk',
-        value: function getRisk(obj) {
-            var highRiskMother = obj ? obj.highRiskMother : '';
-
-            if ('Yes' == highRiskMother) {
-                return 'High';
-            } else if ('No' == highRiskMother) {
-                return 'Low';
-            }
+            if (!patientData.id) delete patientData['id'];
+            return patientData;
         }
     }, {
         key: 'calculateObsterics',
@@ -91001,10 +91026,12 @@ var VisitDataTranslator = (function (_BaseTranslator) {
         value: function getDataModelForView(allVisits, visitFilter) {
 
             var visitData = null;
+            var referralLetterShown = false;
             if (visitFilter.selectedVisitId != -1) {
                 visitData = $.grep(allVisits, function (j) {
                     return j.visitId == visitFilter.selectedVisitId;
                 })[0];
+                referralLetterShown = this.isRecentVisit(allVisits, visitData.visitId, visitData.visitType);
             } else {
                 visitData = this.getLastVisitData(allVisits, visitFilter.visitType);
                 if (visitData) {
@@ -91023,6 +91050,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 visitNumber: visitData ? visitData.visitNumber + 1 : 1,
                 risks: risks,
                 isRiskOpen: risks.length > 0 ? true : false,
+                isReferralLetterShown: referralLetterShown ? referralLetterShown : false,
                 AbdominalExamination: {
                     InspectationOfScars: visitData ? visitData.abdominalFindings : '',
                     FundalHeightInCMS: visitData ? visitData.fundalHeight : 0,
@@ -91434,6 +91462,24 @@ var VisitDataTranslator = (function (_BaseTranslator) {
 
             return visitInfo;
         }
+    }, {
+        key: 'isRecentVisit',
+        value: function isRecentVisit(allVisits, visitId, visitType) {
+            var allANCVisits = null;
+            if (visitType === 'ANC1' || visitType === 'ANC2' || visitType === 'ANC3') {
+                allANCVisits = $.grep(allVisits, function (j) {
+                    return j.visitType == 'ANC1' || j.visitType == 'ANC2' || j.visitType == 'ANC3';
+                });
+            }
+            var maxVisitId = Math.max.apply(Math, allANCVisits.map(function (o) {
+                return o.visitId;
+            }));
+            if (maxVisitId == visitId) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }]);
 
     return VisitDataTranslator;
@@ -91476,7 +91522,6 @@ var VisitSummaryTranslator = (function (_BaseTranslator) {
         value: function populateVisitSummaryData(resp) {
             var weekValue = resp ? this.calculateCurrentPregnancyWeek(Utils.convertToDateString(new Date()), resp.lmp) : -1;
             var pregnancyStatus = resp ? this.calculatePregnancyStatus(weekValue) : null;
-
             var patientData = resp.patientData;
             var visitSummaryData = resp.visitData;
             return {
