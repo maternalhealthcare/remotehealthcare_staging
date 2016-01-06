@@ -1545,17 +1545,6 @@ input[type=checkbox]:checked + label:after {
     padding-bottom: 19%;
     width: 32%; } }
 
-@media (max-width: 1199px) {
-  .visitContainerResponsive {
-    top: 40%;
-    position: absolute;
-    width: 98%; } }
-
-@media (max-width: 767px) {
-  .visitContainerResponsive {
-    top: 60%;
-    position: absolute; } }
-
 /*Media query ends here*/
 
 /** The Magic **/
@@ -1750,6 +1739,33 @@ body {
   width: 300px;
   height: 154px; }
 
+input[type="checkbox"] {
+  display: none; }
+  input[type="checkbox"] ~ label::before {
+    border-radius: 3px;
+    padding: 1px 0px 0px 4px;
+    content: "\a0 ";
+    display: inline-block;
+    font-family: FontAwesome;
+    font-size: 106%;
+    line-height: 21px;
+    margin: 0 0.5em 0 0;
+    overflow: visible;
+    position: relative;
+    text-indent: -0.1em;
+    top: 0.05em;
+    width: 20px;
+    height: 20px;
+    color: #FFF;
+    background: #FFF;
+    cursor: pointer;
+    border: solid 1px #cfcfcf;
+    opacity: 1; }
+
+input[type="checkbox"]:checked ~ label::before {
+  content: "\f00c";
+  color: #3AAFDA;
+  background: #FFFFFF; }
 
 /* Custom code*/
 /* Top main navigation Starts here*/
