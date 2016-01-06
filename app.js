@@ -1,17 +1,12 @@
 /*eslint no-console: 0*/
-
 'use strict';
-
 var express = require('express');
 var path = require('path');
 var app = express();
 var request = require('request');
 var bodyParser = require('body-parser');
-
 var port = process.env.PORT || 3000;
-
 app.use(bodyParser.json());
-
 app.use(express.static(__dirname + '/dist/'));
 // var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
 // var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
