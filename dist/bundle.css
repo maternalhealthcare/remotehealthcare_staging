@@ -1358,6 +1358,9 @@ input::-webkit-inner-spin-button {
 .paddingStyleBottom {
   margin-top: 1%; }
 
+.heightSpecific {
+  height: 215px; }
+
 .padBottom {
   margin-bottom: 1%; }
 
@@ -1513,6 +1516,24 @@ input[type=checkbox]:checked + label:after {
   border: 2px solid #B9E3FF;
   margin-top: -0.5%;
   font-family: GEInspira; }
+
+/*Media query starts here*/
+@media (min-width: 100px) and (max-width: 762px) {
+  .SPContainer {
+    top: 31%;
+    position: relative; } }
+
+@media (min-width: 763px) and (max-width: 1200px) {
+  .SPContainer {
+    top: 13%;
+    position: relative; }
+  .progressDiv {
+    padding-bottom: 1.5%; }
+  .dividerFirst {
+    padding-bottom: 19%;
+    width: 32%; } }
+
+/*Media query ends here*/
 
 /** The Magic **/
 .btn-breadcrumb .btn {

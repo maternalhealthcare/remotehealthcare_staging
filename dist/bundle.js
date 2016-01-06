@@ -69421,6 +69421,7 @@ var PATIENT_VISIT_SAVE_URL = '/api/saveVisit'; //'http://ec2-52-10-19-65.us-west
 var PATIENT_VISIT_FETCH_URL = '/api/getVisits'; //'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientVisit/searchVisits?patientReference=';
 var PATIENT_DETAILS_URL = '/api/getPatientDetail'; //'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/searchByID?id=';
 var FETCH_SUBCENTER_DETAILS = '/api/getSubCenterDetails';
+var PATIENT_SEARCH_URL = '/api/worklists'; //'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search'
 var REGISTRATION_URL_PATTERN = 'Developer/Registration/RegistrationId';
 
 var VISIT_SUMMARY_URL_PATTERN = 'app/Patient/patientId/VisitSummary/visitId';
@@ -69442,6 +69443,8 @@ var FETCH_SUBCENTER = 'FETCH_SUBCENTER';
 var AUTO_SEARCH = 'AUTO_SEARCH';
 var MANUAL_SEARCH = 'MANUAL_SEARCH';
 var NO_DATA_FOUND = 'no data found';
+var SEARCH_TYPE = 'searchType';
+var SEARCH_STRING = 'searchString';
 var ACTION_TYPE = {
     REGISTER_PATIENT_ACTION: 'REGISTER_PATIENT_ACTION',
     SAVE_VISIT_INFO_ACTION: 'SAVE_VISIT_INFO',
@@ -69560,7 +69563,10 @@ module.exports = {
     FETCH_SUBCENTER_DETAILS: FETCH_SUBCENTER_DETAILS,
     AUTO_SEARCH: AUTO_SEARCH,
     MANUAL_SEARCH: MANUAL_SEARCH,
-    NO_DATA_FOUND: NO_DATA_FOUND
+    NO_DATA_FOUND: NO_DATA_FOUND,
+    PATIENT_SEARCH_URL: PATIENT_SEARCH_URL,
+    SEARCH_TYPE: SEARCH_TYPE,
+    SEARCH_STRING: SEARCH_STRING
 };
 
 },{}],663:[function(require,module,exports){
@@ -69706,20 +69712,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // import StageIndicator from './../../../controls/StageIndicator';
 // Input, Row, Label,
 
-/*var patientH1 = {
-    marginLeft: '10px',
-    fontWeight: 'normal',
-    fontSize: '25px'
-};
-
-var bgStyle = {
-    backgroundColor: '#DAF1F9',
-    marginLeft: '-16px',
-    marginTop: '65px',
-    position: 'fixed',
-    width: '100%'
-};
-*/
 var widthPercent = 0;
 
 var PatientBanner = (function (_React$Component) {
@@ -69734,22 +69726,29 @@ var PatientBanner = (function (_React$Component) {
 	_createClass(PatientBanner, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var progressTo = _react2.default.findDOMNode(this.refs.progressBar).children[0]['style']['cssText'];
-			widthPercent = progressTo.substring(progressTo.indexOf(':') + 1, progressTo.indexOf(';')).trim();
-			this.forceUpdate();
+			widthPercent = '0';
+		}
+	}, {
+		key: 'componentWillUpdate',
+		value: function componentWillUpdate() {
+			widthPercent = _react2.default.findDOMNode(this.refs.progressBar).children[0]['style']['width'];
+			var patientData = this.props.patientData;
+			if (patientData.pregnancyweekValue > 40) {
+				widthPercent = '100';
+			} else {
+				widthPercent = _react2.default.findDOMNode(this.refs.progressBar).children[0]['style']['width'];
+			}
 		}
 	}, {
 		key: 'render',
 		value: function render() {
 			var patientData = this.props.patientData;
-			// let labelClass = 'col-xs-1 text-right';
-			// let dataClass = 'col-xs-1 text-left';
 			return _react2.default.createElement(
 				'div',
-				{ className: 'col-lg-12 col-sm-12 col-md-12 patient-banner' },
+				{ className: 'col-lg-12 col-sm-12 col-xs-12 col-md-12 patient-banner' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-lg-4 col-sm-12 col-md-12 patient-info-bx1' },
+					{ className: 'col-lg-4 col-xs-12 col-md-4 col-sm-4 patient-info-bx1' },
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-sm-12 col-md-12 col-lg-4' },
@@ -69757,7 +69756,7 @@ var PatientBanner = (function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'content-body col-lg-8 col-sm-12 col-md-12 device_width' },
+						{ className: 'content-body col-lg-8 col-xs-12 col-md-4 col-sm-4 device_width dividerFirst' },
 						_react2.default.createElement(
 							'div',
 							{ id: 'row' },
@@ -69809,7 +69808,7 @@ var PatientBanner = (function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-lg-2 col-md-12 col-sm-12 patient-info-bx2' },
+					{ className: 'col-lg-2 col-xs-12 col-md-4 col-sm-4 patient-info-bx2' },
 					_react2.default.createElement(
 						'div',
 						{ className: 'content-body col-sm-12 col-lg-12 col-md-12' },
@@ -69864,7 +69863,7 @@ var PatientBanner = (function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-lg-2 col-sm-12 col-md-12 patient-info-bx3' },
+					{ className: 'col-lg-3 col-xs-12 col-md-4 col-sm-4 patient-info-bx3' },
 					_react2.default.createElement(
 						'div',
 						{ className: 'content-body col-sm-12' },
@@ -69919,7 +69918,7 @@ var PatientBanner = (function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-lg-4 col-md-12 col-sm-12' },
+					{ className: 'col-lg-3 col-xs-12 col-md-4 col-sm-4 progressDiv' },
 					_react2.default.createElement(
 						'div',
 						{ className: 'content-body col-lg-8 col-md-12 col-sm-12' },
@@ -69937,7 +69936,7 @@ var PatientBanner = (function (_React$Component) {
 								_react2.default.createElement(
 									'div',
 									{ className: 'progress' },
-									_react2.default.createElement(_reactBootstrap.ProgressBar, { striped: true, bsStyle: 'success', min: 0, max: 45, now: patientData.pregnancyweekValue, ref: 'progressBar' })
+									_react2.default.createElement(_reactBootstrap.ProgressBar, { striped: true, bsStyle: 'success', min: 0, max: 40, now: patientData.pregnancyweekValue, ref: 'progressBar' })
 								)
 							)
 						),
@@ -69949,7 +69948,7 @@ var PatientBanner = (function (_React$Component) {
 								{ className: 'col-lg-12' },
 								_react2.default.createElement(
 									'div',
-									{ className: 'progress_val', style: { marginLeft: widthPercent } },
+									{ className: 'progress_val', style: { marginLeft: widthPercent, transition: 'all 1s ease-in-out;' } },
 									_react2.default.createElement('div', { className: 'arrow-up' }),
 									_react2.default.createElement(
 										'span',
@@ -71805,21 +71804,21 @@ var _DropDown = require('./../../controls/DropDown');
 
 var _DropDown2 = _interopRequireDefault(_DropDown);
 
-var _RadioButton = require('./../../controls/RadioButton');
-
-var _RadioButton2 = _interopRequireDefault(_RadioButton);
-
 var _server = require('react-dom/server');
 
 var _server2 = _interopRequireDefault(_server);
 
-var _jspdfBrowserify = require('jspdf-browserify');
-
-var _jspdfBrowserify2 = _interopRequireDefault(_jspdfBrowserify);
-
 var _ReferralPrint = require('./ReferralPrint.js');
 
 var _ReferralPrint2 = _interopRequireDefault(_ReferralPrint);
+
+var _VisitSummary = require('./../visit-summary/VisitSummary');
+
+var _VisitSummary2 = _interopRequireDefault(_VisitSummary);
+
+var _VisitSummaryStore = require('../../stores/VisitSummaryStore');
+
+var _VisitSummaryStore2 = _interopRequireDefault(_VisitSummaryStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -71829,7 +71828,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-unused-vars: 0*/
 
+//import jspdf from 'jspdf-browserify';
+
 var StyleHeader = {
+    media: 'print',
     backgroundColor: '#CCCCCC',
     border: '1px solid black',
     marginTop: '3px',
@@ -71849,7 +71851,7 @@ var textColor = { color: '#0000A3' };
 
 var labelStyle = {
     float: 'left',
-    marginLeft: '13px'
+    marginLeft: '10px'
 
 };
 var wrapperStyle = { marginTop: '30px' };
@@ -71876,6 +71878,9 @@ var ReferralLetter = (function (_ControlBase) {
         _this.state = { patientData: {} };
         _ReferLetterStore2.default.addChangeListener(AppConstants.FETCH_EVENT, _this.notifyPatientFetch.bind(_this));
         AppAction.executeAction(ActionType.REFER_LETTER_DATA_FETCH, null);
+
+        _VisitSummaryStore2.default.addChangeListener(AppConstants.FETCH_EVENT, _this.retrieveVisitData.bind(_this));
+        AppAction.executeAction(ActionType.VISIT_SUMMARY_FETCH, null);
         return _this;
     }
 
@@ -71885,18 +71890,34 @@ var ReferralLetter = (function (_ControlBase) {
             this.setState({ patientData: data.args });
         }
     }, {
+        key: 'retrieveVisitData',
+        value: function retrieveVisitData(visitSummaryData) {
+
+            this.setState({ visitSummary: visitSummaryData.args });
+            // this.state.visitSummary = visitSummaryData.args;
+            this.forceUpdate();
+        }
+    }, {
         key: 'exportToPdf',
         value: function exportToPdf() {
-            var html = _server2.default.renderToString(_react2.default.createElement(_ReferralPrint2.default, { patientInfo: this.state.patientData, referralInfo: this.state.patientData }));
-            var doc = new _jspdfBrowserify2.default();
+            var printContents = _server2.default.renderToString(_react2.default.createElement(_ReferralPrint2.default, { patientInfo: this.state.patientData, referralInfo: this.state.patientData }));
+            var summaryContents = _server2.default.renderToString(_react2.default.createElement(_VisitSummary2.default, { visitSummarydata: this.state.visitSummary }));
+            printContents = printContents + summaryContents;
+
+            var win = window.open('', '', 'left=0,top=0,width=800,height=900');
+            win.document.write(printContents);
+            win.focus();
+            win.print();
+            win.close();
+
+            /*var html = ReactDOMServer.renderToString(<ReferralPrint patientInfo={this.state.patientData} referralInfo={this.state.patientData} />);
+            var doc = new jspdf();
             doc.fromHTML(html);
-            doc.output('dataurlnewwindow');
+            doc.output('dataurlnewwindow');*/
         }
     }, {
         key: 'render',
         value: function render() {
-            var labelClass = 'col-xs-4 alignLeft';
-            var wrapperClass = 'col-xs-2';
             return _react2.default.createElement(
                 'div',
                 null,
@@ -72021,7 +72042,7 @@ var ReferralLetter = (function (_ControlBase) {
                 ),
                 _react2.default.createElement(
                     'div',
-                    { className: 'wrapper whiteBg', style: wrapperStyle },
+                    { className: 'wrapper', style: wrapperStyle },
                     _react2.default.createElement(
                         'form',
                         null,
@@ -72030,25 +72051,25 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { lg: 6, sm: 12, xs: 12, style: { marginTop: '1%' } },
-                                _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('ReferredTo'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-2 marginMinus',
-                                    wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'referredTo') }),
+                                { xs: 6, style: { marginTop: '1%' } },
+                                _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: locale('ReferredTo'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-3 marginMinus',
+                                    wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.patientData, 'referredTo') }),
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
-                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('ReasonForReferral'), className: 'editable', placeholder: locale('PleaseEnterTheReason'), labelClassName: 'col-xs-12 col-lg-2 marginMinus',
-                                        wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'reasonForReferral') }),
+                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('ReasonForReferral'), className: 'editable', placeholder: locale('PleaseEnterTheReason'), labelClassName: 'col-xs-3 marginMinus',
+                                        wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.patientData, 'reasonForReferral') }),
                                     '  '
                                 )
                             ),
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { lg: 6, sm: 12, xs: 12 },
-                                _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YY', className: 'editable', label: locale('RefferedOn'), labelClassName: 'col-xs-12 col-lg-2 marginMinus',
-                                    wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'referredOn') }),
+                                { xs: 4 },
+                                _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YY', className: 'editable', label: locale('RefferedOn'), labelClassName: 'col-xs-4 marginMinus',
+                                    wrapperClassName: 'col-xs-5', valueLink: this.linkState(this.state.patientData, 'referredOn') }),
                                 _react2.default.createElement(
                                     'div',
-                                    { className: 'referral', style: { 'width': '38%' } },
+                                    { className: 'referral' },
                                     _react2.default.createElement(
                                         'label',
                                         { style: labelStyle },
@@ -72069,9 +72090,9 @@ var ReferralLetter = (function (_ControlBase) {
                                 _react2.default.createElement(
                                     'div',
                                     { className: 'referral' },
-                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('CurrentMedication'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-12 col-lg-3 marginMinus',
-                                        wrapperClassName: 'col-xs-12 col-lg-4', valueLink: this.linkState(this.state.patientData, 'CurrentMedication') }),
-                                    ' '
+                                    _react2.default.createElement(_reactBootstrap.Input, { type: 'textarea', label: locale('CurrentMedication'), className: 'editable', placeholder: locale('PleaseEenter'), labelClassName: 'col-xs-5 marginMinus',
+                                        wrapperClassName: 'col-xs-7', valueLink: this.linkState(this.state.patientData, 'CurrentMedication') }),
+                                    '   '
                                 )
                             )
                         ),
@@ -72080,30 +72101,70 @@ var ReferralLetter = (function (_ControlBase) {
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { lg: 4, sm: 12, xs: 12 },
-                                _react2.default.createElement(_RadioButton2.default, { label: 'Information on referral provided to institution referred',
-                                    labelClassName: 'col-xs-12 col-lg-6', wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.context, 'informationOnReferral', this.valueChanged), name: 'informationOnReferral', trueText: 'Yes', falseText: 'No' })
+                                { xs: 4 },
+                                _react2.default.createElement(
+                                    'label',
+                                    null,
+                                    locale('Information_on_Referral_provided_to_institution_referred')
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'class': 'btn-group', 'data-toggle': 'buttons', style: radioStyle },
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'class': 'btn btn-default', wrapperClassName: 'col-xs-5' },
+                                        _react2.default.createElement('input', { type: 'radio', id: 'q156', checked: 'true', name: 'radio', value: 'Yes' }),
+                                        ' ',
+                                        locale('Yes')
+                                    ),
+                                    '    ',
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'class': 'btn btn-default' },
+                                        _react2.default.createElement('input', { type: 'radio', id: 'q157', name: 'radio', value: 'No' }),
+                                        ' ',
+                                        locale('No')
+                                    )
+                                ),
+                                _react2.default.createElement('br', null),
+                                _react2.default.createElement('br', null),
+                                _react2.default.createElement('br', null),
+                                _react2.default.createElement('br', null),
+                                _react2.default.createElement(
+                                    'label',
+                                    null,
+                                    locale('PatientConsentObtained')
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'class': 'btn-group', 'data-toggle': 'buttons', style: radioStyle },
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'class': 'btn btn-default', wrapperClassName: 'col-xs-5' },
+                                        _react2.default.createElement('input', { type: 'radio', name: 'radioPatient', value: 'Yes' }),
+                                        ' ',
+                                        locale('Yes')
+                                    ),
+                                    '    ',
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'class': 'btn btn-default' },
+                                        _react2.default.createElement('input', { type: 'radio', name: 'radioPatient', checked: 'true', value: 'No' }),
+                                        ' ',
+                                        locale('No')
+                                    )
+                                )
                             )
                         ),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement('br', null),
                         _react2.default.createElement(
                             _reactBootstrap.Row,
                             null,
                             _react2.default.createElement(
                                 _reactBootstrap.Col,
-                                { lg: 4, sm: 12, xs: 12 },
-                                _react2.default.createElement(_RadioButton2.default, { label: 'PatientConsentObtained',
-                                    labelClassName: 'col-xs-12 col-lg-6', wrapperClassName: 'col-xs-12 col-lg-6', valueLink: this.linkState(this.state.context, 'PatientConsentObtained', this.valueChanged), name: 'PatientConsentObtained', trueText: 'Yes', falseText: 'No' })
-                            )
-                        ),
-                        _react2.default.createElement('br', null),
-                        _react2.default.createElement('br', null),
-                        _react2.default.createElement('br', null),
-                        _react2.default.createElement(
-                            _reactBootstrap.Row,
-                            null,
-                            _react2.default.createElement(
-                                _reactBootstrap.Col,
-                                { lg: 4, sm: 12, xs: 12, style: layoutBtn },
+                                { xs: 4, style: layoutBtn },
                                 _react2.default.createElement(
                                     'button',
                                     { type: 'button', className: 'btn-success', onClick: this.exportToPdf.bind(this) },
@@ -72128,16 +72189,16 @@ var ReferralLetter = (function (_ControlBase) {
 
 exports.default = ReferralLetter;
 
-},{"../../stores/ReferLetterStore":759,"./../../controls/ControlBase":737,"./../../controls/DatePicker":740,"./../../controls/DropDown":741,"./../../controls/RadioButton":747,"./../login/AuthenticatedComponent":676,"./ReferralPrint.js":680,"jspdf-browserify":94,"react":631,"react-bootstrap":255,"react-dom/server":430}],680:[function(require,module,exports){
-"use strict";
+},{"../../stores/ReferLetterStore":759,"../../stores/VisitSummaryStore":763,"./../../controls/ControlBase":737,"./../../controls/DatePicker":740,"./../../controls/DropDown":741,"./../login/AuthenticatedComponent":676,"./../visit-summary/VisitSummary":693,"./ReferralPrint.js":680,"react":631,"react-bootstrap":255,"react-dom/server":430}],680:[function(require,module,exports){
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+				value: true
 });
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -72149,255 +72210,362 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-mixed-spaces-and-tabs:0*/
 
+var StyleHeader = {
+				media: 'print',
+				paddingLeft: '30px',
+				'font-family': 'GEInspira',
+				fontWeight: '300'
+};
+
+var styleContent = {
+				media: 'print',
+				marginLeft: '5%',
+				'font-family': 'GEInspira',
+				fontWeight: '200'
+};
+
+var styleBottom = {
+				media: 'print',
+				marginLeft: '50%',
+				paddingLeft: '30px',
+				'font-family': 'GEInspira',
+				fontWeight: '300'
+};
+
+var styleCenter = {
+				marginLeft: '40%',
+				fontWeight: '600'
+};
+
 var ReferralPrint = (function (_React$Component) {
-	_inherits(ReferralPrint, _React$Component);
+				_inherits(ReferralPrint, _React$Component);
 
-	function ReferralPrint() {
-		_classCallCheck(this, ReferralPrint);
+				function ReferralPrint() {
+								_classCallCheck(this, ReferralPrint);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(ReferralPrint).call(this));
-	}
+								return _possibleConstructorReturn(this, Object.getPrototypeOf(ReferralPrint).call(this));
+				}
 
-	_createClass(ReferralPrint, [{
-		key: "render",
-		value: function render() {
-			var patientData = this.props.patientInfo;
-			var referralOptions = this.props.referralInfo;
-			return _react2.default.createElement(
-				"div",
-				null,
-				_react2.default.createElement(
-					"pre",
-					null,
-					"To,"
-				),
-				_react2.default.createElement(
-					"span",
-					null,
-					referralOptions.referredTo
-				),
-				_react2.default.createElement(
-					"pre",
-					null,
-					"District Government Hospital, Perambalur Sir/Madam, I am referring this patient for further management. I request you to kindly do the needful and provide the feedback for further follow-up through the patient."
-				),
-				_react2.default.createElement(
-					"div",
-					{ id: "patient-Info-container" },
-					_react2.default.createElement(
-						"div",
-						{ className: "col-lg-12" },
-						_react2.default.createElement(
-							"div",
-							{ className: "row" },
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-2" },
-								locale('Name'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.name
-								)
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-3" },
-								locale('SpouseName'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.spouseName
-								)
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-2" },
-								locale('Age'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.age
-								)
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-3" },
-								locale('ContactNo'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.emergencyContactPhn
-								),
-								" "
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-2" },
-								locale('BloodGroup'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.bloodGroup
-								)
-							)
-						),
-						_react2.default.createElement(
-							"div",
-							{ className: "row" },
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-2" },
-								locale('PatientID'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.patientId
-								)
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-3" },
-								locale('PICMEID'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.picmeID
-								)
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-2" },
-								locale('SubCenterName'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.subCentreName
-								),
-								"r"
-							),
-							_react2.default.createElement(
-								"div",
-								{ className: "col-md-3" },
-								locale('PHCName'),
-								": ",
-								_react2.default.createElement(
-									"span",
-									null,
-									patientData.phcName
-								),
-								" "
-							)
-						)
-					)
-				),
-				_react2.default.createElement(
-					"div",
-					{ id: "Advanced-referral-details" },
-					_react2.default.createElement(
-						"div",
-						{ className: "row" },
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							_react2.default.createElement(
-								"span",
-								null,
-								"Referral reason"
-							)
-						),
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							referralOptions.reasonForReferral
-						)
-					),
-					_react2.default.createElement(
-						"div",
-						{ className: "row" },
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							_react2.default.createElement(
-								"span",
-								null,
-								"Information on referral provided to institution"
-							)
-						),
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							referralOptions.OnformationOnReferral
-						)
-					),
-					_react2.default.createElement(
-						"div",
-						{ className: "row" },
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							_react2.default.createElement(
-								"span",
-								null,
-								"Mode of transport"
-							)
-						),
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							referralOptions.modeOfTransport
-						)
-					),
-					_react2.default.createElement(
-						"div",
-						{ className: "row" },
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							_react2.default.createElement(
-								"span",
-								null,
-								"Referral Date and time"
-							)
-						),
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							referralOptions.referredOn
-						)
-					),
-					_react2.default.createElement(
-						"div",
-						{ className: "row" },
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							_react2.default.createElement(
-								"span",
-								null,
-								"Patient Consent obtained"
-							)
-						),
-						_react2.default.createElement(
-							"div",
-							{ "class": "col-sm-4" },
-							referralOptions.patientConsent
-						)
-					)
-				)
-			);
-		}
-	}]);
+				_createClass(ReferralPrint, [{
+								key: 'render',
+								value: function render() {
+												var patientData = this.props.patientInfo;
+												var referralOptions = this.props.referralInfo;
+												return _react2.default.createElement(
+																'div',
+																null,
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement('br', null),
+																				_react2.default.createElement('br', null)
+																),
+																_react2.default.createElement(
+																				'label',
+																				{ style: styleCenter },
+																				' ',
+																				locale('Referral_Letter'),
+																				' '
+																),
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement('br', null),
+																				_react2.default.createElement('br', null)
+																),
+																_react2.default.createElement(
+																				'div',
+																				{ style: StyleHeader },
+																				_react2.default.createElement(
+																								'div',
+																								null,
+																								'To,'
+																				),
+																				_react2.default.createElement(
+																								'div',
+																								null,
+																								'Dr. ',
+																								referralOptions.referredTo
+																				),
+																				_react2.default.createElement(
+																								'div',
+																								null,
+																								'District Government Hospital,'
+																				),
+																				_react2.default.createElement(
+																								'div',
+																								null,
+																								'Perambalur'
+																				)
+																),
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement('br', null)
+																),
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement('br', null)
+																),
+																_react2.default.createElement(
+																				'div',
+																				{ style: StyleHeader },
+																				'Sir/Madam,'
+																),
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement('br', null)
+																),
+																_react2.default.createElement(
+																				'div',
+																				{ style: styleContent },
+																				'    ',
+																				_react2.default.createElement(
+																								'p',
+																								null,
+																								'I am referring this patient for further management. I request you to kindly do the needful and provide the feedback for further follow-up through the patient. '
+																				)
+																),
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement('br', null),
+																				_react2.default.createElement('br', null),
+																				_react2.default.createElement('br', null)
+																),
+																_react2.default.createElement(
+																				'div',
+																				null,
+																				_react2.default.createElement(
+																								'div',
+																								{ id: 'patient-Info', style: styleContent },
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('Name'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.name
+																												)
+																								),
+																								'    ',
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('SpouseName'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.spouseName
+																												)
+																								),
+																								'    ',
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('Age'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.age
+																												)
+																								),
+																								'    ',
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('ContactNo'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.emergencyContactPhn
+																												),
+																												' '
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('BloodGroup'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.bloodGroup
+																												)
+																								),
+																								'    ',
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('PatientID'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.patientId
+																												)
+																								),
+																								'    ',
+																								_react2.default.createElement(
+																												'label',
+																												null,
+																												locale('PICMEID'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																patientData.picmeID
+																												)
+																								)
+																				),
+																				_react2.default.createElement(
+																								'div',
+																								{ id: 'Referral-Info', style: styleContent },
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												{ className: 'col-md-2' },
+																												locale('ReasonForReferral'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																referralOptions.reasonForReferral
+																												)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												{ className: 'col-md-2' },
+																												locale('Information_on_Referral_provided_to_institution_referred'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																referralOptions.OnformationOnReferral
+																												)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												{ className: 'col-md-2' },
+																												locale('ModeOfTransport'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																referralOptions.modeOfTransport
+																												)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												{ className: 'col-md-2' },
+																												locale('RefferedOn'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																referralOptions.referredOn
+																												)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												{ className: 'col-md-2' },
+																												locale('PatientConsentObtained'),
+																												': ',
+																												_react2.default.createElement(
+																																'span',
+																																null,
+																																referralOptions.patientConsent
+																												)
+																								)
+																				),
+																				_react2.default.createElement(
+																								'div',
+																								null,
+																								_react2.default.createElement(
+																												'div',
+																												null,
+																												_react2.default.createElement('br', null),
+																												_react2.default.createElement('br', null)
+																								),
+																								_react2.default.createElement(
+																												'label',
+																												{ style: styleContent },
+																												' PHC Seal : '
+																								),
+																								_react2.default.createElement(
+																												'div',
+																												{ style: styleBottom },
+																												_react2.default.createElement(
+																																'label',
+																																null,
+																																'Signature of the Medical Officer'
+																												),
+																												_react2.default.createElement(
+																																'div',
+																																null,
+																																_react2.default.createElement('br', null)
+																												),
+																												_react2.default.createElement(
+																																'label',
+																																null,
+																																locale('PHCName'),
+																																' : ',
+																																referralOptions.phcName
+																												),
+																												_react2.default.createElement(
+																																'div',
+																																null,
+																																_react2.default.createElement('br', null)
+																												),
+																												_react2.default.createElement(
+																																'label',
+																																null,
+																																'Date :'
+																												)
+																								)
+																				)
+																)
+												);
+								}
+				}]);
 
-	return ReferralPrint;
+				return ReferralPrint;
 })(_react2.default.Component);
 
 exports.default = ReferralPrint;
@@ -74244,7 +74412,7 @@ var VisitsPerWeekRange = (function (_ControlBase) {
 					null,
 					_react2.default.createElement(
 						_reactBootstrap.Col,
-						{ xs: 8 },
+						{ xs: 12, lg: 9 },
 						_react2.default.createElement(
 							'span',
 							{ style: label },
@@ -74277,7 +74445,7 @@ var VisitsPerWeekRange = (function (_ControlBase) {
 						),
 						_react2.default.createElement(
 							'span',
-							{ style: label },
+							null,
 							_react2.default.createElement(
 								'label',
 								{ className: 'visitsPerWeekRangeVisitCount left-block', bsSize: 'xsmall' },
@@ -74292,7 +74460,7 @@ var VisitsPerWeekRange = (function (_ControlBase) {
 						),
 						_react2.default.createElement(
 							'span',
-							{ style: label },
+							null,
 							_react2.default.createElement(
 								'label',
 								{ className: 'visitsPerWeekRangeVisitCount left-block', bsSize: 'xsmall' },
@@ -74308,7 +74476,7 @@ var VisitsPerWeekRange = (function (_ControlBase) {
 					),
 					_react2.default.createElement(
 						_reactBootstrap.Col,
-						{ xs: 4 },
+						{ xs: 12, lg: 3 },
 						_react2.default.createElement(
 							'div',
 							{ style: divDropDown },
@@ -75188,10 +75356,10 @@ var AbdominalExamination = (function (_ControlBase) {
         key: 'childRender',
         value: function childRender() {
 
-            var labelClass = 'col-xs-3 alignLeft';
-            var wcTextArea = 'col-xs-2';
-            var wcNumber = 'col-xs-2';
-            var wcDropDown = 'col-xs-2';
+            var labelClass = 'col-xs-12 col-lg-4 alignLeft';
+            var wcTextArea = 'col-xs-12 col-lg-4';
+            var wcNumber = 'col-xs-12 col-lg-4';
+            var wcDropDown = 'col-xs-12 col-lg-4';
 
             var foetalLie = [{
                 value: 'Longitudinal',
@@ -75222,6 +75390,9 @@ var AbdominalExamination = (function (_ControlBase) {
             }];
 
             var FoetalMovements = [{
+                value: '',
+                text: locale('Select')
+            }, {
                 value: 'Yes',
                 text: locale('Yes')
             }, {
@@ -75238,46 +75409,78 @@ var AbdominalExamination = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', className: 'paddingStyleBottom', label: locale('InspectationOfScarsOrAbdominalFindings'), placeholder: 'Abdominal Findings', labelClassName: labelClass, wrapperClassName: wcTextArea, valueLink: this.linkState(this.state.context.AbdominalExamination, 'InspectationOfScars') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', className: 'paddingStyleBottom', label: locale('InspectationOfScarsOrAbdominalFindings'), placeholder: 'Abdominal Findings', labelClassName: labelClass, wrapperClassName: wcTextArea, valueLink: this.linkState(this.state.context.AbdominalExamination, 'InspectationOfScars') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeightInCM'), className: 'paddingStyleBottom', placeholder: 'Height cms', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInCMS') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeightInCM'), className: 'paddingStyleBottom', placeholder: 'Height cms', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInCMS') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeight'), className: 'paddingStyleBottom', placeholder: 'Height weeks', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInWeeks') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FundalHeight'), className: 'paddingStyleBottom', placeholder: 'Height weeks', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FundalHeightInWeeks') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalLie'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
-                            wrapperClassName: wcDropDown, options: foetalLie, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FoetalLie') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_DropDown2.default, { label: locale('FoetalLie'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
+                                wrapperClassName: wcDropDown, options: foetalLie, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FoetalLie') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalPresentation'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
-                            wrapperClassName: wcDropDown, options: foetalPresentation, valueLink: this.linkState(this.state.context.AbdominalExamination, 'Foetalpresentation') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_DropDown2.default, { label: locale('FoetalPresentation'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
+                                wrapperClassName: wcDropDown, options: foetalPresentation, valueLink: this.linkState(this.state.context.AbdominalExamination, 'Foetalpresentation') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FHS'), className: 'paddingStyleBottom', placeholder: 'Foetal heart Rate', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FHS') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('FHS'), className: 'paddingStyleBottom', placeholder: 'Foetal heart Rate', labelClassName: labelClass, wrapperClassName: wcNumber, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FHS') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('SingleVsMultiplePregnancy'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
-                            wrapperClassName: wcDropDown, options: pregnancy, valueLink: this.linkState(this.state.context.AbdominalExamination, 'SingleVsMultiplePregnancy') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_DropDown2.default, { label: locale('SingleVsMultiplePregnancy'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
+                                wrapperClassName: wcDropDown, options: pregnancy, valueLink: this.linkState(this.state.context.AbdominalExamination, 'SingleVsMultiplePregnancy') })
+                        )
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Row,
                         null,
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalMovements'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
-                            wrapperClassName: wcDropDown, options: FoetalMovements, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FoetalMovements') })
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            _react2.default.createElement(_DropDown2.default, { label: locale('FoetalMovements'), className: 'paddingStyleBottom', placeholder: 'select', labelClassName: labelClass,
+                                wrapperClassName: wcDropDown, options: FoetalMovements, valueLink: this.linkState(this.state.context.AbdominalExamination, 'FoetalMovements') })
+                        )
                     )
                 )
             );
@@ -75321,11 +75524,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-unused-vars: 0*/
 /*eslint no-mixed-spaces-and-tabs:0*/
 
-var textAllergyAllign = {
-    marginLeft: '68%',
-    marginTop: '-11%'
-};
-
 var Allergies = (function (_ControlBase) {
     _inherits(Allergies, _ControlBase);
 
@@ -75338,15 +75536,15 @@ var Allergies = (function (_ControlBase) {
     _createClass(Allergies, [{
         key: 'childRender',
         value: function childRender() {
-            var labelClass = 'col-xs-5 alignLeft';
-            var wrapperClass = 'col-xs-2';
+            var labelClass = 'col-xs-12 col-lg-5 alignLeft';
+            var wrapperClass = 'col-xs-12 col-lg-4';
             var isDrugTextbox = _react2.default.createElement('span', null);
             var isFoodTextbox = _react2.default.createElement('span', null);
             var isEnvTextbox = _react2.default.createElement('span', null);
 
-            if (this.state.context.Allergies.isDrug) isDrugTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'drugAllergyDetail') });
-            if (this.state.context.Allergies.isFood) isFoodTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'foodAllergyDetail') });
-            if (this.state.context.Allergies.isEnv) isEnvTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', style: textAllergyAllign, label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'envAllergyDetail') });
+            if (this.state.context.Allergies.isDrug) isDrugTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'drugAllergyDetail') });
+            if (this.state.context.Allergies.isFood) isFoodTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'foodAllergyDetail') });
+            if (this.state.context.Allergies.isEnv) isEnvTextbox = _react2.default.createElement(_reactBootstrap.Input, { type: 'textbox', label: '', className: 'editable col-lg-4 col-xs-12 col-sm-12', placeholder: locale('If_yes_please_indicate'), valueLink: this.linkState(this.state.context.Allergies, 'envAllergyDetail') });
 
             return _react2.default.createElement(
                 'div',
@@ -75359,8 +75557,12 @@ var Allergies = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 4, sm: 6, xs: 6 },
-                            _react2.default.createElement(_ToggleButton2.default, { label: locale('DrugAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isDrug') }),
+                            { lg: 4, sm: 12, xs: 12 },
+                            _react2.default.createElement(_ToggleButton2.default, { label: locale('DrugAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isDrug') })
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 4, sm: 12, xs: 12 },
                             isDrugTextbox
                         )
                     ),
@@ -75369,8 +75571,12 @@ var Allergies = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 4, sm: 6, xs: 6 },
-                            _react2.default.createElement(_ToggleButton2.default, { label: locale('FoodAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isFood') }),
+                            { lg: 4, sm: 12, xs: 12 },
+                            _react2.default.createElement(_ToggleButton2.default, { label: locale('FoodAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isFood') })
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 4, sm: 12, xs: 12 },
                             isFoodTextbox
                         )
                     ),
@@ -75379,8 +75585,12 @@ var Allergies = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 4, sm: 6, xs: 6 },
-                            _react2.default.createElement(_ToggleButton2.default, { label: locale('EnviornmentalAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isEnv') }),
+                            { lg: 4, sm: 12, xs: 12 },
+                            _react2.default.createElement(_ToggleButton2.default, { label: locale('EnviornmentalAllergies'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.Allergies, 'isEnv') })
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 4, sm: 12, xs: 12 },
                             isEnvTextbox
                         )
                     )
@@ -75576,6 +75786,10 @@ exports.default = BreastExamination;
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -75627,6 +75841,7 @@ var Comments = (function (_ControlBase) {
     _createClass(Comments, [{
         key: 'childRender',
         value: function childRender() {
+
             return _react2.default.createElement(
                 'div',
                 { className: 'wrapper whiteBg' },
@@ -75648,17 +75863,8 @@ var Comments = (function (_ControlBase) {
                                 'div',
                                 { className: 'space' },
                                 ' ',
-                                _react2.default.createElement('textarea', { rows: '10', placeholder: locale('EnterComments'), className: 'textareaComments col-lg-8 col-xs-12', valueLink: this.linkState(this.state.context.Comments, 'GeneralComments') }),
+                                _react2.default.createElement('textarea', { rows: '10', ref: 'commentsText', valueLink: this.linkState(this.state.context.Comments, 'GeneralComments'), placeholder: locale('EnterComments'), className: 'textareaComments col-lg-8 col-xs-12' }),
                                 ' '
-                            )
-                        ),
-                        _react2.default.createElement(
-                            _reactBootstrap.Col,
-                            { className: 'headerBtnWrapper' },
-                            _react2.default.createElement(
-                                _reactBootstrap.Button,
-                                { bsSize: 'large', className: 'saveHeaderBtnForComments' },
-                                locale('Save')
                             )
                         )
                     ),
@@ -75674,32 +75880,9 @@ var Comments = (function (_ControlBase) {
                             'div',
                             { className: 'col-xs-12' },
                             _react2.default.createElement(
-                                'div',
-                                { className: 'col-xs-10' },
-                                _react2.default.createElement(
-                                    'span',
-                                    { className: 'commentsPersonName' },
-                                    'Janaki Amma on 12 Nov 2015'
-                                )
-                            ),
-                            _react2.default.createElement(
-                                'div',
-                                { className: 'col-sm-2 buttonsLayoutForComments' },
-                                _react2.default.createElement(
-                                    _reactBootstrap.Button,
-                                    { bsSize: 'small', className: 'commentEditButton' },
-                                    locale('Edit')
-                                ),
-                                _react2.default.createElement(
-                                    _reactBootstrap.Button,
-                                    { bsSize: 'small', className: 'commentDeleteButton' },
-                                    locale('Delete')
-                                )
-                            ),
-                            _react2.default.createElement(
                                 'span',
                                 { className: 'col-xs-12 preContents' },
-                                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum'
+                                this.state.context.Comments.previousVisitComments
                             )
                         )
                     )
@@ -75713,7 +75896,7 @@ var Comments = (function (_ControlBase) {
 
 module.exports = Comments;
 
-},{"./../../controls/ControlBase":737,"./../../controls/DropDown":741,"./../../controls/LabeledControlList":745,"./../../controls/ToggleButton":750,"react":631,"react-bootstrap":255}],699:[function(require,module,exports){
+},{"./../../controls/ControlBase":737,"./../../controls/DropDown":741,"./../../controls/LabeledControlList":745,"./../../controls/ToggleButton":750,"react":631,"react-bootstrap":255,"react-dom":429}],699:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -75792,12 +75975,12 @@ var CurrentIllnessHistory = (function (_ControlBase) {
                     null,
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
-                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalMoments'), placeholder: 'select', labelClassName: labelClass, wrapperClassName: wrapperClass, options: FoetalMomentsoptions, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'foetalMoments') })
+                        { lg: 4, xs: 12 },
+                        _react2.default.createElement(_DropDown2.default, { label: locale('FoetalMoments'), placeholder: 'select', labelClassName: 'col-lg-4 col-xs-12 alignLeft', wrapperClassName: 'col-lg-6 col-xs-12', options: FoetalMomentsoptions, valueLink: this.linkState(this.state.context.CurrentIllnessHistory, 'foetalMoments') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 4 },
+                        { lg: 4, xs: 12 },
                         foetalMoments_textbox
                     )
                 );
@@ -76207,12 +76390,12 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6, className: 'paddingStyleBottom' },
+																												{ lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('HeightIncms'), placeholder: 'Height in cms', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Height') })
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6, className: 'paddingStyleBottom' },
+																												{ lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('RespiratoryRatePM'), placeholder: 'Respiratory Rate per min', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'RespiratoryRate') })
 																								)
 																				),
@@ -76221,12 +76404,12 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6, className: 'paddingStyleBottom' },
+																												{ lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('WeightInKgs'), placeholder: 'Weight in Kgs', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Weight') })
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ lg: 6, sm: 12, xs: 12 },
 																												_react2.default.createElement(_ToggleButton2.default, { label: locale('Oedema'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Oedema') })
 																								)
 																				),
@@ -76235,12 +76418,12 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ lg: 6, sm: 12, xs: 12 },
 																												_react2.default.createElement(_ToggleButton2.default, { label: locale('Pallor'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Pallor') })
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6, className: 'paddingStyleBottom' },
+																												{ lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'text', label: locale('BP'), placeholder: '00/00', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'BloodPressure') })
 																								)
 																				),
@@ -76249,12 +76432,12 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ lg: 6, sm: 12, xs: 12 },
 																												_react2.default.createElement(_ToggleButton2.default, { label: locale('Jaundice'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Jaundice') })
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6, className: 'paddingStyleBottom' },
+																												{ lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('TemperatureInFarenheit'), placeholder: 'Temperature in farenheit', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'TemperatureInFarenheit') })
 																								)
 																				),
@@ -76263,12 +76446,12 @@ var GeneralExamination = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6, className: 'paddingStyleBottom' },
+																												{ lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
 																												_react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('Pulse'), placeholder: 'Pulse', labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'Pulse') })
 																								),
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ xs: 6 },
+																												{ lg: 6, sm: 12, xs: 12 },
 																												_react2.default.createElement(_ToggleButton2.default, { label: locale('TooWeakToGetOutOfBed'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.GeneralExamination, 'TooWeak') })
 																								)
 																				)
@@ -76433,12 +76616,12 @@ var LabOrders = (function (_ControlBase) {
                     ' ',
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 6 },
+                        { lg: 4, sm: 12, xs: 12 },
                         _react2.default.createElement(_ToggleButton2.default, { label: locale('Recommendationforanomalyscan'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'recommendAnomalyScan') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 6 },
+                        { lg: 4, sm: 12, xs: 12 },
                         _react2.default.createElement(_ToggleButton2.default, { label: locale('GCT'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'GCT') })
                     )
                 );
@@ -76449,13 +76632,13 @@ var LabOrders = (function (_ControlBase) {
                     ' ',
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 6 },
+                        { lg: 4, sm: 12, xs: 12 },
                         '  ',
                         _react2.default.createElement(_ToggleButton2.default, { label: locale('HbRepeat'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'HbRepeat') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
-                        { xs: 6 },
+                        { lg: 4, sm: 12, xs: 12 },
                         _react2.default.createElement(_ToggleButton2.default, { label: locale('BloodSugarRepeat'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.LabOrder, 'BloodSugarRepeat') })
                     )
                 );
@@ -76583,8 +76766,8 @@ var LabResults = (function (_ControlBase) {
     _createClass(LabResults, [{
         key: 'childRender',
         value: function childRender() {
-            var labelClass = 'col-xs-3 alignLeft';
-            var wrapperClass = 'col-xs-3';
+            var labelClass = 'col-xs-12 col-lg-4 alignLeft';
+            var wrapperClass = 'col-xs-12 col-lg-4';
 
             var UPToptions = [{
                 value: 'SelectUPT',
@@ -76625,7 +76808,7 @@ var LabResults = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
+                            { lg: 4, sm: 12, xs: 12, className: 'paddingStyleBottom' },
                             upt,
                             usg
                         ),
@@ -76654,9 +76837,8 @@ var LabResults = (function (_ControlBase) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.Col,
-                            { lg: 6, sm: 12, xs: 12, className: 'paddingStyleBottom' },
-                            _react2.default.createElement(_DropDown2.default, { className: 'col-xs-12 col-lg-6 col-md-12', label: locale('RapidMalariaTest'), placeholder: 'select', labelClassName: labelClass,
-                                wrapperClassName: wrapperClass, options: RapidMalariaTestoptions, valueLink: this.linkState(this.state.context.LabResults, 'RapidMalariaTest') })
+                            { lg: 4, sm: 12, xs: 12 },
+                            _react2.default.createElement(_DropDown2.default, { label: locale('RapidMalariaTest'), placeholder: 'select', labelClassName: 'col-xs-12 col-lg-4 alignLeft', wrapperClassName: wrapperClass, options: RapidMalariaTestoptions, valueLink: this.linkState(this.state.context.LabResults, 'RapidMalariaTest') })
                         )
                     )
                 )
@@ -77018,6 +77200,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
             var folicAcid_Tablets_dispensed = _react2.default.createElement('span', null);
             var folicAcidSupplimentIFADate = _react2.default.createElement('span', null);
             var folicAcidTablet_Quantity = _react2.default.createElement('span', null);
+            var counsellingDietDate = _react2.default.createElement('span', null);
 
             if (this.state.context.MedicalPrescriptions.Inj_TT_IM) {
                 isInj_TT_IM_Date = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date of Injection ', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'injTT0_5mlIMDate') });
@@ -77035,6 +77218,9 @@ var MedicalPrescriptions = (function (_ControlBase) {
                 folicAcidSupplimentIFADate = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Date dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSupplimentIFADate') });
                 folicAcidTablet_Quantity = _react2.default.createElement(_reactBootstrap.Input, { type: 'number', label: locale('QuantityDispensed'), placeholder: 'Quantity Dispensed', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.GeneralExamination, 'folicAcidTabletsQuantity') });
             }
+            if (this.state.context.MedicalPrescriptions.Counselling) {
+                counsellingDietDate = _react2.default.createElement(_DatePicker2.default, { placeholder: 'DD/MM/YYYY', className: 'editable', label: 'Counselling Diet Date', labelClassName: 'col-lg-3 col-xs-12 marginMinus', wrapperClassName: 'col-lg-3 col-xs-12', valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'counsellingDietDate') });
+            }
 
             if (this.state.context.visitType == 'ANC2') {
                 isInj_TT_IM = _react2.default.createElement(
@@ -77043,7 +77229,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { lg: 6, xs: 12 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-8 col-lg-4 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -77062,7 +77248,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { lg: 6, xs: 12 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-8 col-lg-4 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -77081,7 +77267,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { lg: 6, xs: 12 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Albendazole_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Albendazole_Dispensed'), labelClassName: 'col-xs-8 col-lg-4 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Albendazole') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -77101,7 +77287,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { lg: 3, xs: 12 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Folic_Acid_Tablets_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSuppliment_IFA') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Folic_Acid_Tablets_Dispensed'), labelClassName: 'col-xs-12 col-lg-8  alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'folicAcidSuppliment_IFA') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -77121,7 +77307,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { lg: 3, xs: 12 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('Inj_TT_IM'), labelClassName: 'col-xs-8 col-lg-8  alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Inj_TT_IM') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -77140,7 +77326,7 @@ var MedicalPrescriptions = (function (_ControlBase) {
                     _react2.default.createElement(
                         _reactBootstrap.Col,
                         { lg: 6, xs: 12 },
-                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-8 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
+                        _react2.default.createElement(_ToggleButton2.default, { label: locale('IFA_Tablets_Dispensed'), labelClassName: 'col-xs-8 col-lg-4  alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'IFA_Tablets_Dispensed') })
                     ),
                     _react2.default.createElement(
                         _reactBootstrap.Col,
@@ -77164,6 +77350,11 @@ var MedicalPrescriptions = (function (_ControlBase) {
                             _reactBootstrap.Col,
                             { lg: 6, xs: 12 },
                             _react2.default.createElement(_ToggleButton2.default, { label: locale('Counselling'), labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MedicalPrescriptions, 'Counselling') })
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 6, xs: 12 },
+                            counsellingDietDate
                         )
                     ),
                     _react2.default.createElement(
@@ -77268,8 +77459,8 @@ var MenstrualHistory = (function (_ControlBase) {
 				_createClass(MenstrualHistory, [{
 								key: 'childRender',
 								value: function childRender() {
-												var labelClass = 'col-xs-12 alignLeft';
-												var wrapperClass = 'col-xs-12';
+												var labelClass = 'col-xs-12 col-lg-6 alignLeft';
+												var wrapperClass = 'col-xs-12 col-lg-6';
 
 												var RegularValues = {
 																value: 'Regular',
@@ -77292,9 +77483,9 @@ var MenstrualHistory = (function (_ControlBase) {
 																								null,
 																								_react2.default.createElement(
 																												_reactBootstrap.Col,
-																												{ lg: 4, sm: 12, xs: 12 },
+																												{ lg: 6, sm: 12, xs: 12 },
 																												_react2.default.createElement(_RadioButton2.default, { label: 'Regularity',
-																																labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MenstrualHistory, 'Regularity', this.valueChanged), name: 'Regularity', trueText: 'Regular', falseText: 'Irregular' })
+																																labelClassName: 'col-xs-12 col-lg-4 alignLeft', wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.MenstrualHistory, 'Regularity', this.valueChanged), name: 'Regularity', trueText: 'Regular', falseText: 'Irregular' })
 																								)
 																				),
 																				_react2.default.createElement(
@@ -77617,7 +77808,6 @@ var colStyle = {
     'background': '#fff',
     'padding': '20px',
     'margin-bottom': '30px',
-    'height': '212px',
     'marginTop': '3%'
 };
 var rowStyle = {
@@ -77628,6 +77818,7 @@ var labStyle = {
     'color': '#2899CD',
     'font-size': '20px'
 };
+
 var contentStyle = {};
 
 var PastMedicalHistory = (function (_ControlBase) {
@@ -77660,7 +77851,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                             { lg: 4 },
                             _react2.default.createElement(
                                 'div',
-                                { style: colStyle },
+                                { style: colStyle, className: 'heightSpecific' },
                                 _react2.default.createElement(
                                     'span',
                                     { style: labStyle },
@@ -77681,7 +77872,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                             { lg: 4 },
                             _react2.default.createElement(
                                 'div',
-                                { style: colStyle },
+                                { style: colStyle, className: 'heightSpecific' },
                                 _react2.default.createElement(
                                     'span',
                                     { style: labStyle },
@@ -77727,7 +77918,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                             { lg: 4 },
                             _react2.default.createElement(
                                 'div',
-                                { style: colStyle },
+                                { style: colStyle, className: 'heightSpecific' },
                                 _react2.default.createElement(
                                     'span',
                                     { style: labStyle },
@@ -77748,7 +77939,7 @@ var PastMedicalHistory = (function (_ControlBase) {
                             { lg: 4 },
                             _react2.default.createElement(
                                 'div',
-                                { style: colStyle },
+                                { style: colStyle, className: 'heightSpecific' },
                                 _react2.default.createElement(
                                     'span',
                                     { style: labStyle },
@@ -77875,6 +78066,27 @@ var PastMedicalHistory = (function (_ControlBase) {
                                 ),
                                 _react2.default.createElement(_ToggleButton2.default, { label: locale('OnMedication'), disabled: !this.state.context.PastMedicalHistory.SexuallyTransmittedInfection_STI_and_HIV_AIDS, labelClassName: labelClass,
                                     wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'STI_AIDS_OnMedication') })
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Col,
+                            { lg: 4 },
+                            _react2.default.createElement(
+                                'div',
+                                { style: colStyle },
+                                _react2.default.createElement(
+                                    'span',
+                                    { style: labStyle },
+                                    _react2.default.createElement(_reactBootstrap.Input, { label: locale('Tuberculosis'), style: labStyle, placeholder: 'Tuberculosis', labelClassName: labelClass, wrapperClassName: wrapperClass })
+                                ),
+                                _react2.default.createElement(
+                                    _reactBootstrap.Row,
+                                    { style: contentStyle },
+                                    _react2.default.createElement(_ToggleButton2.default, { label: locale('ChronicCough_bloodInSputum_prolongedFever_tuberculosis'), labelClassName: labelClass1,
+                                        wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'ChronicCough_bloodInSputum_prolongedFever_tuberculosis') })
+                                ),
+                                _react2.default.createElement(_ToggleButton2.default, { label: locale('OnMedication'), disabled: !this.state.context.PastMedicalHistory.ChronicCough_bloodInSputum_prolongedFever_tuberculosis, labelClassName: labelClass,
+                                    wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.PastMedicalHistory, 'chronicOnMedication') })
                             )
                         )
                     )
@@ -78033,8 +78245,8 @@ var SystemicExamination = (function (_ControlBase) {
     key: 'childRender',
     value: function childRender() {
 
-      var labelClass = 'col-xs-3 alignLeft';
-      var wrapperClass = 'col-xs-9';
+      var labelClass = 'col-xs-12 col-lg-4 alignLeft';
+      var wrapperClass = 'col-xs-12 col-lg-6';
       var abNormalCardiovascularySystem = _react2.default.createElement('span', null);
       var abNormalNervousSystem = _react2.default.createElement('span', null);
       var abNormalDigestiveSystem = _react2.default.createElement('span', null);
@@ -78057,12 +78269,12 @@ var SystemicExamination = (function (_ControlBase) {
               { label: locale('Cardiovasculary'), placeholder: 'Cardiovasculary System', labelClassName: labelClass, wrapperClassName: wrapperClass },
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 _react2.default.createElement(_RadioButton2.default, { labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.SystemicExamination, 'IsCardiovascularySystem'), name: 'Cardiovasculary', trueText: locale('Normal'), falseText: locale('Abnormal') })
               ),
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 abNormalCardiovascularySystem
               )
             )
@@ -78075,12 +78287,12 @@ var SystemicExamination = (function (_ControlBase) {
               { label: locale('Nervous_System'), placeholder: 'Nervous System', labelClassName: labelClass, wrapperClassName: wrapperClass },
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 _react2.default.createElement(_RadioButton2.default, { labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.SystemicExamination, 'IsNervousSystem'), name: 'NervousSystem', trueText: locale('Normal'), falseText: locale('Abnormal') })
               ),
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 abNormalNervousSystem
               )
             )
@@ -78093,12 +78305,12 @@ var SystemicExamination = (function (_ControlBase) {
               { label: locale('Digestive'), placeholder: 'Digestive System', labelClassName: labelClass, wrapperClassName: wrapperClass },
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 _react2.default.createElement(_RadioButton2.default, { labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.SystemicExamination, 'IsDigestiveSystem'), name: 'DigestiveSystem', trueText: locale('Normal'), falseText: locale('Abnormal') })
               ),
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 abNormalDigestiveSystem
               )
             )
@@ -78111,12 +78323,12 @@ var SystemicExamination = (function (_ControlBase) {
               { label: locale('Musculoskeltal'), placeholder: 'Musculoskeltal System', labelClassName: labelClass, wrapperClassName: wrapperClass },
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 _react2.default.createElement(_RadioButton2.default, { labelClassName: labelClass, wrapperClassName: wrapperClass, valueLink: this.linkState(this.state.context.SystemicExamination, 'IsMusculoskeletalSystem'), name: 'MusculoskeltalSystem', trueText: locale('Normal'), falseText: locale('Abnormal') })
               ),
               _react2.default.createElement(
                 _reactBootstrap.Col,
-                { xs: 4 },
+                null,
                 abNormalMusculoskeltalSystem
               )
             )
@@ -78396,6 +78608,8 @@ var VisitInfo = (function (_ControlBase) {
     }, {
         key: 'notifyVisitInfoFetch',
         value: function notifyVisitInfoFetch(data) {
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+            console.log(data.args);
             this.setState({ visitData: data.args });
         }
     }, {
@@ -78408,6 +78622,9 @@ var VisitInfo = (function (_ControlBase) {
                 var newVisitData = (0, _reactAddonsUpdate2.default)(visitData, {
                     risks: {
                         $set: risks
+                    },
+                    isRiskOpen: {
+                        $set: true
                     }
                 });
                 this.setState({ visitData: newVisitData });
@@ -78418,6 +78635,9 @@ var VisitInfo = (function (_ControlBase) {
     }, {
         key: 'handlesaveAction',
         value: function handlesaveAction() {
+            this.state.visitData.enteredBy = this.loginUser;
+            this.state.visitData.Comments.previousVisitComments = this.state.visitData.Comments.previousVisitComments + '\t' + this.state.visitData.Comments.GeneralComments + ' ' + locale('Entered_by') + ' ' + this.loginUser;
+            this.state.visitData.Comments.GeneralComments = '';
             AppAction.executeAction(ActionType.SAVE_VISIT_INFO_ACTION, this.state.visitData);
         }
     }, {
@@ -81525,7 +81745,7 @@ module.exports = {
     ExpectedDateOfDelivery: 'EDD by Date',
     EDDByUSG: 'EDD by USG',
     MandatoryField: 'Mandatory field',
-    First_Day_Of_Last_Mentsrual_Period: '( 1st day of last Mentsrual Period)',
+    First_Day_Of_Last_Mentsrual_Period: '( 1st day of last Menstrual Period)',
     If_already_done: '( If already done)',
     DateofQuickening: 'Date Of Quickening',
 
@@ -81682,6 +81902,7 @@ module.exports = {
     ReproductiveTractInfection_RTI: 'Reproductive Tract Infection',
     STI_AIDS: 'STI/AIDS',
     SexuallyTransmittedInfection_STI_and_HIV_AIDS: 'Sexually Transmitted Infection and HIV/AIDS',
+    ChronicCough_bloodInSputum_prolongedFever_tuberculosis: 'Chronic cough, blood in the sputum, prolonged fever',
 
     /*Systemic Examination*/
     SystemicExamination: 'Systemic Examination',
@@ -82152,6 +82373,7 @@ module.exports = {
     ReproductiveTractInfection_RTI: 'இனப்பெருக்க பாதை நோய்த்தொற்று',
     STI_AIDS: 'பால்வினை / எய்ட்ஸ்',
     SexuallyTransmittedInfection_STI_and_HIV_AIDS: 'பால்வினை தொற்று மற்றும் HIV / AIDS',
+    ChronicCough_bloodInSputum_prolongedFever_tuberculosis: 'நீடித்த இருமல், சளி இரத்த, நீண்ட காய்ச்சல்',
 
     /*Systemic Examination*/
     SystemicExamination: 'அமைப்பு ரீதியான தேர்வு',
@@ -82594,6 +82816,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _LoginStore = require('../stores/LoginStore');
+
+var _LoginStore2 = _interopRequireDefault(_LoginStore);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -82609,7 +82835,10 @@ var ControlBase = (function (_React$Component) {
     function ControlBase() {
         _classCallCheck(this, ControlBase);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ControlBase).call(this));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ControlBase).call(this));
+
+        _this.loginUser = _LoginStore2.default.user;
+        return _this;
     }
 
     _createClass(ControlBase, [{
@@ -82694,7 +82923,7 @@ var ControlBase = (function (_React$Component) {
 
 exports.default = ControlBase;
 
-},{"react":631}],738:[function(require,module,exports){
+},{"../stores/LoginStore":758,"react":631}],738:[function(require,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -84858,6 +85087,8 @@ var VisitStore = (function (_BaseStore) {
                 visitFilter.patientId = patientId;
                 visitFilter.visitType = visitType;
                 data = _DataTranslator2.default.translateVisitDataForView(visitData, visitFilter);
+                console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                console.log(data);
             } else if (type == RequestType.POST) {
                 data = _DataTranslator2.default.translateVisitDataForService(visitData);
             }
@@ -85103,7 +85334,7 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: '/api/worklists',
+                        url: AppConstants.PATIENT_SEARCH_URL,
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
@@ -85120,7 +85351,7 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: '/api/worklists',
+                        url: AppConstants.PATIENT_SEARCH_URL,
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
@@ -85136,7 +85367,7 @@ var WorkListStore = (function (_BaseStore) {
                         worklist: []
                     });
                     getData = {
-                        url: '/api/worklists',
+                        url: AppConstants.PATIENT_SEARCH_URL,
                         dataType: DataType.JSON,
                         contentType: ContentType.JSON
                     };
@@ -85151,10 +85382,17 @@ var WorkListStore = (function (_BaseStore) {
 
                     if (action.data.searchType === AppConstants.AUTO_SEARCH) {
                         var updatedWorklistJson = WorkListStore.getSortedList(totalList, action.data.searchBy);
-                        updatedWorklistJson['searchType'] = AppConstants.AUTO_SEARCH;
+                        updatedWorklistJson[AppConstants.SEARCH_TYPE] = AppConstants.AUTO_SEARCH;
                         WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
                     } else {
                         var searchBy = action.data.searchBy;
+                        /* getData = {
+                             url:AppConstants.PATIENT_SEARCH_URL,
+                             dataType: DataType.JSON,
+                             contentType: ContentType.JSON,
+                             notifyError:true,
+                             headers : [{key : AppConstants.SEARCH_STRING,value : searchBy}]
+                         };*/
                         getData = {
                             url: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search?searchString=' + searchBy,
                             dataType: DataType.JSON,
@@ -85163,11 +85401,11 @@ var WorkListStore = (function (_BaseStore) {
                         ServiceManager.doGet(getData).then(function (response) {
                             var updatedWorklistJson = WorkListStore.getSortedList(response, action.data.searchType);
                             if (updatedWorklistJson[_AppConstants.WORKLIST_JSON].length == 0) {
-                                updatedWorklistJson['searchType'] = AppConstants.MANUAL_SEARCH;
+                                updatedWorklistJson[AppConstants.SEARCH_TYPE] = AppConstants.MANUAL_SEARCH;
                                 updatedWorklistJson[_AppConstants.WORKLIST_JSON] = AppConstants.NO_DATA_FOUND;
                                 WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
                             } else {
-                                updatedWorklistJson['searchType'] = AppConstants.MANUAL_SEARCH;
+                                updatedWorklistJson[AppConstants.SEARCH_TYPE] = AppConstants.MANUAL_SEARCH;
                                 WorkListStore.emitChange(ActionType.PATIENT_SEARCH_ACTION, updatedWorklistJson);
                             }
                         });
@@ -85448,15 +85686,15 @@ var BaseTranslator = (function () {
                 }
             }
 
-            if (!bool(objVisit.isPregnancyRequired)) {
+            if (!bool(objVisit.isPregnancyRequired) && objVisit.visitType == 'ANC1') {
                 output.push({
                     text: 'Pregnancy wanted No: Refer to Nearest PHC that has MTP facilities'
                 });
-            } else if (objVisit.visitType == 'ANC1') {
-                output.push({
-                    text: '2nd visit - Between 14 and 26 weeks , 3rd Visit - Between 28 and 34 weeks,  4th Visit - Between 36 weeks and term (till delivery)'
-                });
-            }
+            } /* else if (objVisit.visitType == 'ANC1') {
+                 output.push({
+                     text: '2nd visit - Between 14 and 26 weeks , 3rd Visit - Between 28 and 34 weeks,  4th Visit - Between 36 weeks and term (till delivery)'
+                 });
+              }*/
 
             if (objVisit.temperature >= 38 && bool(objVisit.isTooWeekToGetOutOfBed)) {
                 output.push({
@@ -85479,7 +85717,7 @@ var BaseTranslator = (function () {
                     text: 'Potential Heart Disease: Refer to nearest PHC'
                 });
             }
-            if (bp.length > 0 && Number(bp[0]) > 140 && Number(bp[0]) > 90 || !bool(objVisit.urineProteins)) {
+            if (bp.length > 0 && Number(bp[0]) > 140 && Number(bp[0]) > 90 || bool(objVisit.urineProteins)) {
                 output.push({
                     text: 'Potential Hypertension: Refer to nearest PHC'
                 });
@@ -85732,7 +85970,7 @@ var RegistrationDataTranslator = (function (_BaseTranslator) {
                 city: obj ? obj.city : '',
                 state: obj ? obj.state : '',
                 pincode: obj ? obj.pincode : '',
-                temporaryAddrSameAsPermanent: obj ? bool(obj.temporaryAddrSameAsPermanent) : '',
+                temporaryAddrSameAsPermanent: obj ? bool(obj.temporaryAddrSameAsPermanent) : true,
                 isPregrnancyWanted: obj ? bool(obj.isPregrnancyWanted) : '',
                 lmp: obj ? obj.lmp : '',
                 edd: obj ? obj.edd : '',
@@ -86123,6 +86361,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
     _createClass(VisitDataTranslator, null, [{
         key: 'getDataModelForView',
         value: function getDataModelForView(allVisits, visitFilter) {
+
             var visitData = null;
             if (visitFilter.selectedVisitId != -1) {
                 visitData = $.grep(allVisits, function (j) {
@@ -86132,8 +86371,13 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 visitData = this.getLastVisitData(allVisits, visitFilter.visitType);
                 if (visitData) {
                     visitData.visitId = -1; // set the Visit Id of pre-populated visit to -1
+                    visitData.enteredBy = '';
                 }
             }
+
+            console.log('>>>>>>>>>>>>visitData>>>>>>>>>>>>>>>>>>>>>>>>>');
+            console.log(visitData.counsellingDietDate + ' ' + visitData.domesticViolenceDate + ' ' + visitData.impOfANCDate + ' ' + visitData.domesticViolence + ' ' + visitData.sexDuringPregnancy + ' ' + visitData.impOfANC + ' ' + visitData.sexDuringPregnancyDate);
+
             var risks = visitData ? this.executeRules(visitData) : [];
             var visitInfo = {
                 visitId: visitData ? visitData.visitId : -1,
@@ -86153,7 +86397,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                     Foetalpresentation: visitData ? visitData.foetalPresentation : '',
                     FHS: visitData ? visitData.foetalHeartRate : '',
                     SingleVsMultiplePregnancy: visitData ? visitData.singleVsMultiplePrgncy : '',
-                    FoetalMovements: visitData ? bool(visitData.isFoetalMovements) : false,
+                    FoetalMovements: visitData ? visitData.isFoetalMovements : '',
                     gestationalAge: visitData ? this.calculateCurrentPregnancyWeek(visitData.visitStartDate, visitData.lMPDate) : 1
                 },
 
@@ -86265,6 +86509,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                     TreatmentForInfertility: visitData ? bool(visitData.isTreatmentForInfertility) : false,
                     SpinalDeformitiesSuchAs_Acoliosis_kyphosis_polio: visitData ? bool(visitData.isSpinalDeformities) : false,
                     Rh_negative_inThePreviousPregnancy: visitData ? bool(visitData.isRhNgtvPrvsPrgncy) : false,
+                    Pregnancies: visitData ? bool(visitData.Pregnancies) : false,
                     abortions: visitData ? visitData.abortions : 0
                 },
                 PastMedicalHistory: {
@@ -86275,6 +86520,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                     Breathlessness_on_exertion_palpitations_HeartDisease: visitData ? bool(visitData.isBreathlessnessMedHist) : false,
                     Breathlessness_OnMedication: visitData ? bool(visitData.isBreathlessnessMedHistOnMedication) : false,
                     ChronicCough_bloodInSputum_prolongedFever_tuberculosis: visitData ? bool(visitData.isChrncCoughBldInTheSputmProlongdFevr) : false,
+                    chronicOnMedication: visitData ? bool(visitData.isChrncCoughBldInTheSputmProlongdFevrOnMedication) : false,
                     RenalDisease: visitData ? bool(visitData.isRenalDisease) : false,
                     Renaldisease_OnMedication: visitData ? bool(visitData.isRenalDiseaseOnMedication) : false,
                     Convulsions_epilepsy: visitData ? bool(visitData.isConvulsns) : false,
@@ -86339,9 +86585,17 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                     iFATabletsDispensedQuantity: visitData ? visitData.folicAcidTabletsQuantity : 0,
                     albendazoledispensedQuantity: visitData ? visitData.albendazoledispensedQuantity : 0,
                     folicAcidTabletsQuantity: visitData ? visitData.folicAcidTabletsQuantity : 0
+                    //                counsellingDietDate : visitData ? visitData.counsellingDietDate : '',
+                    //                domesticViolenceDate : visitData ? visitData.domesticViolenceDate : '',
+                    //                impOfANCDate : visitData ? visitData.impOfANCDate : '',
+                    //                domesticViolence: visitData ? bool(visitData.domesticViolence) : false,
+                    //                impOfANC: visitData ? bool(visitData.impOfANC) : false,
+                    //                sexDuringPregnancy: visitData ? bool(visitData.sexDuringPregnancy) : false,
+                    //                sexDuringPregnancyDate : visitData ? visitData.sexDuringPregnancyDate : ''
                 },
                 Comments: {
-                    GeneralComments: visitData ? visitData.comments : ''
+                    GeneralComments: '',
+                    previousVisitComments: visitData ? visitData.comments : ''
                 }
             };
 
@@ -86481,7 +86735,7 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 foetalPresentation: visitData.AbdominalExamination.Foetalpresentation,
                 foetalHeartRate: visitData.AbdominalExamination.FHS,
                 singleVsMultiplePrgncy: visitData.AbdominalExamination.SingleVsMultiplePregnancy,
-                isFoetalMovements: str(visitData.AbdominalExamination.FoetalMovements, ''),
+                isFoetalMovements: visitData.AbdominalExamination.FoetalMovements,
                 isBldGrpIncluRhFact: str(visitData.LabOrder.BloodGroup_including_RhFactor, ''),
                 isVdrlOrRpr: str(visitData.LabOrder.VDRL_RPR),
                 isHivTesting: str(visitData.LabOrder.HIV_testing),
@@ -86503,12 +86757,12 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 bPLCard: str(visitData.MedicalPrescriptions.BPLCard, ''),
                 possibleLocationofDelivery: visitData.MedicalPrescriptions.RecordPossibleLocationOfDelivery,
                 injTT0_5mlIMDate: visitData.MedicalPrescriptions.injTT0_5mlIMDate,
-                comments: visitData.Comments.GeneralComments,
+                comments: visitData.Comments.previousVisitComments,
                 quickeningDate: visitData.CurrentPregnancy.quickeningDate,
                 foetalMomentsCountPer12Hrs: 12,
-                //   foetalMoments: visitData.CurrentIllnessHistory.foetalMoments,
+                isFoetalMoments: visitData.CurrentIllnessHistory.foetalMoments,
                 folicAcidSupplimentIFADate: '12/12/1990',
-                counsellingDietDate: '12/12/1990',
+                counsellingDietDate: visitData.MedicalPrescriptions.counsellingDietDate,
                 impOfANCDate: '12/12/1990',
                 domesticViolenceDate: '12/12/1990',
                 sexDuringPregnancyDate: '12/12/1990',
@@ -86523,19 +86777,19 @@ var VisitDataTranslator = (function (_BaseTranslator) {
                 isGCT: str(visitData.LabOrder.GCT),
                 impOfANC: '',
                 domesticViolence: '',
-                // albendazoledispensed: str(visitData.MedicalPrescriptions.Albendazole, ''),
-                // albendazoledispensedDate: visitData.MedicalPrescriptions.Albendazole_Date,
-                // albendazoledispensedQuantity: visitData.MedicalPrescriptions.albendazoledispensedQuantity,
-                // iFATabletsDispensed: str(visitData.MedicalPrescriptions.IFA_Tablets_Dispensed, ''),
-                // iFATabletsDispensedDate : visitData.MedicalPrescriptions.IFA_Tablets_Dispensed_Date,
-                // iFATabletsDispensedQuantity: visitData.MedicalPrescriptions.iFATabletsDispensedQuantity,
-                // folicAcidTabletsDispensed: str(visitData.MedicalPrescriptions.folicAcidSuppliment_IFA, ''),
-                // folicAcidTabletsDate: visitData.MedicalPrescriptions.folicAcidSupplimentIFADate,
-                // folicAcidTabletsQuantity: visitData.MedicalPrescriptions.folicAcidTabletsQuantity,
-                // uSG: visitData.LabResults.USG,
-                // ishbRepeat: str(visitData.LabOrder.HbRepeat,''),
-                // isbloodSugarRepeat: str(visitData.LabOrder.BloodSugarRepeat,''),
-                // abortions: visitData.ObstetricHistory.abortions,
+                albendazoledispensed: str(visitData.MedicalPrescriptions.Albendazole, ''),
+                albendazoledispensedDate: visitData.MedicalPrescriptions.Albendazole_Date,
+                albendazoledispensedQuantity: visitData.MedicalPrescriptions.albendazoledispensedQuantity,
+                iFATabletsDispensed: str(visitData.MedicalPrescriptions.IFA_Tablets_Dispensed, ''),
+                iFATabletsDispensedDate: visitData.MedicalPrescriptions.IFA_Tablets_Dispensed_Date,
+                iFATabletsDispensedQuantity: visitData.MedicalPrescriptions.iFATabletsDispensedQuantity,
+                folicAcidTabletsDispensed: str(visitData.MedicalPrescriptions.folicAcidSuppliment_IFA, ''),
+                folicAcidTabletsDate: visitData.MedicalPrescriptions.folicAcidSupplimentIFADate,
+                folicAcidTabletsQuantity: visitData.MedicalPrescriptions.folicAcidTabletsQuantity,
+                uSG: visitData.LabResults.USG,
+                ishbRepeat: str(visitData.LabOrder.HbRepeat, ''),
+                isbloodSugarRepeat: str(visitData.LabOrder.BloodSugarRepeat, ''),
+                abortions: visitData.ObstetricHistory.abortions,
                 visitId: visitData.visitId
 
             };
@@ -86561,21 +86815,33 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _BaseTranslator2 = require('./BaseTranslator');
+
+var _BaseTranslator3 = _interopRequireDefault(_BaseTranslator2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var VisitSummaryTranslator = (function () {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var VisitSummaryTranslator = (function (_BaseTranslator) {
+    _inherits(VisitSummaryTranslator, _BaseTranslator);
+
     function VisitSummaryTranslator() {
         _classCallCheck(this, VisitSummaryTranslator);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(VisitSummaryTranslator).apply(this, arguments));
     }
 
-    _createClass(VisitSummaryTranslator, [{
-        key: 'calculateAge',
-        value: function calculateAge() {
-            return 2;
-        }
-    }], [{
+    _createClass(VisitSummaryTranslator, null, [{
         key: 'populateVisitSummaryData',
         value: function populateVisitSummaryData(resp) {
+            var weekValue = resp ? this.calculateCurrentPregnancyWeek(Utils.convertToDateString(new Date()), resp.lmp) : -1;
+            var pregnancyStatus = resp ? this.calculatePregnancyStatus(weekValue) : null;
+
             var patientData = resp.patientData;
             var visitSummaryData = resp.visitData;
             return {
@@ -86589,7 +86855,7 @@ var VisitSummaryTranslator = (function () {
                 patAge: patientData ? Utils.findAge(patientData.dOB) : '',
                 patcontactNumber: patientData ? patientData.emergencyContactPhn : '',
                 patBG: patientData ? patientData.bloodGroup : '',
-                patPregnancyStatus: patientData ? patientData.isPregrnancyWanted : '',
+                patPregnancyStatus: patientData ? pregnancyStatus : '',
                 patObstetrics: patientData ? patientData.obstetrics : '',
                 patRisk: patientData ? patientData.highRiskMotherComments : '',
                 isFood: visitSummaryData ? visitSummaryData.isFoodAllergies : '',
@@ -86610,14 +86876,30 @@ var VisitSummaryTranslator = (function () {
 
             };
         }
+    }, {
+        key: 'calculatePregnancyStatus',
+        value: function calculatePregnancyStatus(weekValue) {
+            var trimester = null;
+
+            if (weekValue > -1 && weekValue < 13) {
+                trimester = 'W1-12';
+            } else if (weekValue > 12 && weekValue < 28) {
+                trimester = 'W13-27';
+            } else if (weekValue > 27 && weekValue < 41) {
+                trimester = 'W28-40';
+            } else if (weekValue > 40) {
+                trimester = 'postnatal';
+            }
+            return trimester;
+        }
     }]);
 
     return VisitSummaryTranslator;
-})();
+})(_BaseTranslator3.default);
 
 exports.default = VisitSummaryTranslator;
 
-},{}],773:[function(require,module,exports){
+},{"./BaseTranslator":765}],773:[function(require,module,exports){
 arguments[4][662][0].apply(exports,arguments)
 },{"dup":662}],774:[function(require,module,exports){
 'use strict';
@@ -87080,7 +87362,7 @@ var ServiceManager = (function () {
         key: 'handleError',
         value: function handleError(error) {
             // console.log('Inside ServiceManager : function HandleError :' + error);
-            //        toast.show(error, 'error');
+            toast.show(error, 'error');
         }
     }]);
 
