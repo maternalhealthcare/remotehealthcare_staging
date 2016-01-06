@@ -20,7 +20,7 @@ app.get('/', function(req, res) {
 );
 
 app.get('/api/worklists', function(req, res, next) {
-    var url = 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search';
+    var url = 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search';
     request(url, function(error, response, body) {
         if (error) {
             console.log('get worklist');
@@ -36,7 +36,7 @@ app.get('/api/worklists', function(req, res, next) {
 app.post('/api/registerPatient', function(req, res, next) {
     var datas = JSON.stringify(req.body);
     var options = {
-        uri: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/register',
+        uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/register',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -60,7 +60,7 @@ app.post('/api/saveVisit', function(req, res, next) {
     var datas = JSON.stringify(req.body);
 
     var options = {
-        uri: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientVisit/createVisit',
+        uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientVisit/createVisit',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -83,7 +83,7 @@ app.get('/api/getVisits', function(req, res, next) {
     var datas = JSON.stringify(req.body);
     var patientId = req.headers['patientid'];
     var options = {
-        uri: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientVisit/searchVisits?patientReference=' + patientId,
+        uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientVisit/searchVisits?patientReference=' + patientId,
         method: 'GET',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -106,7 +106,7 @@ app.get('/api/getPatientDetail', function(req, res, next) {
     var datas = JSON.stringify(req.body);
     var patientId = req.headers['patientid'];
     var options = {
-        uri: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/searchByID?id=' + patientId,
+        uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/searchByID?id=' + patientId,
         method: 'GET',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -127,7 +127,7 @@ app.get('/api/getPatientDetail', function(req, res, next) {
 app.get('/api/getSubCenterDetails', function(req, res, next) {
     var datas = JSON.stringify(req.body);
     var options = {
-        uri: 'http://ec2-52-10-19-65.us-west-2.compute.amazonaws.com/FHIRServer/organization/searchAllSC',
+        uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/organization/searchAllSC',
         method: 'GET',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
