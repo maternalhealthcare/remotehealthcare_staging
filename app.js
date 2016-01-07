@@ -14,25 +14,55 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/dist/'));
 
+// var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
+// var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
+// request = request.defaults({proxy: proxyUrl});
+
+
+
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/dist/index.html'));
 }
 );
 
-app.get('/api/worklists', function(req, res, next) {
-    var url = 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search';
-    request(url, function(error, response, body) {
-        if (error) {
-            console.log('get worklist');
-            next(error);
-        }
-        if (!error && response.statusCode == 200) {
-            // console.log(body); // Show the HTML for the Google homepage.
-            res.json(JSON.parse(body));
-        } 
-    });
-});
 
+app.get('/api/worklists', function(req, res, next) {
+    var options = '';
+    var datas = JSON.stringify(req.body);
+    var searchString = req.headers['searchstring'];
+    if(typeof req.headers['searchstring'] !== 'undefined') {
+    	options = {
+    	uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search?searchString=' + searchString,
+		method: 'GET',
+		headers: {
+		'Content-Type': 'application/json; charset=utf-8'
+		},
+		body: datas
+};
+     }
+     else
+     {
+	options = {
+	uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/search',
+	method: 'GET',
+	headers: {
+	'Content-Type': 'application/json; charset=utf-8'
+	},
+	body: datas
+    };
+    }
+    
+     request(options, function(error, response, body) {
+	if (error) {
+	next(error);
+	}
+	if (!error && response.statusCode == 200) {
+	res.json(JSON.parse(body));
+	}
+	});
+
+});
+    
 app.post('/api/registerPatient', function(req, res, next) {
     var patientData = req.body;	
     var uri = 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/register';	
@@ -107,7 +137,6 @@ app.post('/api/saveVisit', function(req, res, next) {
 });
 
 app.get('/api/getVisits', function(req, res, next) {
-
     var datas = JSON.stringify(req.body);
     var patientId = req.headers['patientid'];
     var options = {
@@ -127,6 +156,7 @@ app.get('/api/getVisits', function(req, res, next) {
             res.json(JSON.parse(body));
         }
     });
+
 });
 
 app.get('/api/getPatientDetail', function(req, res, next) {

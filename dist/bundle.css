@@ -41,11 +41,19 @@
   padding-right: 60px;
 }
 
-.react-datepicker-input .input-button {
+.react-datepicker-input .button-wrapper {
   position: absolute;
-  margin: 0;
   right: 0;
   top: 0;
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.react-datepicker-input .input-button {
+  margin: 0;
   height: 100%;
   width: 50px;
   display: flex;
@@ -60,6 +68,10 @@
 
 .react-datepicker-input .input-button:hover {
   background-color: #E8E8E8;
+}
+
+.react-datepicker-input .clear-button i {
+  cursor: pointer;
 }
 
 .react-datepicker-input i {
@@ -755,6 +767,11 @@ a.btn.trimisterBtn.breadcrumbSelect {
   background-color: #50b6ff;
   border-color: #50b6ff; }
 
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  border-radius: 4px; }
+
 .pagination > li > a {
   color: #000; }
 
@@ -776,7 +793,6 @@ svg .c3-chart-arcs-title {
   padding: 4px 10px; }
 
 .dataTables_wrapper {
-  height: 400px;
   width: 100%; }
 
 .dataTable thead {
@@ -786,7 +802,7 @@ svg .c3-chart-arcs-title {
   display: block; }
 
 .dataTable tbody {
-  height: 250px;
+  height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
   display: block; }
@@ -1692,6 +1708,11 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
   border: solid 1px #DCDCDC;
   border-radius: 5px; }
 
+.summaryModelboxBody {
+  border: solid 1px #DCDCDC;
+  border-radius: 5px;
+  background: #FFF; }
+
 .modelPageTitle {
   text-align: center;
   font-size: 25px;
@@ -1736,6 +1757,9 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
 .spacer {
   height: 200px; }
 
+.spacerVisitSummary {
+  height: 100px; }
+
 .printBtn {
   border-radius: 25px;
   background: #2197DF;
@@ -1756,6 +1780,39 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
 /*PopupContent ends here*/
 .preCommentsBox.row label {
   font-weight: 700; }
+
+/*Visit Summray starts here*/
+.borderBottom {
+  border-bottom: solid 1px #CFCFCF; }
+
+.borderRightDiagnostics {
+  border-right: solid 1px #CFCFCF;
+  height: 95px;
+  padding-top: 14px;
+  padding-left: 30px; }
+
+.borderRightLabReports {
+  border-right: solid 1px #CFCFCF;
+  height: 95px;
+  padding-top: 14px; }
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 20px;
+  padding: 13px 0px 0px 21px; }
+
+.textPAdding_18 {
+  padding-left: 18px; }
+
+.paddingSpace {
+  width: 10px;
+  border: solid 5px #FFF; }
+
+.paddLeft {
+  padding-left: 12px;
+  padding-right: 9px; }
+
+/*Visit Summray ends here*/
 
 /** The Magic **/
 .btn-breadcrumb .btn {
@@ -1864,58 +1921,6 @@ a.btn.trimisterBtn.breadcrumbSelect {
   background-repeat: none;
   background-position: 3px 0px; }
 
-body {
-  font-family: GEInspira;
-  background: #FFFFFF; }
-
-.Dboard {
-  background: #FFFFFF;
-  top: 6px; }
-
-.Dboard .date {
-  font-size: 25px; }
-
-.Dboard .monthName {
-  float: left;
-  position: absolute;
-  top: 1px; }
-
-.Dboard .yearName {
-  float: left;
-  top: 15px;
-  position: absolute;
-  font-size: 10px;
-  padding-top: 4px; }
-
-.boxes > div {
-  height: 105px;
-  padding-top: 15px;
-  border-right: solid 1px #E0E0E0; }
-
-.boxes.row {
-  border-top: solid 1px #E0E0E0;
-  border-bottom: solid 1px #E0E0E0; }
-
-.right {
-  border-left: solid 1px #E0E0E0; }
-
-@media (min-width: 480px) {
-  .boxes > div {
-    height: auto; } }
-
-.print_export {
-  padding-top: 7px; }
-
-.border {
-  border: solid 1px #E0E0E0;
-  height: auto; }
-
-.row.one-border {
-  border-top: solid 1px #CFCFCF; }
-
-.col-lg-5.right-border {
-  border-right: solid 1px #CFCFCF;
-  height: 343px; }
 
 .chart {
   height: 190px; }
@@ -2500,37 +2505,6 @@ button.toast-close-button {
     padding: 15px 15px 15px 50px;
     width: 26em; } }
 
-html, body, #app, #app > div {
-    width: 100%;
-    height: 100%;
-}
-
-.upload-panel {
-    width: 400px;
-    height: 200px;
-    border: 2px dashed black;
-    padding: 0 15px;
-}
-
-.upload-panel.hide {
-    display: none;
-    visibility: hidden;
-}
-
-.upload-list {
-    width: 400px;
-    height: auto;
-    min-height: 200px;
-    border: 2px dashed black;
-    padding: 0 15px 15px;
-    overflow: hidden;
-}
-
-.upload-list dd > span {
-    display: block;
-    float: left;
-    width: 100%;
-}
 .wholeVisitIndicator {
   margin-top: 15px;
   margin-bottom: 16px;
@@ -2587,6 +2561,11 @@ html, body, #app, #app > div {
   background-color: #50b6ff;
   border-color: #50b6ff; }
 
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  border-radius: 4px; }
+
 .pagination > li > a {
   color: #000; }
 
@@ -2608,7 +2587,6 @@ svg .c3-chart-arcs-title {
   padding: 4px 10px; }
 
 .dataTables_wrapper {
-  height: 400px;
   width: 100%; }
 
 .dataTable thead {
@@ -2618,7 +2596,7 @@ svg .c3-chart-arcs-title {
   display: block; }
 
 .dataTable tbody {
-  height: 250px;
+  height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
   display: block; }
