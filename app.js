@@ -34,9 +34,37 @@ app.get('/api/worklists', function(req, res, next) {
 });
 
 app.post('/api/registerPatient', function(req, res, next) {
+    var patientData = req.body;	
+    var uri = 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/register';	
+   
     var datas = JSON.stringify(req.body);
     var options = {
-        uri: 'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/register',
+        uri: uri,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: datas
+    };
+
+    request(options, function(error, response, body) {
+        if (error) {
+            next(error);
+        }
+        if (!error && response.statusCode == 200) {
+            res.json(body);
+        }
+    });
+
+});
+
+app.post('/api/updatePatient', function(req, res, next) {
+    var patientData = req.body;
+    var uri =  'http://ec2-52-34-194-19.us-west-2.compute.amazonaws.com/FHIRServer/patientRegistration/update';			
+ 
+    var datas = JSON.stringify(req.body);
+    var options = {
+        uri: uri,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
