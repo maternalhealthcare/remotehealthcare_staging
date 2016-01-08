@@ -867,10 +867,6 @@ svg .c3-chart-arcs-title {
   .grid-wrapper {
     width: 413px !important; } }
 
-@media (max-width: 603px) {
-  .tabs-menu-item {
-    width: 100px; } }
-
 @media (max-width: 650px) {
   .dataTable {
     margin-left: 9px !important; } }
@@ -883,18 +879,36 @@ svg .c3-chart-arcs-title {
   .dataTable tbody {
     font-size: 10px !important; } }
 
-@media (max-width: 620px) {
+@media (max-width: 660px) {
+  .tabs-menu-item {
+    width: 100px; } }
+
+@media (max-width: 660px) {
   .tabAcnchor {
     padding: 0px 7px !important;
     font-size: 12px !important; } }
 
-@media (max-width: 620px) {
+@media (max-width: 660px) {
   .tabs-menu-item > a > i {
     padding: 4px 11px !important; } }
 
-@media (max-width: 620px) {
+@media (max-width: 600px) {
   .serachFilter {
-    width: 30% !important; } }
+    width: 27% !important;
+    margin-right: 0px !important; } }
+
+@media (max-width: 605px) {
+  .tabs-menu-item {
+    width: 100px; } }
+
+@media (max-width: 605px) {
+  .tabAcnchor {
+    padding: 0px 7px !important;
+    font-size: 13px !important; } }
+
+@media (max-width: 605px) {
+  .tabs-menu-item > a > i {
+    padding: 4px 11px !important; } }
 
 .chart {
   height: 190px; }
@@ -1838,6 +1852,12 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
 .mediaPadding {
   padding-left: 0; }
 
+.labResHeightSpec {
+  height: 95px; }
+
+.RowHeight {
+  height: 183px; }
+
 /*Visit Summray ends here*/
 .boldLabel span {
   font-weight: 700; }
@@ -1949,6 +1969,58 @@ a.btn.trimisterBtn.breadcrumbSelect {
   background-repeat: none;
   background-position: 3px 0px; }
 
+body {
+  font-family: GEInspira;
+  background: #FFFFFF; }
+
+.Dboard {
+  background: #FFFFFF;
+  top: 6px; }
+
+.Dboard .date {
+  font-size: 25px; }
+
+.Dboard .monthName {
+  float: left;
+  position: absolute;
+  top: 1px; }
+
+.Dboard .yearName {
+  float: left;
+  top: 15px;
+  position: absolute;
+  font-size: 10px;
+  padding-top: 4px; }
+
+.boxes > div {
+  height: 105px;
+  padding-top: 15px;
+  border-right: solid 1px #E0E0E0; }
+
+.boxes.row {
+  border-top: solid 1px #E0E0E0;
+  border-bottom: solid 1px #E0E0E0; }
+
+.right {
+  border-left: solid 1px #E0E0E0; }
+
+@media (min-width: 480px) {
+  .boxes > div {
+    height: auto; } }
+
+.print_export {
+  padding-top: 7px; }
+
+.border {
+  border: solid 1px #E0E0E0;
+  height: auto; }
+
+.row.one-border {
+  border-top: solid 1px #CFCFCF; }
+
+.col-lg-5.right-border {
+  border-right: solid 1px #CFCFCF;
+  height: 343px; }
 
 .chart {
   height: 190px; }
@@ -2704,10 +2776,6 @@ svg .c3-chart-arcs-title {
   .grid-wrapper {
     width: 413px !important; } }
 
-@media (max-width: 603px) {
-  .tabs-menu-item {
-    width: 100px; } }
-
 @media (max-width: 650px) {
   .dataTable {
     margin-left: 9px !important; } }
@@ -2720,15 +2788,33 @@ svg .c3-chart-arcs-title {
   .dataTable tbody {
     font-size: 10px !important; } }
 
-@media (max-width: 620px) {
+@media (max-width: 660px) {
+  .tabs-menu-item {
+    width: 100px; } }
+
+@media (max-width: 660px) {
   .tabAcnchor {
     padding: 0px 7px !important;
     font-size: 12px !important; } }
 
-@media (max-width: 620px) {
+@media (max-width: 660px) {
   .tabs-menu-item > a > i {
     padding: 4px 11px !important; } }
 
-@media (max-width: 620px) {
+@media (max-width: 600px) {
   .serachFilter {
-    width: 30% !important; } }
+    width: 27% !important;
+    margin-right: 0px !important; } }
+
+@media (max-width: 605px) {
+  .tabs-menu-item {
+    width: 100px; } }
+
+@media (max-width: 605px) {
+  .tabAcnchor {
+    padding: 0px 7px !important;
+    font-size: 13px !important; } }
+
+@media (max-width: 605px) {
+  .tabs-menu-item > a > i {
+    padding: 4px 11px !important; } }

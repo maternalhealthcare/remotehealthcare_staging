@@ -80080,6 +80080,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*eslint no-mixed-spaces-and-tabs:0*/
 /*eslint no-unused-vars: 0*/
 
+//import VisitSummaryPrint from './VisitSummaryPrint';
 var wrapperClass = '';
 var StyleHeader = {
 	border: '1px solid black',
@@ -80140,11 +80141,11 @@ var VisitSummary = (function (_ControlBase) {
 			//       console.log(this.state.visitSummary);
 		}
 	}, {
-		key: 'exportToPdf',
-		value: function exportToPdf() {
-			var html = _server2.default.renderToString(_react2.default.createElement(VisitSummary, { visitSummarydata: this.state.visitSummary }));
+		key: 'VisitSummaryPrintPreview',
+		value: function VisitSummaryPrintPreview() {
+			var printContents = _server2.default.renderToString(_react2.default.createElement(VisitSummaryPrint, { visitSummarydata: this.state.visitSummary, referralInfo: this.state.visitSummary }));
 			var win = window.open('', '', 'left=0,top=0,width=800,height=900');
-			win.document.write(html);
+			win.document.write(printContents);
 			win.focus();
 			win.print();
 			win.close();
@@ -80159,6 +80160,7 @@ var VisitSummary = (function (_ControlBase) {
 
 				var widthPercent = 0;
 				var weekVal = this.state.visitSummary.patPregnancyWeek;
+
 				if (weekVal > 40) {
 					weekVal = 40;
 				}
@@ -80233,7 +80235,7 @@ var VisitSummary = (function (_ControlBase) {
 								{ lg: 6, md: 6, sm: 6, xs: 12 },
 								_react2.default.createElement(
 									_reactBootstrap.Button,
-									{ bsStyle: 'btn btn-default printBtn col-xs-12', onClick: this.exportToPdf.bind(this) },
+									{ bsStyle: 'btn btn-default printBtn col-xs-12', onClick: this.VisitSummaryPrintPreview.bind(this) },
 									locale('Print')
 								)
 							)
@@ -80241,7 +80243,7 @@ var VisitSummary = (function (_ControlBase) {
 					),
 					_react2.default.createElement(
 						_reactBootstrap.Row,
-						{ className: 'patientRow' },
+						{ className: 'patientRow patientRowSummary' },
 						_react2.default.createElement(
 							_reactBootstrap.Col,
 							{ lg: 12 },
@@ -80250,11 +80252,15 @@ var VisitSummary = (function (_ControlBase) {
 								null,
 								_react2.default.createElement(
 									_reactBootstrap.Col,
-									{ lg: 3 },
-									_react2.default.createElement(_reactBootstrap.Col, { lg: 6 }),
+									{ lg: 4 },
 									_react2.default.createElement(
 										_reactBootstrap.Col,
-										{ lg: 6 },
+										{ lg: 5, className: 'mediaPadding' },
+										_react2.default.createElement('img', { src: '../../common/default_patient.png', className: 'patient-avatar img-responsive' })
+									),
+									_react2.default.createElement(
+										_reactBootstrap.Col,
+										{ lg: 7, clasName: 'mediaPadding' },
 										_react2.default.createElement(
 											_reactBootstrap.Row,
 											null,
@@ -80313,7 +80319,7 @@ var VisitSummary = (function (_ControlBase) {
 								),
 								_react2.default.createElement(
 									_reactBootstrap.Col,
-									{ lg: 3 },
+									{ lg: 2 },
 									_react2.default.createElement(
 										_reactBootstrap.Row,
 										null,
@@ -80439,7 +80445,7 @@ var VisitSummary = (function (_ControlBase) {
 										null,
 										_react2.default.createElement(
 											_reactBootstrap.Col,
-											{ lg: 6 },
+											{ lg: 8 },
 											_react2.default.createElement(
 												'label',
 												null,
@@ -80790,10 +80796,10 @@ var VisitSummary = (function (_ControlBase) {
 							),
 							_react2.default.createElement(
 								_reactBootstrap.Row,
-								null,
+								{ className: 'labResHeightSpec' },
 								_react2.default.createElement(
 									_reactBootstrap.Col,
-									{ lg: 4, className: 'borderRightLabReports' },
+									{ lg: 4, className: 'borderRightLabReports RowHeight' },
 									_react2.default.createElement(
 										_reactBootstrap.Row,
 										null,
@@ -80811,7 +80817,7 @@ var VisitSummary = (function (_ControlBase) {
 								),
 								_react2.default.createElement(
 									_reactBootstrap.Col,
-									{ lg: 4, className: 'borderRightLabReports' },
+									{ lg: 4, className: 'borderRightLabReports RowHeight' },
 									_react2.default.createElement(
 										_reactBootstrap.Row,
 										null,
@@ -80829,7 +80835,7 @@ var VisitSummary = (function (_ControlBase) {
 								),
 								_react2.default.createElement(
 									_reactBootstrap.Col,
-									{ lg: 4, className: 'borderRightLabReports borderRightNo' },
+									{ lg: 4, className: 'borderRightLabReports RowHeight borderRightNo' },
 									_react2.default.createElement(
 										_reactBootstrap.Row,
 										null,
@@ -80842,7 +80848,7 @@ var VisitSummary = (function (_ControlBase) {
 									_react2.default.createElement(
 										_reactBootstrap.Row,
 										{ className: 'paddLeft' },
-										_react2.default.createElement('textarea', { type: 'textarea', className: 'editable form-control', valueLink: this.linkState(this.state.visitSummary, 'Notes') })
+										_react2.default.createElement('textarea', { type: 'textarea', className: 'editable form-control', rows: '6', placeholder: locale('EnterCommentsIfAny'), valueLink: this.linkState(this.state.visitSummary, 'Notes') })
 									)
 								)
 							)
@@ -80992,6 +80998,7 @@ var VisitSummaryPage = (function (_ControlBase) {
     }, {
         key: 'render',
         value: function render() {
+
             return _react2.default.createElement(
                 'div',
                 null,
@@ -85413,8 +85420,8 @@ var WorklistView = (function (_React$Component) {
     }, {
         key: 'closeTab',
         value: function closeTab() {
-            AppAction.executeAction(ActionType.GET_WEEKLY_WORKLIST, null);
-            this.setState({ tabActive: 2 });
+            AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
+            this.setState({ tabActive: 1 });
             this.setState({ showTab: false });
         }
     }, {
@@ -86162,13 +86169,13 @@ var PregnancyRisk = (function (_React$Component) {
             if (this.isRisk(this.props.risks)) {
                 return _react2.default.createElement(
                     'svg',
-                    { style: svgStyle },
+                    { viewBox: '0 0 30 30', style: svgStyle },
                     _react2.default.createElement('circle', { cx: '13', cy: '13', r: '9px', stroke: '#801900', 'stroke-width': '10', fill: '#ff3200' })
                 );
             } else {
                 return _react2.default.createElement(
                     'svg',
-                    { style: svgStyle },
+                    { viewBox: '0 0 30 30', style: svgStyle },
                     _react2.default.createElement('circle', { cx: '13', cy: '13', r: '9px', stroke: '#006700', 'stroke-width': '10', fill: '#00cc00' })
                 );
             }
@@ -86343,7 +86350,7 @@ var SearchFilter = (function (_React$Component) {
             var searchPatientPlaceHolder = this.state.searchPatientPlaceHolder;
             var innerAddon = {
                 position: 'relative',
-                marginTop: '26px',
+                marginTop: '2%',
                 marginRight: '24px',
                 width: '18%',
                 fontSize: '14px',
@@ -86795,14 +86802,15 @@ var Tabs = (function (_React$Component) {
                     background: 'url(./worklist/close_icon.png) no-repeat scroll 0px 0px',
                     paddingLeft: '22px',
                     opacity: '0.5',
-                    paddingTop: '17px',
                     paddingTop: '15px'
+
                 };
                 var closeStyle = {
                     border: 'none',
                     backgroundColor: 'white',
                     height: '1px',
-                    marginLeft: '162px'
+                    marginLeft: '158px',
+                    outline: 'none'
                 };
                 var notificationIconStyle = {
                     background: 'url(./worklist/notification.png) no-repeat scroll 0px 0px',
@@ -87062,8 +87070,8 @@ var WorklistView = (function (_React$Component) {
     }, {
         key: 'closeTab',
         value: function closeTab() {
-            AppAction.executeAction(ActionType.GET_WEEKLY_WORKLIST, null);
-            this.setState({ tabActive: 2 });
+            AppAction.executeAction(ActionType.GET_TODAYS_WORKLIST, null);
+            this.setState({ tabActive: 1 });
             this.setState({ showTab: false });
         }
     }, {
