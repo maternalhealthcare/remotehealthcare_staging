@@ -1,5 +1,5 @@
 /*eslint no-console: 0*/
-
+/*eslint no-unused-vars: 0*/
 'use strict';
 
 var express = require('express');

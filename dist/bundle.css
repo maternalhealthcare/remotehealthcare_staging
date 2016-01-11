@@ -749,7 +749,9 @@ a.btn.trimisterBtn.breadcrumbSelect {
   color: #000;
   font-size: 15px;
   font-family: GEInspira;
-  font-weight: bold; }
+  font-weight: bold;
+  height: 54px;
+  margin-top: -4px; }
 
 .btnGroup button {
   height: 19px;
@@ -812,7 +814,7 @@ svg .c3-chart-arcs-title {
   overflow-x: hidden; }
 
 .chart-scroll {
-  height: 195px; }
+  height: 191px; }
 
 .overflow-hidden {
   overflow-x: hidden;
@@ -1704,7 +1706,7 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
 @media (max-width: 1000px) {
   .visitInnerContentArea {
     left: 0px;
-    top: 5%; }
+    top: -11%; }
   .visitContainerResponsive > .menubar {
     width: 100%;
     position: absolute;
@@ -1978,6 +1980,58 @@ a.btn.trimisterBtn.breadcrumbSelect {
   background-repeat: none;
   background-position: 3px 0px; }
 
+body {
+  font-family: GEInspira;
+  background: #FFFFFF; }
+
+.Dboard {
+  background: #FFFFFF;
+  top: 6px; }
+
+.Dboard .date {
+  font-size: 25px; }
+
+.Dboard .monthName {
+  float: left;
+  position: absolute;
+  top: 1px; }
+
+.Dboard .yearName {
+  float: left;
+  top: 15px;
+  position: absolute;
+  font-size: 10px;
+  padding-top: 4px; }
+
+.boxes > div {
+  height: 105px;
+  padding-top: 15px;
+  border-right: solid 1px #E0E0E0; }
+
+.boxes.row {
+  border-top: solid 1px #E0E0E0;
+  border-bottom: solid 1px #E0E0E0; }
+
+.right {
+  border-left: solid 1px #E0E0E0; }
+
+@media (min-width: 480px) {
+  .boxes > div {
+    height: auto; } }
+
+.print_export {
+  padding-top: 7px; }
+
+.border {
+  border: solid 1px #E0E0E0;
+  height: auto; }
+
+.row.one-border {
+  border-top: solid 1px #CFCFCF; }
+
+.col-lg-5.right-border {
+  border-right: solid 1px #CFCFCF;
+  height: 343px; }
 
 .chart {
   height: 190px; }
@@ -2038,6 +2092,9 @@ input[type="checkbox"]:checked ~ label::before {
   content: "\f00c";
   color: #3AAFDA;
   background: #FFFFFF; }
+
+body {
+  background: #f5f6f7; }
 
 /* Custom code*/
 /* Top main navigation Starts here*/
@@ -2210,114 +2267,6 @@ ul.dropdown-menu.dropdown-menu-right {
     padding: 10px 15px;
     display: block; } }
 
-/*Media query starts here*/
-@media (max-width: 100%) {
-  .patient-banner {
-    width: 100%;
-    height: 100%; } }
-
-@media (max-width: 768px) {
-  .patient-info-bx1 {
-    height: auto; } }
-
-@media (max-width: 768px) {
-  .patient-info-bx2 {
-    height: auto; } }
-
-@media (max-width: 768px) {
-  .patient-info-bx3 {
-    height: auto; } }
-
-@media (max-width: 768px) {
-  .divider {
-    display: none; } }
-
-@media (max-width: 768px) {
-  .content-body {
-    padding-top: 5px;
-    top: 0px !important; } }
-
-@media (min-width: 100%) {
-  .SPContainer {
-    margin-top: 45%;
-    font-family: GEInspira;
-    border: solid 1px;
-    position: relative; } }
-
-@media (min-width: 768px) {
-  height: 505px; }
-
-/*Media query ends here*/
-.patient-info-bx1, .patient-info-bx2, .patient-info-bx3 {
-  border: none; }
-
-.patient-info-bx2, .patient-info-bx3 > label {
-  font-family: GEInspira;
-  font-size: 15px;
-  color: #000000; }
-
-.patient-banner {
-  background-color: #D4EFF8;
-  border: solid 10px #F5F6F7; }
-
-.patient-avatar {
-  width: 110px;
-  height: 125px;
-  padding: 7px 0px 6px 0px; }
-
-.divider {
-  border-right: solid 2px;
-  border-color: #ffffff;
-  height: 98px;
-  margin-top: 13px; }
-
-.patient-pic-bx {
-  border: none; }
-
-.content-body {
-  top: 33px; }
-
-.content-body #row > label, .content-body #row > span {
-  font-family: GEInspira;
-  font-size: 15px;
-  color: #000000;
-  width: 91px; }
-
-.content-body #row > span {
-  font-family: GEInspira;
-  font-size: 15px;
-  color: #000000; }
-
-.arrow-up {
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid #3F7500;
-  margin: -15px 0px -4px -8px;
-  padding: 0px;
-  width: 0px;
-  height: 0px; }
-
-.progress_val {
-  bottom: -13px;
-  position: relative; }
-
-.progress_val.label-success {
-  background: #3F7500; }
-
-.progress_val span.label.label-success {
-  background: #3F7500;
-  border-radius: 4px;
-  padding: 4px 6px 4px 6px;
-  margin-left: -16px; }
-
-.ps_width {
-  font-family: GEInspira;
-  font-size: 15px;
-  font-weight: bold;
-  color: #000; }
-
-.content-body .progress {
-  border-radius: 9px; }
 
 .style-referTo {
   color: red;
