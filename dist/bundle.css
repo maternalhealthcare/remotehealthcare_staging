@@ -41,11 +41,19 @@
   padding-right: 60px;
 }
 
-.react-datepicker-input .input-button {
+.react-datepicker-input .button-wrapper {
   position: absolute;
-  margin: 0;
   right: 0;
   top: 0;
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.react-datepicker-input .input-button {
+  margin: 0;
   height: 100%;
   width: 50px;
   display: flex;
@@ -60,6 +68,10 @@
 
 .react-datepicker-input .input-button:hover {
   background-color: #E8E8E8;
+}
+
+.react-datepicker-input .clear-button i {
+  cursor: pointer;
 }
 
 .react-datepicker-input i {
@@ -790,15 +802,34 @@ svg .c3-chart-arcs-title {
   height: 43px;
   padding: 4px 10px; }
 
+.headerOffSet_eight {
+  padding: 8px; }
+
+.headerOffSet_zero {
+  padding: 0px !important; }
+
 .dataTables_wrapper {
   width: 100%;
   position: relative; }
 
+.dataTables_wrapper.optioned {
+  position: absolute; }
+
 .dataTable td {
   vertical-align: middle !important; }
 
-.dataTable th {
-  vertical-align: middle !important; }
+.dataTable thead th {
+  vertical-align: middle !important;
+  padding: 0px; }
+
+.dataTable thead th div {
+  position: absolute;
+  padding: 13px 8px;
+  top: 0;
+  border: none;
+  height: 55px;
+  background-color: #f5f5f5;
+  border-left: 1px #ddd; }
 
 .dataTable thead tr {
   height: 55px; }
@@ -941,8 +972,8 @@ svg .c3-chart-arcs-title {
   height: 15px; }
 
 .canvas-style {
-  width: 300px;
-  height: 154px; }
+  width: 350px !important;
+  height: 154px !important; }
 
 .style-referTo {
   color: red;
@@ -2062,8 +2093,8 @@ body {
   height: 15px; }
 
 .canvas-style {
-  width: 300px;
-  height: 154px; }
+  width: 350px !important;
+  height: 154px !important; }
 
 input[type="checkbox"] {
   display: none; }
@@ -2267,6 +2298,114 @@ ul.dropdown-menu.dropdown-menu-right {
     padding: 10px 15px;
     display: block; } }
 
+/*Media query starts here*/
+@media (max-width: 100%) {
+  .patient-banner {
+    width: 100%;
+    height: 100%; } }
+
+@media (max-width: 768px) {
+  .patient-info-bx1 {
+    height: auto; } }
+
+@media (max-width: 768px) {
+  .patient-info-bx2 {
+    height: auto; } }
+
+@media (max-width: 768px) {
+  .patient-info-bx3 {
+    height: auto; } }
+
+@media (max-width: 768px) {
+  .divider {
+    display: none; } }
+
+@media (max-width: 768px) {
+  .content-body {
+    padding-top: 5px;
+    top: 0px !important; } }
+
+@media (min-width: 100%) {
+  .SPContainer {
+    margin-top: 45%;
+    font-family: GEInspira;
+    border: solid 1px;
+    position: relative; } }
+
+@media (min-width: 768px) {
+  height: 505px; }
+
+/*Media query ends here*/
+.patient-info-bx1, .patient-info-bx2, .patient-info-bx3 {
+  border: none; }
+
+.patient-info-bx2, .patient-info-bx3 > label {
+  font-family: GEInspira;
+  font-size: 15px;
+  color: #000000; }
+
+.patient-banner {
+  background-color: #D4EFF8;
+  border: solid 10px #F5F6F7; }
+
+.patient-avatar {
+  width: 110px;
+  height: 125px;
+  padding: 7px 0px 6px 0px; }
+
+.divider {
+  border-right: solid 2px;
+  border-color: #ffffff;
+  height: 98px;
+  margin-top: 13px; }
+
+.patient-pic-bx {
+  border: none; }
+
+.content-body {
+  top: 33px; }
+
+.content-body #row > label, .content-body #row > span {
+  font-family: GEInspira;
+  font-size: 15px;
+  color: #000000;
+  width: 91px; }
+
+.content-body #row > span {
+  font-family: GEInspira;
+  font-size: 15px;
+  color: #000000; }
+
+.arrow-up {
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #3F7500;
+  margin: -15px 0px -4px -8px;
+  padding: 0px;
+  width: 0px;
+  height: 0px; }
+
+.progress_val {
+  bottom: -13px;
+  position: relative; }
+
+.progress_val.label-success {
+  background: #3F7500; }
+
+.progress_val span.label.label-success {
+  background: #3F7500;
+  border-radius: 4px;
+  padding: 4px 6px 4px 6px;
+  margin-left: -16px; }
+
+.ps_width {
+  font-family: GEInspira;
+  font-size: 15px;
+  font-weight: bold;
+  color: #000; }
+
+.content-body .progress {
+  border-radius: 9px; }
 
 .style-referTo {
   color: red;
@@ -2326,7 +2465,9 @@ ul.dropdown-menu.dropdown-menu-right {
   color: #000;
   font-size: 15px;
   font-family: GEInspira;
-  font-weight: bold; }
+  font-weight: bold;
+  height: 54px;
+  margin-top: -4px; }
 
 .toast-title {
   font-weight: bold; }
@@ -2600,15 +2741,34 @@ svg .c3-chart-arcs-title {
   height: 43px;
   padding: 4px 10px; }
 
+.headerOffSet_eight {
+  padding: 8px; }
+
+.headerOffSet_zero {
+  padding: 0px !important; }
+
 .dataTables_wrapper {
   width: 100%;
   position: relative; }
 
+.dataTables_wrapper.optioned {
+  position: absolute; }
+
 .dataTable td {
   vertical-align: middle !important; }
 
-.dataTable th {
-  vertical-align: middle !important; }
+.dataTable thead th {
+  vertical-align: middle !important;
+  padding: 0px; }
+
+.dataTable thead th div {
+  position: absolute;
+  padding: 13px 8px;
+  top: 0;
+  border: none;
+  height: 55px;
+  background-color: #f5f5f5;
+  border-left: 1px #ddd; }
 
 .dataTable thead tr {
   height: 55px; }
@@ -2624,7 +2784,7 @@ svg .c3-chart-arcs-title {
   overflow-x: hidden; }
 
 .chart-scroll {
-  height: 195px; }
+  height: 191px; }
 
 .overflow-hidden {
   overflow-x: hidden;
