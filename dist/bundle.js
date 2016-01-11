@@ -76692,6 +76692,12 @@ var arrowUp = {
     borderRight: ' 8px solid transparent',
     borderBottom: '8px solid #fff'
 };
+var seperator = {
+    margin: '0px !important'
+};
+var logoutImagePad = {
+    marginLeft: '-2%'
+};
 
 var Menu = function (_React$Component) {
     _inherits(Menu, _React$Component);
@@ -76742,10 +76748,12 @@ var Menu = function (_React$Component) {
                         ),
                         ' '
                     ),
+                    '   ',
+                    _react2.default.createElement('hr', { style: seperator }),
                     _react2.default.createElement(
                         _reactBootstrap.MenuItem,
                         { style: menuStyle, href: '#/', style: menuStyle, eventKey: '2' },
-                        _react2.default.createElement('img', { src: './common/logout.png', className: 'img-responsive paddLeft' }),
+                        _react2.default.createElement('img', { src: './common/logout.png', className: 'img-responsive ', style: logoutImagePad }),
                         _react2.default.createElement(
                             'span',
                             { style: dropHeaderLog },
@@ -92672,8 +92680,8 @@ var RegistrationDataTranslator = function (_BaseTranslator) {
                 id: obj ? obj.id : null,
                 name: obj ? obj.name : '',
                 spouseName: obj ? obj.spouseName : '',
-                dOB: obj ? obj.dOB : '', // obj?Utils.convertDateFormatForView(obj.dOB):'',
-                age: obj ? Utils.findAge(obj.dOB) : '',
+                dOB: obj ? obj.dOB : null, // obj?Utils.convertDateFormatForView(obj.dOB):'',
+                age: obj ? obj.dOB ? Utils.findAge(obj.dOB) : '' : '',
                 emergencyContactPhn: obj ? obj.emergencyContactPhn : '',
                 picmeID: obj ? obj.picmeID : '',
                 jananiID: obj ? obj.id : '',
