@@ -13,7 +13,7 @@ const FHIR_DOMAIN_URL = 'http://ec2-52-77-242-7.ap-southeast-1.compute.amazonaws
 
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '../../../dist/'));
+app.use(express.static(__dirname + '/dist/'));
 
 // var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
 // var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
@@ -21,7 +21,7 @@ app.use(express.static(__dirname + '../../../dist/'));
 
 
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '../../../dist/index.html'));
+    res.sendFile(path.join(__dirname + '/dist/index.html'));
 }
 );
 
