@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/dist/'));
 
-// var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
+//var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
 // var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
 // request = request.defaults({proxy: proxyUrl});
 
@@ -28,10 +28,8 @@ app.get('/', function(req, res) {
 app.post('/api/proxyUrl', function(req, res, next) {
     // var patientData = req.body;	
     let url = req.headers.url;
-    console.log('url ' + url);
     var uri = FHIR_DOMAIN_URL + url;
 
-    console.log('uri >>  ' + uri);
 
     var datas = JSON.stringify(req.body);
     var options = {
@@ -57,7 +55,6 @@ app.post('/api/proxyUrl', function(req, res, next) {
 app.get('/api/proxyUrl', function(req, res, next) {
 
     let url = req.headers.url;
-    console.log('url ' + url);
 
     var uri = FHIR_DOMAIN_URL + url;
 
