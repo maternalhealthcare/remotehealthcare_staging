@@ -20,7 +20,7 @@ app.use(express.static(__dirname + '/dist/'));
 // request = request.defaults({proxy: proxyUrl});
 
 
-request = request.defaults({proxy: proxyUrl});
+//request = request.defaults({proxy: proxyUrl});
 
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/dist/index.html'));
