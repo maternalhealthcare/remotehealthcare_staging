@@ -41,19 +41,11 @@
   padding-right: 60px;
 }
 
-.react-datepicker-input .button-wrapper {
+.react-datepicker-input .input-button {
   position: absolute;
+  margin: 0;
   right: 0;
   top: 0;
-  height: 100%;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-.react-datepicker-input .input-button {
-  margin: 0;
   height: 100%;
   width: 50px;
   display: flex;
@@ -68,10 +60,6 @@
 
 .react-datepicker-input .input-button:hover {
   background-color: #E8E8E8;
-}
-
-.react-datepicker-input .clear-button i {
-  cursor: pointer;
 }
 
 .react-datepicker-input i {
@@ -561,9 +549,10 @@ ul.dropdown-menu.dropdown-menu-right {
   .menubar ul {
     display: block;
     top: 16%; }
-  .menubar + div {
-    position: absolute;
-    margin-top: 8%; }
+  .visitContainerResponsive > .menubar + div {
+    position: relative;
+    margin-top: -28%;
+    padding-top: 5%; }
   .menubar .burger {
     display: none; } }
 
@@ -575,6 +564,24 @@ ul.dropdown-menu.dropdown-menu-right {
   .menubar + div {
     position: absolute;
     margin-top: 28%; } }
+
+@media (max-width: 767px) {
+  .menubar ul {
+    display: none; }
+  .menubar .burger {
+    display: block; }
+  .menubar ul {
+    opacity: 0; }
+  .menuubar .burger {
+    display: block; }
+  .visitContainerResponsive {
+    top: 65% !important;
+    position: absolute; }
+  .visitIndicatorVisit {
+    padding-top: 5%; }
+  .buttonsForVisit {
+    width: 52%;
+    margin-top: -3% !important; } }
 
 @media (max-width: 400px) {
   .menubar {
@@ -678,6 +685,9 @@ ul.dropdown-menu.dropdown-menu-right {
     margin-top: -31px;
     border-top: 31px solid transparent;
     border-bottom: 30px solid transparent; }
+
+a.btn:active, a.btn:focus {
+  box-shadow: none !important; }
 
 .breadcrumbSelect {
   background-color: #76d31a !important; }
@@ -1065,12 +1075,13 @@ body {
   border-right: solid 1px #CFCFCF;
   height: 343px; }
 
-.required {
+.required::after {
+  content: "\2605";
   color: red;
-  font-weight: 900;
-  font-size: larger;
-  padding-right: 2px;
-  float: left; }
+  font-size: 10px;
+  bottom: 7px;
+  position: relative;
+  left: 2px; }
 
 .controlLabel {
   text-align: right; }
@@ -1087,6 +1098,9 @@ body {
 @font-face {
   font-family: GEInspira;
   src: url("../fonts/ge-inspira.ttf"); }
+
+.a, .btn-default {
+  outline: none !important; }
 
 .positionFixed {
   position: fixed;
@@ -1144,7 +1158,7 @@ input::-webkit-inner-spin-button {
 
 .form-control::-webkit-input-placeholder {
   font-size: 15px;
-  color: #373737; }
+  color: #D5D5D5; }
 
 .labelPaddingControl {
   padding-top: 18px; }
@@ -1806,7 +1820,7 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
 
 @media (min-width: 768px) {
   .buttonsForVisit {
-    margin-top: -3% !important;
+    margin-top: -1% !important;
     width: 25%; } }
 
 @media (max-width: 768px) {
@@ -1820,20 +1834,19 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
 
 @media (max-width: 1000px) {
   .visitInnerContentArea {
-    display: block;
-    margin-top: 90%;
-    position: absolute;
+    margin-top: 2% !important;
+    position: relative;
     width: 100%; } }
 
 @media (max-width: 1000px) {
   .visitInnerContentArea {
     left: 0px;
-    top: 7%; }
+    top: 1%; }
   .visitContainerResponsive > .menubar {
     width: 100%;
-    position: absolute;
+    position: relative;
     z-index: 100;
-    top: 29%; }
+    margin-top: 14%; }
   .visitContainerResponsive > .menubar > ul > li#menuOption0 {
     width: 30.3%; }
   .visitContainerResponsive > .menubar > ul > li#menuOption1 {
@@ -1856,8 +1869,13 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
     float: left;
     margin-top: -8.5%;
     border-right: 4px solid #F5F5F5; }
+  .visitContainerResponsive > .menubar > ul > li#menuOption6 {
+    width: 30.9%;
+    float: right;
+    margin-right: 69%;
+    border-right: 4px solid #F5F5F5; }
   .visitContainerResponsive > div > .wholeVisitIndicator {
-    margin-top: 31%; } }
+    margin-top: 24%; } }
 
 /*Media query ends here*/
 /*PopupContent starts here*/
@@ -2105,6 +2123,9 @@ input[type="radio"]:checked + label::before, input[type="radio"]:checked + span:
     margin-top: -31px;
     border-top: 31px solid transparent;
     border-bottom: 30px solid transparent; }
+
+a.btn:active, a.btn:focus {
+  box-shadow: none !important; }
 
 .breadcrumbSelect {
   background-color: #76d31a !important; }
@@ -2836,10 +2857,8 @@ button.toast-close-button {
   top: 0%; }
 
 .visitIndicatorRight {
-  width: 20%;
   margin-top: 5px;
-  margin-left: 81%;
-  padding-left: 3%; }
+  margin-left: 84%; }
 
 .btnGroup button {
   height: 19px;
