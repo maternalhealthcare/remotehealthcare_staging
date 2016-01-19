@@ -125,13 +125,17 @@ app.get('/api/getWorklists', function(req, res, next) {
             body: datas
         };
     }
-
     request(options, function(error, response, body) {
         if (error) {
             next(error);
         }
         if (!error && response.statusCode == 200) {
-            res.json(JSON.parse(body));
+        	try{
+        	 res.json(JSON.parse(body));
+        	}catch(e){
+        		 next(body);
+        	}
+           
         }
     });
 });
