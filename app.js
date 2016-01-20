@@ -155,10 +155,11 @@ app.get('/api/getWorklists', function(req, res, next) {
             next(error);
         }
         if (!error && response.statusCode == 200) {
-        	try{
-        	 res.json(JSON.parse(body));
+            try{
+             res.json(JSON.parse(body));
         	}catch(e){
-        		 next(body);
+        		res.status(500).send(body);
+//        		 next(body);
         	}
            
         }
