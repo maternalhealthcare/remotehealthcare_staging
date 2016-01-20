@@ -79,6 +79,31 @@ app.get('/api/proxyUrl', function(req, res, next) {
 });
 
 
+app.get('/api/proxy', function(req, res, next) {
+
+    let url = req.headers.url;
+
+    var uri = FHIR_DOMAIN_URL + url;
+
+    var datas = JSON.stringify(req.body);
+    var options = {
+        uri: uri,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: datas
+    };
+    
+    request(options, function(error, response, body) {
+        if (error) {
+            next(error);
+        } else {
+            res.send(response);
+        }
+    });
+});
+
 app.get('/api/worklists', function(req, res, next) {
     var options = '';
     var datas = JSON.stringify(req.body);
