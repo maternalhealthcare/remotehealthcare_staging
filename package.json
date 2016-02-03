@@ -32,7 +32,8 @@
       "bool": true,
       "str": true,
       "Route": true,
-      "lm": true
+      "lm": true,
+      "process": true
     }
   },
   "author": "",
@@ -73,7 +74,16 @@
     "react-modal": "^0.6.1",
     "react-selectize": "^0.3.7",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "socket.io":"^1.4.4",
+    "socket.io-client":"^1.4.4",
+    "amqplib": "",
+    "request": "^2.67.0",
+	"bitsyntax": "~0.0.4",
+    "buffer-more-ints": "0.0.2",
+    "readable-stream": "1.x >=1.1.9",
+    "when": "~3.6.2",
+	"node-uuid": ""
   },
   "dependencies": {
     "bootstrap": "^3.3.5",

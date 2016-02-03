@@ -17,7 +17,6 @@ app.use(express.static(__dirname + '/dist/'));
 
 //var proxyUrl = 'http://' + '<username>' + ':' + '<password>' + '@' + 'cis-india-pitc-bangalorez.proxy.corporate.ge.com:' + 80;
 // var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
-// request = request.defaults({proxy: proxyUrl});
 
 
 app.get('/', function(req, res) {
@@ -156,11 +155,11 @@ app.get('/api/getWorklists', function(req, res, next) {
         }
         if (!error && response.statusCode == 200) {
             try{
-             res.json(JSON.parse(body));
-        	}catch(e){
-        		res.status(500).send(body);
+                res.json(JSON.parse(body));
+            }catch(e){
+                res.status(500).send(body);
 //        		 next(body);
-        	}
+            }
            
         }
     });
