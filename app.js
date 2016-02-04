@@ -19,6 +19,7 @@ app.use(express.static(__dirname + '/dist/'));
 // var proxyUrl='https_proxy=http://http-proxy.health.ge.com:88';
 
 
+
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/dist/index.html'));
 }
